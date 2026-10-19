@@ -1,0 +1,1 @@
+export const TARN_ET_GARONNE_TESTIMONIALS = []

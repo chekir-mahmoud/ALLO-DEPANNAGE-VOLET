@@ -1,0 +1,313 @@
+================================================================================
+                    DOCUMENTATION SYSTEME DEBARREO
+                    Gestion Pro / Admin / Annonces
+================================================================================
+
+Derniere mise a jour: Mai 2026
+
+================================================================================
+1. STRUCTURE DES DOSSIERS
+================================================================================
+
+/app
+  /admin
+    /annonces/page.tsx      --> Page admin unifiee avec onglets (Annonces, Pros, Demandes)
+    /setup/page.tsx         --> Page de configuration initiale admin
+  /annonces
+    /page.tsx               --> Page serveur pour les annonces (pro uniquement)
+    /client.tsx             --> Composant client pour afficher les annonces aux pros
+  /auth
+    /callback/route.ts      --> Callback OAuth Supabase
+    /login
+      /page.tsx             --> Page de connexion admin
+      /login-form.tsx       --> Formulaire de connexion admin (client component)
+  /pro
+    /inscription/page.tsx   --> Inscription des professionnels
+    /connexion/page.tsx     --> Connexion des professionnels
+  /api
+    /send-email/route.ts    --> API pour envoyer des emails (notifications)
+
+/lib
+  /annonces.ts              --> Types et fonctions pour les annonces
+  /professionals.ts         --> Types pour les professionnels et demandes d'acces
+  /email.ts                 --> Utilitaires et templates d'emails
+  /supabase
+    /client.ts              --> Client Supabase cote navigateur
+    /server.ts              --> Client Supabase cote serveur
+    /middleware.ts          --> Middleware Supabase pour l'auth
+
+/proxy.ts                   --> Middleware Next.js pour la protection des routes
+
+
+================================================================================
+2. BASE DE DONNEES (SUPABASE)
+================================================================================
+
+TABLE: annonces
+---------------
+- id (UUID)                 --> Identifiant unique
+- reference (VARCHAR)       --> Reference auto-generee (YYMMDD-XXX)
+- titre (VARCHAR)           --> Titre de l'annonce
+- message (TEXT)            --> Description detaillee
+- departement (VARCHAR)     --> Code departement (ex: "gironde")
+- ville (VARCHAR)           --> Ville
+- service (VARCHAR)         --> Type de service (ex: "debarras-maison")
+- type_client (VARCHAR)     --> "particulier" ou "professionnel"
+- budget (VARCHAR)          --> Budget estime
+- urgence (BOOLEAN)         --> Demande urgente
+- statut (VARCHAR)          --> "disponible", "en_cours", "termine"
+- mise_en_avant (BOOLEAN)   --> Annonce mise en avant
+- contact_nom (VARCHAR)     --> Nom du contact
+- contact_telephone (VARCHAR) --> Telephone
+- contact_email (VARCHAR)   --> Email (optionnel)
+- contact_ville (VARCHAR)   --> Ville du contact
+- created_at (TIMESTAMP)    --> Date de creation
+- updated_at (TIMESTAMP)    --> Date de mise a jour
+
+TABLE: professionals
+--------------------
+- id (UUID)                 --> Identifiant unique
+- user_id (UUID)            --> Reference vers auth.users
+- nom (VARCHAR)             --> Nom du professionnel
+- email (VARCHAR)           --> Email (unique)
+- telephone (VARCHAR)       --> Telephone
+- siret (VARCHAR)           --> Numero SIRET (optionnel)
+- nom_entreprise (VARCHAR)  --> Nom de l'entreprise (optionnel)
+- ville (VARCHAR)           --> Ville
+- statut (VARCHAR)          --> "en_attente", "valide", "refuse", "suspendu"
+- created_at (TIMESTAMP)    --> Date d'inscription
+- updated_at (TIMESTAMP)    --> Date de mise a jour
+- validated_at (TIMESTAMP)  --> Date de validation par admin
+- validated_by (UUID)       --> Admin qui a valide
+
+TABLE: access_requests
+----------------------
+- id (UUID)                 --> Identifiant unique
+- professional_id (UUID)    --> Reference vers professionals
+- annonce_id (UUID)         --> Reference vers annonces
+- statut (VARCHAR)          --> "en_attente", "accorde", "refuse"
+- created_at (TIMESTAMP)    --> Date de la demande
+- updated_at (TIMESTAMP)    --> Date de mise a jour
+- processed_at (TIMESTAMP)  --> Date de traitement par admin
+- processed_by (UUID)       --> Admin qui a traite
+- UNIQUE(professional_id, annonce_id) --> Une seule demande par pro par annonce
+
+TABLE: admin_notifications
+--------------------------
+- id (UUID)                 --> Identifiant unique
+- type (VARCHAR)            --> "new_professional", "access_request", "new_annonce"
+- reference_id (UUID)       --> ID de l'element concerne
+- is_read (BOOLEAN)         --> Notification lue ou non
+- created_at (TIMESTAMP)    --> Date de creation
+
+FONCTIONS SQL:
+--------------
+- generate_reference()      --> Genere la reference auto (YYMMDD-XXX)
+- update_updated_at_column() --> Met a jour updated_at automatiquement
+- notify_new_professional() --> Cree notification admin pour nouveau pro
+- notify_access_request()   --> Cree notification admin pour demande d'acces
+- register_professional()   --> Inscrit un pro (SECURITY DEFINER, bypass RLS)
+
+
+================================================================================
+3. AUTHENTIFICATION
+================================================================================
+
+ADMIN:
+------
+- Connexion via /auth/login
+- Utilise Supabase Auth
+- Metadata: raw_user_meta_data.is_admin = true
+- Acces a /admin/annonces (page unifiee avec onglets)
+
+PROFESSIONNELS:
+---------------
+- Inscription via /pro/inscription
+  - Champs: nom, email, mot de passe, telephone, SIRET, entreprise, ville
+  - Cree un compte Supabase Auth + profil dans table professionals
+  - Statut initial: "en_attente"
+  - Notification admin automatique
+
+- Connexion via /pro/connexion
+  - Verifie que le compte est valide (statut = "valide")
+  - Si en_attente: message d'attente de validation
+  - Si refuse/suspendu: acces refuse
+
+- Acces aux annonces: /annonces
+  - Requiert un compte pro valide
+  - Peut voir toutes les annonces
+  - Peut demander acces aux coordonnees
+
+
+================================================================================
+4. FLUX UTILISATEUR
+================================================================================
+
+A. INSCRIPTION PRO:
+-------------------
+1. Pro remplit formulaire /pro/inscription
+2. Compte Supabase Auth cree
+3. Profil insere dans professionals (via RPC register_professional)
+4. Notification admin creee automatiquement (trigger)
+5. Email envoye a l'admin (notification)
+6. Pro voit message "en attente de validation"
+
+B. VALIDATION PRO (ADMIN):
+--------------------------
+1. Admin voit badge notification dans onglet "Professionnels"
+2. Admin clique "Valider" ou "Refuser"
+3. Statut mis a jour dans professionals
+4. Notification marquee comme lue
+5. Email envoye au pro (si valide)
+
+C. CONSULTATION ANNONCES (PRO VALIDE):
+--------------------------------------
+1. Pro se connecte via /pro/connexion
+2. Redirection vers /annonces
+3. Pro voit toutes les annonces sans coordonnees
+4. Pro peut filtrer par departement, service, statut
+
+D. DEMANDE D'ACCES COORDONNEES:
+-------------------------------
+1. Pro clique "Demander acces" sur une annonce
+2. Demande inseree dans access_requests (statut: en_attente)
+3. Notification admin creee automatiquement (trigger)
+4. Email envoye a l'admin + au client (si email fourni)
+5. Pro voit "Demande envoyee"
+
+E. TRAITEMENT DEMANDE (ADMIN):
+------------------------------
+1. Admin voit badge notification dans onglet "Demandes d'acces"
+2. Admin clique "Accorder" ou "Refuser"
+3. Statut mis a jour dans access_requests
+4. Notification marquee comme lue
+5. Email envoye au pro avec coordonnees (si accorde)
+6. Pro peut maintenant voir les coordonnees sur l'annonce
+
+
+================================================================================
+5. EMAILS (RESEND)
+================================================================================
+
+Configuration requise:
+- Variable d'environnement: RESEND_API_KEY
+- Expediteur: noreply@debarreo.fr
+
+Types d'emails:
+---------------
+1. new_professional     --> Admin notifie d'une nouvelle inscription pro
+2. pro_validated        --> Pro notifie que son compte est valide
+3. access_request       --> Admin + Client notifies d'une demande d'acces
+4. access_granted       --> Pro recoit les coordonnees du client
+
+Gestion des erreurs:
+- Les erreurs d'email ne bloquent pas les operations
+- Rate limit gere gracieusement (log warning, continue)
+
+
+================================================================================
+6. SECURITE (RLS - Row Level Security)
+================================================================================
+
+TABLE annonces:
+- SELECT: public (tout le monde peut lire)
+- INSERT/UPDATE/DELETE: admin uniquement
+
+TABLE professionals:
+- SELECT own: pro peut voir son propre profil
+- SELECT all: admin peut voir tous les profils
+- INSERT: utilisateur authentifie (via RPC pour bypass)
+- UPDATE own: pro peut modifier son profil
+- UPDATE all: admin peut modifier tous les profils
+
+TABLE access_requests:
+- SELECT own: pro peut voir ses propres demandes
+- SELECT all: admin peut voir toutes les demandes
+- INSERT: pro valide uniquement
+- UPDATE: admin uniquement
+
+TABLE admin_notifications:
+- ALL: admin uniquement
+
+
+================================================================================
+7. MIDDLEWARE / PROTECTION DES ROUTES
+================================================================================
+
+Fichier: /proxy.ts
+
+Routes protegees (Supabase Auth):
+- /admin/annonces --> Requiert auth + is_admin
+
+Routes exclues de la protection:
+- /admin/setup --> Pour creer le premier admin
+- /auth/login --> Page de connexion
+
+Routes publiques:
+- / --> Page d'accueil
+- /pro/inscription --> Inscription pro
+- /pro/connexion --> Connexion pro
+
+
+================================================================================
+8. COMPOSANTS UI PRINCIPAUX
+================================================================================
+
+Page Admin Unifiee (/admin/annonces/page.tsx):
+----------------------------------------------
+- Header avec logo et deconnexion
+- Onglets: Annonces | Professionnels | Demandes d'acces
+- Badges de notification sur les onglets
+- Statistiques (total annonces, disponibles, etc.)
+- Filtres (departement, service, statut)
+- Liste des annonces avec actions (modifier, supprimer)
+- Modale de creation/edition d'annonce
+- Onglet Professionnels: liste avec validation/refus/suspension
+- Onglet Demandes: liste avec accorder/refuser
+
+Page Annonces Pro (/annonces/client.tsx):
+-----------------------------------------
+- Verification du statut pro
+- Carrousel des annonces mises en avant
+- Filtres (departement, service, statut)
+- Liste des annonces
+- Bouton "Demander acces" ou status de la demande
+- Modale de detail avec coordonnees (si acces accorde)
+
+
+================================================================================
+9. TYPES TYPESCRIPT
+================================================================================
+
+Fichier: /lib/annonces.ts
+-------------------------
+- Annonce: type complet d'une annonce
+- AnnonceInsert: type pour l'insertion
+- AnnonceUpdate: type pour la mise a jour
+- SERVICES_LIST: liste des services disponibles
+- DEPARTEMENTS_FRANCE: liste des departements
+- STATUT_CONFIG: configuration des statuts
+
+Fichier: /lib/professionals.ts
+------------------------------
+- Professional: type complet d'un professionnel
+- AccessRequest: type d'une demande d'acces
+- ProUser: type combine (user Supabase + profil pro)
+
+
+================================================================================
+10. VARIABLES D'ENVIRONNEMENT
+================================================================================
+
+Requises:
+- NEXT_PUBLIC_SUPABASE_URL      --> URL du projet Supabase
+- NEXT_PUBLIC_SUPABASE_ANON_KEY --> Cle anonyme Supabase
+- RESEND_API_KEY                --> Cle API Resend (pour emails)
+
+Optionnelles:
+- SUPABASE_SERVICE_ROLE_KEY     --> Cle service role (operations admin)
+
+
+================================================================================
+FIN DE LA DOCUMENTATION
+================================================================================

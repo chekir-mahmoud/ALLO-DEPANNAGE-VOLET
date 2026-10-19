@@ -1,0 +1,76 @@
+// Paris (75) - 20 arrondissements + quartiers importants, optimisés SEO
+export const VALID_CITIES = {
+  // Arrondissements de Paris
+  "paris-1er": { name: "Paris 1er Arrondissement", postalCode: "75001" },
+  "paris-2e": { name: "Paris 2e Arrondissement", postalCode: "75002" },
+  "paris-3e": { name: "Paris 3e Arrondissement", postalCode: "75003" },
+  "paris-4e": { name: "Paris 4e Arrondissement", postalCode: "75004" },
+  "paris-5e": { name: "Paris 5e Arrondissement", postalCode: "75005" },
+  "paris-6e": { name: "Paris 6e Arrondissement", postalCode: "75006" },
+  "paris-7e": { name: "Paris 7e Arrondissement", postalCode: "75007" },
+  "paris-8e": { name: "Paris 8e Arrondissement", postalCode: "75008" },
+  "paris-9e": { name: "Paris 9e Arrondissement", postalCode: "75009" },
+  "paris-10e": { name: "Paris 10e Arrondissement", postalCode: "75010" },
+  "paris-11e": { name: "Paris 11e Arrondissement", postalCode: "75011" },
+  "paris-12e": { name: "Paris 12e Arrondissement", postalCode: "75012" },
+  "paris-13e": { name: "Paris 13e Arrondissement", postalCode: "75013" },
+  "paris-14e": { name: "Paris 14e Arrondissement", postalCode: "75014" },
+  "paris-15e": { name: "Paris 15e Arrondissement", postalCode: "75015" },
+  "paris-16e": { name: "Paris 16e Arrondissement", postalCode: "75016" },
+  "paris-17e": { name: "Paris 17e Arrondissement", postalCode: "75017" },
+  "paris-18e": { name: "Paris 18e Arrondissement", postalCode: "75018" },
+  "paris-19e": { name: "Paris 19e Arrondissement", postalCode: "75019" },
+  "paris-20e": { name: "Paris 20e Arrondissement", postalCode: "75020" },
+
+  // Quartiers notables et zones commerciales SEO
+  "le-marais": { name: "Le Marais (4e)", postalCode: "75004" },
+  "latin-quarter": { name: "Quartier Latin (5e)", postalCode: "75005" },
+  "montmartre": { name: "Montmartre (18e)", postalCode: "75018" },
+  "pigalle": { name: "Pigalle (9e)", postalCode: "75009" },
+  "champs-elysees": { name: "Champs-Élysées (8e)", postalCode: "75008" },
+  "opera": { name: "Opéra (2e-9e)", postalCode: "75002" },
+  "bastille": { name: "Bastille (11e-12e)", postalCode: "75011" },
+  "republique": { name: "République (3e-11e)", postalCode: "75003" },
+  "notre-dame": { name: "Notre-Dame (4e-5e)", postalCode: "75004" },
+  "sacre-coeur": { name: "Sacré-Cœur (18e)", postalCode: "75018" },
+  "arc-de-triomphe": { name: "Arc de Triomphe (8e-16e-17e)", postalCode: "75008" },
+  "eiffel": { name: "Eiffel (7e-15e-16e)", postalCode: "75007" },
+  "versailles-gate": { name: "Porte de Versailles (15e)", postalCode: "75015" },
+  "palais-garnier": { name: "Palais Garnier (2e-9e)", postalCode: "75009" },
+  "louvre": { name: "Louvre (1er)", postalCode: "75001" },
+
+  // Quartiers résidentiels importants
+  "passy": { name: "Passy (16e)", postalCode: "75016" },
+  "neuilly": { name: "Neuilly (16e-17e)", postalCode: "75016" },
+  "auteuil": { name: "Auteuil (16e)", postalCode: "75016" },
+  "boulogne": { name: "Boulogne (16e)", postalCode: "75016" },
+  "bois-de-boulogne": { name: "Bois de Boulogne (16e)", postalCode: "75016" },
+  "montparnasse": { name: "Montparnasse (14e-15e)", postalCode: "75014" },
+  "grenelle": { name: "Grenelle (15e)", postalCode: "75015" },
+  "invalides": { name: "Les Invalides (7e)", postalCode: "75007" },
+  "sorbonne": { name: "Sorbonne (5e)", postalCode: "75005" },
+  "luxembourg": { name: "Luxembourg (5e-6e)", postalCode: "75005" },
+
+  // Zones commerciales et d'affaires
+  "la-defense": { name: "La Défense (proche Paris)", postalCode: "75001" },
+  "bercy": { name: "Bercy (12e)", postalCode: "75012" },
+  "belleville": { name: "Belleville (10e-11e-20e)", postalCode: "75010" },
+  "marais-village": { name: "Village Saint-Paul (4e)", postalCode: "75004" },
+  "passage-des-panoramas": { name: "Passages Couverts (2e)", postalCode: "75002" },
+  "rue-de-rivoli": { name: "Rue de Rivoli (1er-4e)", postalCode: "75001" },
+  "rue-saint-honore": { name: "Rue Saint-Honoré (1er)", postalCode: "75001" },
+  "rue-de-turenne": { name: "Rue de Turenne (3e-4e)", postalCode: "75003" },
+  "rue-mouffetard": { name: "Rue Mouffetard (5e)", postalCode: "75005" },
+  "rue-de-seine": { name: "Rue de Seine (6e)", postalCode: "75006" },
+
+  // Autres quartiers touristiques
+  "ile-de-la-cite": { name: "Île de la Cité (1er-4e)", postalCode: "75001" },
+  "ile-saint-louis": { name: "Île Saint-Louis (4e)", postalCode: "75004" },
+  "le-palais-royal": { name: "Palais Royal (1er)", postalCode: "75001" },
+  "tuileries": { name: "Tuileries (1er)", postalCode: "75001" },
+  "marais-historique": { name: "Marais Historique (3e-4e)", postalCode: "75003" },
+}
+
+export const CITY_DESCRIPTIONS: { [key: string]: string } = {
+  "paris": "Services de débarras, nettoyage et location de bennes à Paris (75). Intervention rapide dans tous les arrondissements de la capitale.",
+}

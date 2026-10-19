@@ -1,0 +1,21 @@
+{
+  "name": "Débarras Proximité",
+  "short_name": "Débarras Proximité",
+  "description": "Débarras de maison à Bordeaux et en Gironde",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0E2452",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

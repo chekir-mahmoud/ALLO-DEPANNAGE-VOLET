@@ -1,0 +1,1 @@
+export const PYRENEES_ORIENTALES_TESTIMONIALS = []

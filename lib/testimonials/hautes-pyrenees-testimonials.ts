@@ -1,0 +1,1 @@
+export const HAUTES_PYRENEES_TESTIMONIALS = []
