@@ -20,7 +20,7 @@ const NAV_RIGHT = [
   { href: "/temoignages", label: "Avis clients" },
   { href: "/a-propos", label: "Qui sommes-nous ?" },
   { href: "/blog", label: "Conseils pratiques" },
-  { href: "/foire-aux-questions", label: "FAQ" },
+  { href: "/foire-aux-questions", label: "Questions fréquentes" },
   { href: "/contact", label: "Contact" },
 ]
 const NAV_MOBILE = [...NAV_LEFT, ...NAV_RIGHT]
@@ -200,13 +200,14 @@ export default function Header({ phoneConfig, onContactClick, forceShowHeader }:
               </Button>
             </div>
 
-            {/* Grand écran (1536 px et plus) : 5 onglets de chaque côté du logo */}
-            <div className="hidden 2xl:flex items-center justify-between gap-8">
-              <nav className="flex items-center gap-5 text-[15px] font-semibold flex-1 justify-end whitespace-nowrap">
+            {/* Grand écran (1536 px et plus) : 5 onglets de chaque côté du logo.
+                Grille à 3 colonnes (gauche et droite de même largeur) : le logo reste au centre exact */}
+            <div className="hidden 2xl:grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-x-6">
+              <nav className="flex items-center justify-end gap-4 text-[14px] font-semibold whitespace-nowrap">
                 {NAV_LEFT.map((item) => <NavLink key={item.href} {...item} active={isActive(item.href)} />)}
               </nav>
 
-              <Link href="/" className="flex items-center mx-6 flex-shrink-0">
+              <Link href="/" className="flex items-center">
                 <Image
                   src="/images/logo-depannage-volet-roulant.png"
                   alt="Allo Dépannage Volet"
@@ -217,7 +218,7 @@ export default function Header({ phoneConfig, onContactClick, forceShowHeader }:
                 />
               </Link>
 
-              <nav className="flex items-center gap-5 text-[15px] font-semibold flex-1 whitespace-nowrap">
+              <nav className="flex items-center justify-start gap-4 text-[14px] font-semibold whitespace-nowrap">
                 {NAV_RIGHT.map((item) => <NavLink key={item.href} {...item} active={isActive(item.href)} />)}
               </nav>
             </div>

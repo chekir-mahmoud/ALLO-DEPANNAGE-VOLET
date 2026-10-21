@@ -110,7 +110,7 @@ const organizationSchema = {
     "height": 265
   },
   "image": "https://www.allo-depannage-volet.fr/images/volet/technicien-reparation-volet-roulant.jpg",
-  "telephone": "+33614469888",
+  "telephone": "+33620090025",
   "email": "contact@allo-depannage-volet.fr",
   "address": COMPANY_ADDRESS,
   "areaServed": { "@type": "Country", "name": "France" },
@@ -118,7 +118,7 @@ const organizationSchema = {
   "slogan": "Le dépannage de volets roulants partout en France",
   "contactPoint": {
     "@type": "ContactPoint",
-    "telephone": "+33614469888",
+    "telephone": "+33620090025",
     "contactType": "customer service",
     "availableLanguage": "French",
     "hoursAvailable": {

@@ -5,13 +5,13 @@ export interface PhoneConfig {
 }
 
 export const DEFAULT_PHONE: PhoneConfig = {
-  display: "06 14 46 98 88",
-  tel: "+33614469888",
+  display: "06 20 09 00 25",
+  tel: "+33620090025",
   department: "National",
 }
 
-const D = "06 14 46 98 88"
-const T = "+33614469888"
+const D = "06 20 09 00 25"
+const T = "+33620090025"
 
 // Numéro affiché sur les pages d'un département. Même numéro partout pour l'instant :
 // pour un numéro propre à un département, passez-le sur sa ligne, ex. dept("Gironde (33)", "06 …", "+336…")
