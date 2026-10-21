@@ -114,18 +114,12 @@ const organizationSchema = {
   "email": "contact@allo-depannage-volet.fr",
   "address": COMPANY_ADDRESS,
   "areaServed": { "@type": "Country", "name": "France" },
-  "foundingDate": "2017",
-  "numberOfEmployees": {
-    "@type": "QuantitativeValue",
-    "minValue": 10,
-    "maxValue": 50
-  },
+  "foundingDate": "2020-05-18",
   "slogan": "Le dépannage de volets roulants partout en France",
   "contactPoint": {
     "@type": "ContactPoint",
     "telephone": "+33614469888",
     "contactType": "customer service",
-    "contactOption": "TollFree",
     "availableLanguage": "French",
     "hoursAvailable": {
       "@type": "OpeningHoursSpecification",

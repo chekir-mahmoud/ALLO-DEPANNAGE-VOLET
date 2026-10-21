@@ -1,30 +1,36 @@
-# Service testimonials and phone numbers
+# Allo Dépannage Volet
 
-*Automatically synced with your [v0.app](https://v0.app) deployments*
+Site de [www.allo-depannage-volet.fr](https://www.allo-depannage-volet.fr) : dépannage, réparation, installation et
+motorisation de volets roulants, rideaux métalliques et stores bannes.
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/contactaasoh24-8330s-projects/debarreo)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.app-black?style=for-the-badge)](https://v0.app/chat/GvJEKaoDZ2p)
+Next.js (App Router), React, Tailwind CSS, hébergé sur Vercel.
 
-## Overview
+## Lancer le site en local
 
-This repository will stay in sync with your deployed chats on [v0.app](https://v0.app).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.app](https://v0.app).
+```bash
+npm install
+npm run dev     # http://localhost:3000
+npm run build   # vérification avant déploiement
+```
 
-## Deployment
+Variable d'environnement (fichier `.env.local` en local, *Settings → Environment Variables* sur Vercel) :
 
-Your project is live at:
+- `RESEND_API_KEY` : envoi des demandes de devis par email (`app/api/send-quote/route.ts`).
 
-**[https://vercel.com/contactaasoh24-8330s-projects/debarreo](https://vercel.com/contactaasoh24-8330s-projects/debarreo)**
+## Organisation
 
-## Build your app
+| Dossier / fichier | Contenu |
+|---|---|
+| `app/[departement]/` | Pages département, ville, prestation par département et par ville |
+| `app/nos-services/` | Pages nationales des prestations |
+| `lib/departments.ts` | Liste des départements actifs |
+| `lib/*-city-config.ts` | Villes de chaque département |
+| `lib/sous-services/volet-roulant.ts` | Contenu des prestations |
+| `lib/phone-config.ts` | Numéro de téléphone par département |
+| `lib/testimonials/` | Avis clients |
+| `lib/site.ts` | URL, adresse du siège, note Google |
 
-Continue building your app on:
+## Guides
 
-**[https://v0.app/chat/GvJEKaoDZ2p](https://v0.app/chat/GvJEKaoDZ2p)**
-
-## How It Works
-
-1. Create and modify your project using [v0.app](https://v0.app)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+- [Ajouter un département](ADD_NEW_DEPARTMENT_GUIDE.md)
+- [Ajouter une prestation](ADD_NEW_SERVICE_GUIDE.md)

@@ -4,9 +4,9 @@ export const SITE_NAME = "Allo Dépannage Volet"
 // Adresse du siège (données structurées Google), identique aux mentions légales
 export const COMPANY_ADDRESS = {
   "@type": "PostalAddress",
-  streetAddress: "77 rue Calixte Camelle",
-  postalCode: "33130",
-  addressLocality: "Bègles",
+  streetAddress: "202 Avenue de Soubeyran",
+  postalCode: "33460",
+  addressLocality: "Arsac",
   addressRegion: "Gironde",
   addressCountry: "FR",
 }

@@ -1,5 +1,5 @@
 "use client"
-import { COMPANY_ADDRESS, SITE_URL, cityPath } from "@/lib/site"
+import { COMPANY_ADDRESS, SITE_URL, cityPath, servicePath, sousServicePath } from "@/lib/site"
 import type React from "react"
 import { useState, useEffect } from "react"
 import Image from "next/image"
@@ -16,7 +16,7 @@ import QuoteFormHeading from "@/components/quote-form-heading"
 import Footer from "@/components/Footer"
 import QuoteForm from "@/components/QuoteForm"
 import { SERVICES_SECTION_TITLE, type ResolvedSousServiceConfig } from "@/lib/sous-services/volet-roulant"
-import { VOLET_INTERVENTIONS } from "@/lib/testimonials/exemples-volet-roulant"
+import { avisPourDepartement } from "@/lib/testimonials/exemples-volet-roulant"
 import { VOLET_SERVICES } from "@/lib/services-volet-roulant"
 import { getCityFaq } from "@/lib/city-faq"
 import DynamicHead from "@/components/DynamicHead"
@@ -39,6 +39,8 @@ interface ClientVillePageProps {
   departmentConfig?: { slug: string; name: string; displayName: string; postalCode: string } | null
   cities?: { name: string; slug: string }[]
   departmentCities?: Record<string, { name: string }>
+  // Faux pour les petites villes : les cartes services pointent vers les pages nationales
+  hasSousServices?: boolean
   // Page de sous-service (ex. /gironde/bordeaux/depannage-volet-roulant) : même design, contenu adapté
   sousService?: ResolvedSousServiceConfig
 }
@@ -353,6 +355,7 @@ export default function ClientVillePage({
   departmentConfig,
   cities = [],
   departmentCities,
+  hasSousServices = true,
   sousService: ss,
 }: ClientVillePageProps) {
   if (!cityData) { notFound() }
@@ -744,7 +747,7 @@ export default function ClientVillePage({
                 <Link
                   key={i}
                   prefetch={false}
-                  href={`/${departmentSlug}/${initialVilleSlug}/${service.slug}`}
+                  href={hasSousServices ? sousServicePath(departmentSlug, initialVilleSlug, service.slug) : servicePath(service.slug)}
                   className={cardClass}
                   aria-label={`${service.title} à ${cityData.name}`}
                 >
@@ -759,7 +762,7 @@ export default function ClientVillePage({
       {!["rideau-metallique", "store-banne"].includes(ss?.slug ?? "") && <BrandsSection className="bg-white" padding="pt-0 pb-10 md:pb-14" />}
       <HowItWorksSection />
       <WhyChooseUsSection />
-      <TestimonialsSection padding="py-10 md:py-14" testimonials={VOLET_INTERVENTIONS} examples className="bg-white" />
+      <TestimonialsSection padding="py-10 md:py-14" testimonials={avisPourDepartement(departmentConfig?.postalCode ?? "", [{ name: cityData.name }, ...Object.values(departmentCities ?? {}).filter((c) => c.name !== cityData.name)])} examples className="bg-white" />
       <FormulesSection place={`à ${cityData.name}`} onQuote={() => setIsQuoteFormOpen(true)} />
       {/* Nos Prestations et Tarifs Section */}
       {ss ? (
@@ -829,7 +832,7 @@ export default function ClientVillePage({
             <div className="rounded-2xl overflow-hidden shadow-xl">
               <Image
                 src={ss?.aboutImage ?? "/images/volet/reparation-coffre-volet-roulant.jpg"}
-                alt={`Technicien Allo Dépannage Volet en intervention sur un volet roulant à ${cityData.name}`}
+                alt={ss ? `${ss.label} à ${cityData.name} par Allo Dépannage Volet` : `Technicien Allo Dépannage Volet en intervention sur un volet roulant à ${cityData.name}`}
                 width={677}
                 height={369}
                 className="w-full h-auto object-cover"

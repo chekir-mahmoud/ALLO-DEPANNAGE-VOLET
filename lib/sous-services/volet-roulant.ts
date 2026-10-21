@@ -796,3 +796,39 @@ function stripPlaces<T>(value: T): T {
 export function resolveSousServiceNational(config: SousServiceConfig, pageUrl: string): ResolvedSousServiceConfig {
   return stripPlaces(resolveSousServiceConfig(config, CITY, CP, DEPT, pageUrl))
 }
+
+// ─── Version département (/gironde/depannage-volet-roulant) ─────────────────
+// Même principe : « à Bordeaux » devient « en Gironde », « Bordeaux (33000) » devient « Gironde (33) ».
+
+function mapStrings<T>(value: T, fn: (s: string) => string): T {
+  if (typeof value === "string") return fn(value) as T
+  if (Array.isArray(value)) return value.map((v) => mapStrings(v, fn)) as T
+  if (value && typeof value === "object") {
+    return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, mapStrings(v, fn)])) as T
+  }
+  return value
+}
+
+export function resolveSousServiceDepartment(
+  config: SousServiceConfig,
+  dept: { name: string; displayName: string; postalCode: string },
+  pageUrl: string,
+): ResolvedSousServiceConfig {
+  // displayName : « en Gironde », « dans l'Isère »…
+  const inDept = dept.displayName
+  const InDept = inDept.charAt(0).toUpperCase() + inDept.slice(1)
+  const resolved = mapStrings(resolveSousServiceConfig(config, CITY, CP, DEPT, pageUrl), (text) =>
+    text
+      .replace(new RegExp(`à ${CITY} ${DEPT}`, "g"), inDept)
+      .replace(new RegExp(`à ${CITY} et (dans toute la région|ses environs)`, "g"), inDept)
+      .replace(new RegExp(`à ${CITY} et dans les communes[^.]*`, "g"), inDept)
+      .replace(new RegExp(`(^|[.!?]\\s+)À ${CITY},`, "g"), (_m, start: string) => `${start}${InDept},`)
+      .replace(new RegExp(`(à|dans|près de) ${CITY}`, "g"), inDept)
+      .replace(new RegExp(`(de|sur) ${CITY}`, "g"), `$1 ${dept.name}`)
+      .replace(new RegExp(CITY, "g"), dept.name)
+      .replace(new RegExp(CP, "g"), dept.postalCode)
+      .replace(new RegExp(DEPT, "g"), inDept),
+  )
+  // Titre principal sans lieu : la page ajoute « en Gironde » en surligné (comme « partout en France »)
+  return { ...resolved, h1: resolveSousServiceNational(config, pageUrl).h1 }
+}

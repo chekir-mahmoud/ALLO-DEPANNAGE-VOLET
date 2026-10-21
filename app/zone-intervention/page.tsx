@@ -46,7 +46,7 @@ export default function ZonesInterventionPage() {
       >
         <Image
           src="/images/volet/rideau-metallique-depannage.jpg"
-          alt="Technicien Allo Dépannage Volet en intervention partout en France"
+          alt="Technicien Allo Dépannage Volet dépannant un rideau métallique"
           fill
           priority
           className="object-cover object-center opacity-30"

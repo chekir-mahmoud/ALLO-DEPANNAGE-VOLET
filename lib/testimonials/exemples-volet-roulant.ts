@@ -76,3 +76,23 @@ const TOUS_LES_AVIS: AvisClient[] = [
 export const VOLET_INTERVENTIONS: AvisClient[] = TOUS_LES_AVIS.filter(
   (a) => !a.aRemplacer || process.env.NODE_ENV !== "production",
 )
+
+// Avis affichés sur une page département : uniquement des villes de ce département.
+//  - vrais avis : seulement ceux dont la ville est dans le département (« Bègles (33) »),
+//    leur lieu n'est jamais modifié ;
+//  - avis provisoires (aRemplacer, visibles en développement seulement) : rattachés tour à tour
+//    aux villes du département.
+export function avisPourDepartement(
+  departmentCode: string,
+  cities: { name: string }[],
+): AvisClient[] {
+  // Villes réparties sur toute la liste (évite « Lyon, Lyon 1er, Lyon 2ème »)
+  const provisoires = VOLET_INTERVENTIONS.filter((a) => a.aRemplacer).length
+  const stride = Math.max(1, Math.floor(cities.length / Math.max(provisoires, 1)))
+  let i = 0
+  return VOLET_INTERVENTIONS.flatMap((avis) => {
+    if (!avis.aRemplacer) return avis.location.endsWith(`(${departmentCode})`) ? [avis] : []
+    const city = cities[(i++ * stride) % Math.max(cities.length, 1)]
+    return city ? [{ ...avis, location: `${city.name} (${departmentCode})` }] : []
+  })
+}

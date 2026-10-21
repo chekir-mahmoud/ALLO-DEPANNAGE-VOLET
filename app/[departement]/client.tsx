@@ -19,9 +19,8 @@ import QuoteForm from "@/components/quote-form"
 import FloatingButtons from "@/components/FloatingButtons"
 import { Clock, Wrench, BadgeCheck, CheckCircle2, ChevronDown, Star, FileCheck, Phone, MapPin, FileText, ChevronRight, BadgeEuro } from "lucide-react"
 import { VOLET_SERVICES } from "@/lib/services-volet-roulant"
-import { VOLET_INTERVENTIONS } from "@/lib/testimonials/exemples-volet-roulant"
+import { avisPourDepartement } from "@/lib/testimonials/exemples-volet-roulant"
 import { getDepartmentFaq } from "@/lib/department-faq"
-import { servicePath } from "@/lib/site"
 
 interface DepartmentPageClientProps {
   departmentSlug: string
@@ -251,7 +250,7 @@ export default function DepartmentPageClient({
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
             {VOLET_SERVICES.map((ss) => ({ slug: ss.slug, title: ss.label, short: ss.sub, image: ss.image })).map((service) => (
-              <Link key={service.slug} href={servicePath(service.slug)} className="group relative block h-96 overflow-hidden rounded-2xl shadow-lg">
+              <Link key={service.slug} href={`/${departmentSlug}/${service.slug}`} className="group relative block h-96 overflow-hidden rounded-2xl shadow-lg">
                 <img
                   src={service.image}
                   alt={`${service.title} ${deptConfig.displayName}`}
@@ -274,7 +273,7 @@ export default function DepartmentPageClient({
 
       <HowItWorksSection />
 
-      <TestimonialsSection padding="py-10 md:py-14" testimonials={VOLET_INTERVENTIONS} examples className="bg-white" />
+      <TestimonialsSection padding="py-10 md:py-14" testimonials={avisPourDepartement(deptConfig.postalCode, cities)} examples className="bg-white" />
 
       <TarifsSection padding="py-10 md:py-14" place={deptConfig.displayName} className="bg-gray-50" />
 
@@ -302,20 +301,17 @@ export default function DepartmentPageClient({
                 {displayedCities.length > 0 ? (
                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
                     {displayedCities.map((city) => {
-                      const isHome = city.slug === featuredSlug
                       return (
                         <Link
                           key={city.slug}
                           prefetch={false}
                           href={`/${departmentSlug}/${city.slug}`}
-                          className={`group flex items-center gap-2 rounded-lg border px-3 py-2 transition-colors duration-200 hover:border-[#0E2452] hover:bg-[#0E2452] ${
-                            isHome ? "border-[#0E2452] bg-[#0E2452]" : "border-gray-200 bg-white"
-                          }`}
+                          className="group flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2 transition-colors duration-200 hover:border-[#0E2452] hover:bg-[#0E2452]"
                         >
-                          <MapPin className={`h-3.5 w-3.5 flex-shrink-0 transition-colors group-hover:text-[#FFC629] ${isHome ? "text-[#FFC629]" : "text-[#0E2452]"}`} aria-hidden="true" />
-                          <span className={`min-w-0 truncate text-xs font-medium transition-colors group-hover:text-white ${isHome ? "text-white" : "text-gray-700"}`}>
+                          <MapPin className="h-3.5 w-3.5 flex-shrink-0 text-[#0E2452] transition-colors group-hover:text-[#FFC629]" aria-hidden="true" />
+                          <span className="min-w-0 truncate text-xs font-medium text-gray-700 transition-colors group-hover:text-white">
                             {city.name}
-                            <span className={`ml-1 font-normal group-hover:text-slate-300 ${isHome ? "text-slate-300" : "text-gray-400"}`}>{city.postalCode}</span>
+                            <span className="ml-1 font-normal text-gray-400 group-hover:text-slate-300">{city.postalCode}</span>
                           </span>
                         </Link>
                       )

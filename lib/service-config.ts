@@ -102,14 +102,6 @@ import { VALID_CITIES as BOUCHES_DU_RHONE_CITIES } from "./bouches-du-rhone-city
 import { VALID_CITIES as PARIS_CITIES } from "./paris-city-config"
 
 
-// Configuration des services disponibles
-export interface ServiceConfig {
-  name: string
-  slug: string
-  description: string
-  phoneKey: string // Clé pour récupérer le numéro de téléphone
-}
-
 // Type pour les données de ville
 export type CityData = { name: string; postalCode: string; population?: string }
 
@@ -380,42 +372,31 @@ export function getCityDataByDepartment(departmentSlug: string, citySlug: string
   return cities[citySlug.toLowerCase()] || null
 }
 
-export const SERVICES: Record<string, ServiceConfig> = {
-  "debarras-maison": {
-    name: "Débarras de Maison",
-    slug: "debarras-maison",
-    description: "Service professionnel de débarras de maison",
-    phoneKey: "debarras-maison", // Service-specific
-  },
+// Pages de sous-services (/[departement]/[ville]/[sousService]) réservées aux villes
+// d'au moins SOUS_SERVICE_MIN_POPULATION habitants, plus toutes celles de Gironde.
+// Les autres villes renvoient vers les pages nationales /nos-services/... (moins de pages
+// quasi identiques à rendre et à mettre en cache sur Vercel).
+export const SOUS_SERVICE_MIN_POPULATION = 5000
+
+export function cityHasSousServices(departmentSlug: string, citySlug: string): boolean {
+  if (departmentSlug.toLowerCase() === "gironde") return true
+  const city = getCityDataByDepartment(departmentSlug, citySlug)
+  const population = Number(String(city?.population ?? "").replace(/\D/g, ""))
+  return population >= SOUS_SERVICE_MIN_POPULATION
+}
+
+// Villes affichées dans le bloc « villes desservies » (48 max, noms seulement) :
+// évite d'envoyer au navigateur la liste complète du département sur chaque page ville
+export function getDisplayedDepartmentCities(departmentSlug: string): Record<string, { name: string }> {
+  return Object.fromEntries(
+    Object.entries(getCitiesByDepartment(departmentSlug)).slice(0, 48).map(([slug, city]) => [slug, { name: city.name }]),
+  )
 }
 
 export { ACTIVE_DEPARTMENTS, type DepartmentServiceConfig } from "./departments"
-
-// Fonction pour obtenir la config d'un service
-export function getServiceConfig(serviceSlug: string): ServiceConfig | null {
-  return SERVICES[serviceSlug] || null
-}
 
 // Fonction pour obtenir la config d'un département
 export function getDepartmentConfig(departmentSlug: string): DepartmentServiceConfig | null {
   return ACTIVE_DEPARTMENTS[departmentSlug.toLowerCase()] || null
 }
 
-// Génère les métadonnées SEO pour une page service + département + ville
-export function generateServiceMetadata(
-  service: ServiceConfig,
-  department: DepartmentServiceConfig,
-  cityName: string,
-  cityPostalCode: string
-) {
-  return {
-    title: `${service.name} ${cityName} (${cityPostalCode}) - Devis Gratuit | Allo Dépannage Volet`,
-    description: `${service.description} à ${cityName} ${department.displayName}. Devis gratuit le jour même. Service professionnel et rapide.`,
-    keywords: [
-      service.name.toLowerCase(),
-      `${service.name.toLowerCase()} ${cityName}`,
-      `${service.name.toLowerCase()} ${department.name}`,
-      `service ${service.slug} ${cityPostalCode}`,
-    ],
-  }
-}

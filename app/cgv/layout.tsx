@@ -4,7 +4,7 @@ import BreadcrumbSchema from "@/components/breadcrumb-schema"
 
 export const metadata = pageMetadata({
   title: "Conditions générales de vente | Allo Dépannage Volet",
-  description: "Conditions générales de vente de Allo Dépannage Volet : devis, commande, paiement, délais d'intervention et responsabilités.",
+  description: "Conditions générales de vente d'Allo Dépannage Volet : devis gratuit, commande, paiement, rétractation, garanties et réclamations pour le dépannage et la pose de volets roulants.",
   path: "/cgv",
 })
 

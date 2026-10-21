@@ -65,11 +65,17 @@ export default async function Layout({ children, params }: { children: React.Rea
               description: article.excerpt,
               image: article.image ? `${SITE_URL}${article.image}` : undefined,
               datePublished: article.date,
+              dateModified: article.date,
               articleSection: article.category,
               keywords: article.tags.join(", "),
               mainEntityOfPage: `${SITE_URL}/blog/${article.slug}`,
               author: { "@type": "Organization", name: "Allo Dépannage Volet", url: SITE_URL },
-              publisher: { "@type": "Organization", name: "Allo Dépannage Volet", url: SITE_URL },
+              publisher: {
+                "@type": "Organization",
+                name: "Allo Dépannage Volet",
+                url: SITE_URL,
+                logo: { "@type": "ImageObject", url: `${SITE_URL}/images/logo-depannage-volet-roulant.png` },
+              },
             }),
           }}
         />

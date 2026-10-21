@@ -11,33 +11,6 @@ const nextConfig = {
     imageSizes: [64, 128, 256, 384],
     // Images optimisées gardées en cache 1 an (au lieu de 60 s par défaut)
     minimumCacheTTL: 31536000,
-    remotePatterns: [
-      { protocol: "https", hostname: "images.unsplash.com" },
-    ],
-  },
-  async redirects() {
-    return [
-      // Sous-service débarras appartement remplacé par débarras fin de chantier
-      {
-        source: "/:departement/:ville/debarras-appartement",
-        destination: "/:departement/:ville/debarras-fin-de-chantier",
-        permanent: true,
-      },
-      // Sous-service « vide maison » renommé « débarras de maison »
-      {
-        source: "/:departement/:ville/vide-maison",
-        destination: "/:departement/:ville/debarras-maison",
-        permanent: true,
-      },
-      // Anciennes URL /debarras-maison/... -> URL courtes /[departement]/[ville]/...
-      { source: "/debarras-maison", destination: "/zone-intervention", permanent: true },
-            {
-        source: "/debarras-maison/:departement/:ville/debarras-appartement",
-        destination: "/:departement/:ville/debarras-fin-de-chantier",
-        permanent: true,
-      },
-      { source: "/debarras-maison/:path*", destination: "/:path*", permanent: true },
-    ]
   },
 }
 

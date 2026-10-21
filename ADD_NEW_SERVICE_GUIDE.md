@@ -1,202 +1,120 @@
-# Guide Complet : Ajouter un Nouveau Service
+# Guide : ajouter une prestation
 
-Ce guide explique étape par étape comment ajouter un nouveau service (par exemple, "plomberie") à l'architecture du projet Debarreo.
+Ce guide explique comment ajouter une prestation (par exemple « Porte de garage ») au site Allo Dépannage Volet.
 
-## Architecture Actuelle
+Les 6 prestations actuelles : dépannage, réparation, installation et motorisation de volets roulants,
+rideau métallique, store banne.
 
-Le projet utilise la structure suivante :
-- **Services** : nettoyage, debarras-maison, debarras-epave, location-bennes, demolition-et-deconstruction, vitrerie, volet-roulant
-- **Départements** : Gironde (33), Isère (38), Rhône (69), Haute-Savoie (74)
-- **Villes** : Multiples villes par département
+Une fois la prestation déclarée, **toutes ses pages sont créées automatiquement** :
 
-Structure des fichiers :
+| Page | Exemple |
+|---|---|
+| Page nationale | `/nos-services/porte-de-garage` |
+| Page par département | `/gironde/porte-de-garage` |
+| Page par ville (villes de 5 000 habitants ou plus, toutes en Gironde) | `/gironde/bordeaux/porte-de-garage` |
+| Sitemap | ajoutée dans `/sitemap/static.xml` et dans chaque `/sitemap/[departement].xml` |
+
+Il n'y a **aucune route à créer** dans `app/`.
+
+---
+
+## Étape 1 : choisir le slug
+
+Le slug est la partie de l'URL : minuscules, sans accents, mots séparés par des tirets (`porte-de-garage`).
+
+⚠️ Il ne doit être identique à **aucune clé de ville** d'un fichier `lib/*-city-config.ts` :
+la route `/[departement]/[slug]` sert à la fois aux pages villes et aux pages prestation par département.
+
+---
+
+## Étape 2 : ajouter les photos
+
+Placez les images dans `public/images/volet/`, avec un nom de fichier descriptif en français
+(`porte-garage-sectionnelle.jpg`), puis déclarez-les dans l'objet `IMG` de
+`lib/sous-services/volet-roulant.ts`.
+
+---
+
+## Étape 3 : écrire le contenu de la prestation
+
+**Fichier :** `lib/sous-services/volet-roulant.ts`, tableau `SOUS_SERVICES_VOLET`
+
+Ajoutez une entrée en copiant une prestation existante (par exemple `store-banne`) et en adaptant tous les textes.
+Le type `SousServiceConfig` liste tous les champs obligatoires.
+
+Les textes sont écrits **pour une ville** : les champs qui reçoivent `city` doivent contenir le lieu sous la forme
+« à ${city} ».
+
+```typescript
+h1: (city) => `Réparation de porte de garage à ${city}`,
+heroIntro: (city) => `Porte de garage bloquée à ${city} ? Nos techniciens interviennent 7j/7…`,
 ```
-app/
-  ├── [service]/
-  │   ├── page.tsx                          # Page principale du service
-  │   └── [departement]/[ville]/
-  │       ├── page.tsx                      # Page SSR servant le client
-  │       └── client.tsx                    # Composant client avec UI
-  └── [departement]/page.tsx                # Pages par département
+
+Le site adapte ensuite ces textes automatiquement :
+- **page ville** : « à Bordeaux » ;
+- **page département** : « en Gironde », « dans le Rhône » ;
+- **page nationale** : la mention de lieu est retirée.
+
+Pour que cette adaptation fonctionne, gardez des tournures simples : « à ${city} », « À ${city}, … »,
+« à ${city} et ses environs ».
+
+Ajoutez aussi le titre de la section « Nos services » dans `SERVICES_SECTION_TITLE` (même fichier) :
+
+```typescript
+"porte-de-garage": "Nos solutions pour les portes de garage",
 ```
 
 ---
 
-## Étapes pour Ajouter un Nouveau Service
+## Étape 4 : la carte de la prestation
 
-### 1️⃣ **Ajouter le Service à la Configuration**
-
-**Fichier** : `/lib/service-config.ts`
-
-Ajoutez une nouvelle entrée dans l'objet `SERVICES` :
+**Fichier :** `lib/services-volet-roulant.ts`, tableau `VOLET_SERVICES`
 
 ```typescript
-export const SERVICES: Record<string, ServiceConfig> = {
-  // ... services existants ...
-  "plomberie": {
-    name: "Plomberie",
-    slug: "plomberie",
-    description: "Services de plomberie professionnels",
-    phoneKey: "plomberie", // Clé pour récupérer le numéro de téléphone
-  },
-}
+{
+  slug: "porte-de-garage",
+  label: "Porte de garage",
+  sub: "Dépannage, motorisation et entretien",
+  image: "/images/volet/porte-garage-sectionnelle.jpg",
+},
 ```
 
-**Important** : 
-- `slug` doit être en minuscules avec tirets (kebab-case)
-- `phoneKey` doit correspondre à une clé dans `/lib/phone-config.ts`
+Cette liste alimente les cartes de l'accueil, des pages départements et villes, et le pied de page.
 
 ---
 
-### 2️⃣ **Ajouter le Numéro de Téléphone du Service**
+## Étape 5 : description de la page « Nos services »
 
-**Fichier** : `/lib/phone-config.ts`
-
-Trouvez la fonction `getPhoneByDepartmentService()` et ajoutez une case pour votre service :
+**Fichier :** `app/nos-services/page.tsx`, objet `NATIONAL_DESCRIPTIONS`
 
 ```typescript
-export function getPhoneByDepartmentService(department: string, service: string): { tel: string; display: string } {
-  const dept = department.toLowerCase()
-  const srv = service.toLowerCase()
-
-  // ... cases existantes ...
-
-  if (srv === "plomberie") {
-    if (dept === "gironde") return { tel: "+33XXX", display: "0XXX" }
-    if (dept === "isere") return { tel: "+33XXX", display: "0XXX" }
-    if (dept === "rhone") return { tel: "+33XXX", display: "0XXX" }
-    if (dept === "haute-savoie") return { tel: "+33XXX", display: "0XXX" }
-  }
-
-  // Valeur par défaut
-  return GIRONDE_PHONES.default
-}
+"porte-de-garage": "Dépannage, réparation et motorisation de portes de garage…",
 ```
 
 ---
 
-### 3️⃣ **Ajouter les Témoignages du Service**
+## Étape 6 (optionnel) : sections affichées
 
-**Fichier** : `/lib/testimonials/service-testimonials.ts`
+Deux sections ne sont affichées que pour certaines prestations, dans
+`app/nos-services/[slug]/service-client.tsx` et `app/[departement]/[ville]/client.tsx` :
 
-Ajoutez les témoignages pour votre service :
+- **Pannes fréquentes** (`PannesSection`) : seulement pour `depannage-volet-roulant` et `reparation-volet-roulant` ;
+- **Marques** (`BrandsSection`) : masquée pour `rideau-metallique` et `store-banne`.
 
-```typescript
-export const PLOMBERIE_TESTIMONIALS: Testimonial[] = [
-  {
-    name: "Jean Dupont",
-    location: "Bordeaux",
-    rating: 5,
-    text: "Service rapide et professionnel. Je recommande vivement!",
-    date: "2024-01-15",
-  },
-  // ... plus de témoignages ...
-]
-```
-
-Puis, ajoutez la fonction pour récupérer les témoignages du service :
-
-```typescript
-export function getTestimonialsByService(serviceSlug: string): Testimonial[] {
-  switch (serviceSlug.toLowerCase()) {
-    // ... cases existantes ...
-    case "plomberie":
-      return PLOMBERIE_TESTIMONIALS
-    default:
-      return []
-  }
-}
-```
+Ajoutez le slug de la nouvelle prestation à ces listes si besoin.
 
 ---
 
-### 4️⃣ **Créer la Structure des Dossiers**
+## Checklist
 
-Créez les dossiers suivants :
-
-```
-app/plomberie/
-├── page.tsx                    # Page principale du service
-└── [departement]/[ville]/
-    ├── page.tsx                # Page SSR
-    └── client.tsx              # Composant client
-```
-
----
-
-### 5️⃣ **Créer la Page Principale du Service**
-
-**Fichier** : `app/plomberie/page.tsx`
-
-Copiez et adaptez depuis un service existant (ex: `app/nettoyage/page.tsx`) :
-
-```typescript
-import { getServiceConfig } from "@/lib/service-config"
-import ClientVillePage from "./[departement]/[ville]/client"
-
-export const metadata = {
-  title: "Plomberie - Devis Gratuit | Debarreo",
-  description: "Services de plomberie professionnels",
-}
-
-const Page = () => {
-  const serviceConfig = getServiceConfig("plomberie")
-
-  if (!serviceConfig) {
-    return <div>Service not found</div>
-  }
-
-  return (
-    <main>
-      {/* Contenu spécifique au service plomberie */}
-      <h1>{serviceConfig.name}</h1>
-      {/* ... resto du contenu ... */}
-    </main>
-  )
-}
-
-export default Page
-```
-
----
-
-### 6️⃣ **Créer la Page SSR (Page.tsx) pour Département/Ville**
-
-**Fichier** : `app/plomberie/[departement]/[ville]/page.tsx`
-
-Copiez et adaptez depuis `app/nettoyage/[departement]/[ville]/page.tsx` :
-
-```typescript
-import { getCityDataByDepartment, getDepartmentConfig, getServiceConfig } from "@/lib/service-config"
-import { getCitiesByDepartment } from "@/lib/service-config"
-import { getPhoneByDepartmentService } from "@/lib/phone-config"
-import { getTestimonialsByServiceAndDepartment } from "@/lib/testimonials"
-import ClientVillePage from "./client"
-import { notFound } from "next/navigation"
-
-const Page = async ({ params }: { params: { departement: string; ville: string } }) => {
-  const { departement, ville } = params
-  
-  const cityData = getCityDataByDepartment(departement, ville)
-  const departmentConfig = getDepartmentConfig(departement)
-  const serviceConfig = getServiceConfig("plomberie")
-
-  if (!cityData || !departmentConfig || !serviceConfig) {
-    return <div>Page not found</div>
-  }
-
-  return (
-    <ClientVillePage
-      cityData={cityData}
-      phoneConfig={getPhoneByDepartmentService(departement, "plomberie")}
-      initialVilleSlug={ville}
-      serviceSlug="plomberie"
-      departmentSlug={departement}
-      departmentConfig={departmentConfig}
-      testimonials={getTestimonialsByServiceAndDepartment("plomberie", departement)}
-      departmentCities={getCitiesByDepartment(departement)}
-    />
-  )
-}
-
-export default Page
+- [ ] Slug choisi, différent de toutes les clés de villes
+- [ ] Photos ajoutées dans `public/images/volet/` et déclarées dans `IMG`
+- [ ] Prestation ajoutée dans `SOUS_SERVICES_VOLET` et `SERVICES_SECTION_TITLE`
+- [ ] Carte ajoutée dans `VOLET_SERVICES`
+- [ ] Description ajoutée dans `NATIONAL_DESCRIPTIONS`
+- [ ] `npm run build` sans erreur
+- [ ] Pages vérifiées en local (`npm run dev`), en relisant les textes :
+  - `http://localhost:3000/nos-services/porte-de-garage` (aucune ville, aucun « à » orphelin)
+  - `http://localhost:3000/gironde/porte-de-garage` (« en Gironde »)
+  - `http://localhost:3000/rhone/porte-de-garage` (« dans le Rhône »)
+  - `http://localhost:3000/gironde/bordeaux/porte-de-garage` (« à Bordeaux »)

@@ -16,7 +16,7 @@ import PannesSection from "@/components/sections/pannes-section"
 import WhyChooseUsSection from "@/components/sections/why-choose-us-section"
 import TestimonialsSection from "@/components/sections/testimonials-section"
 import { DEFAULT_PHONE } from "@/lib/phone-config"
-import { VOLET_INTERVENTIONS } from "@/lib/testimonials/exemples-volet-roulant"
+import { VOLET_INTERVENTIONS, type AvisClient } from "@/lib/testimonials/exemples-volet-roulant"
 import { SERVICES_SECTION_TITLE, type ResolvedSousServiceConfig } from "@/lib/sous-services/volet-roulant"
 import { CheckCircle2, ChevronDown, ChevronRight, FileText, Phone, ShieldCheck, Wrench } from "lucide-react"
 
@@ -29,8 +29,24 @@ const Eyebrow = ({ children }: { children: React.ReactNode }) => (
 
 type Other = { slug: string; label: string; sub: string; image: string }
 
-export default function ServiceClient({ ss, others }: { ss: ResolvedSousServiceConfig; others: Other[] }) {
-  const phoneConfig = DEFAULT_PHONE
+// Aussi utilisé pour les pages prestation d'un département (/gironde/depannage-volet-roulant) :
+// place = « en Gironde », numéro du département, liens vers les autres prestations du département
+export default function ServiceClient({
+  ss,
+  others,
+  phoneConfig = DEFAULT_PHONE,
+  place = "partout en France",
+  othersBasePath = "/nos-services",
+  testimonials = VOLET_INTERVENTIONS,
+}: {
+  ss: ResolvedSousServiceConfig
+  others: Other[]
+  phoneConfig?: { tel: string; display: string }
+  place?: string
+  othersBasePath?: string
+  // Page département : avis rattachés aux villes du département
+  testimonials?: AvisClient[]
+}) {
   const [isQuoteFormOpen, setIsQuoteFormOpen] = useState(false)
   const [h1Main, ...h1Rest] = ss.h1.split(" – ")
 
@@ -58,7 +74,7 @@ export default function ServiceClient({ ss, others }: { ss: ResolvedSousServiceC
           <div className="grid lg:grid-cols-[3fr_2fr] gap-10 lg:gap-14 items-center">
             <div className="lg:self-stretch lg:flex lg:flex-col lg:-mb-6">
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight text-white mb-5">
-                {h1Main} <span className="text-[#FFC629]">partout en France</span>.
+                {h1Main} <span className="text-[#FFC629]">{place}</span>.
                 {h1Rest.length > 0 && <span className="mt-2 block text-base md:text-lg font-medium text-[#FFC629]">{h1Rest.join(" – ")}.</span>}
               </h1>
 
@@ -214,7 +230,7 @@ export default function ServiceClient({ ss, others }: { ss: ResolvedSousServiceC
 
       <WhyChooseUsSection className="bg-gray-50" />
 
-      <TestimonialsSection testimonials={VOLET_INTERVENTIONS} examples className="bg-white" padding="py-10 md:py-14" />
+      <TestimonialsSection testimonials={testimonials} examples className="bg-white" padding="py-10 md:py-14" />
 
       {/* FAQ */}
       <section className="bg-gray-50 py-10 md:py-14" id="faq">
@@ -270,7 +286,7 @@ export default function ServiceClient({ ss, others }: { ss: ResolvedSousServiceC
           <ul className="max-w-7xl mx-auto grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
             {others.map((o) => (
               <li key={o.slug}>
-                <Link href={`/nos-services/${o.slug}`} className="group relative flex h-56 overflow-hidden rounded-2xl">
+                <Link href={`${othersBasePath}/${o.slug}`} className="group relative flex h-56 overflow-hidden rounded-2xl">
                   <Image src={o.image} alt={o.label} fill sizes="(min-width: 1024px) 20vw, (min-width: 640px) 50vw, 100vw" className="object-cover transition-transform duration-700 group-hover:scale-105" />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0E2452]/95 via-[#0E2452]/40 to-transparent" />
                   <div className="relative mt-auto p-5">

@@ -1,15 +1,19 @@
 import { NextResponse } from "next/server"
-import { ACTIVE_DEPARTMENTS, getCitiesByDepartment } from "@/lib/service-config"
+import { ACTIVE_DEPARTMENTS, getCitiesByDepartment, cityHasSousServices } from "@/lib/service-config"
 import { SOUS_SERVICES_VOLET } from "@/lib/sous-services/volet-roulant"
 import { articles } from "@/app/blog/data"
 import { SITE_URL, HOME_DEPARTMENT, cityPath, servicePath, sousServicePath } from "@/lib/site"
 
-const DEBARRAS_SOUS_SERVICES = SOUS_SERVICES_VOLET.map((s) => s.slug)
+const SOUS_SERVICE_SLUGS = SOUS_SERVICES_VOLET.map((s) => s.slug)
 
 type UrlEntry = { loc: string; priority: string; changefreq: string }
 
+// Date de dernière modification du contenu, à changer seulement quand le contenu change vraiment.
+// (Avec la date du jour, Google re-parcourt toutes les pages après chaque déploiement.)
+const SITEMAP_LASTMOD = "2026-10-21"
+
 function toXml(urls: UrlEntry[]): NextResponse {
-  const today = new Date().toISOString().split("T")[0]
+  const today = SITEMAP_LASTMOD
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urls.map((url) => `  <url>
@@ -92,6 +96,15 @@ export async function GET(
     changefreq: isGironde ? "daily" : "weekly",
   }]
 
+  // Prestations du département (/gironde/depannage-volet-roulant)
+  for (const ssSlug of SOUS_SERVICE_SLUGS) {
+    urls.push({
+      loc: `${SITE_URL}/${departmentSlug}/${ssSlug}`,
+      priority: isGironde ? "0.92" : "0.80",
+      changefreq: "weekly",
+    })
+  }
+
   for (const citySlug of Object.keys(getCitiesByDepartment(departmentSlug) ?? {})) {
     const path = cityPath(departmentSlug, citySlug)
     // La page d'accueil (Bordeaux) est déjà dans le sitemap statique
@@ -103,7 +116,8 @@ export async function GET(
       })
     }
 
-    for (const ssSlug of DEBARRAS_SOUS_SERVICES) {
+    if (!cityHasSousServices(departmentSlug, citySlug)) continue
+    for (const ssSlug of SOUS_SERVICE_SLUGS) {
       urls.push({
         loc: `${SITE_URL}${sousServicePath(departmentSlug, citySlug, ssSlug)}`,
         priority: isGironde ? "0.90" : "0.75",

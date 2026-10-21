@@ -11,30 +11,19 @@ import Link from "next/link"
 // Onglets du menu (gauche et droite du logo sur ordinateur, liste complète sur mobile)
 const NAV_LEFT = [
   { href: "/", label: "Accueil" },
-  { href: "/a-propos", label: "À propos" },
-  { href: "/nos-services", label: "Nos services" },
-  { href: "/zone-intervention", label: "Zone d'intervention" },
-  { href: "/devis", label: "Demande de devis" },
+  { href: "/nos-services", label: "Nos prestations" },
+  { href: "/tarifs", label: "Grille tarifaire" },
+  { href: "/estimation", label: "Simulateur de prix" },
+  { href: "/zone-intervention", label: "Zones d'intervention" },
 ]
 const NAV_RIGHT = [
-  { href: "/tarifs", label: "Tarifs" },
   { href: "/temoignages", label: "Avis clients" },
-  { href: "/foire-aux-questions", label: "Questions fréquentes" },
-  { href: "/blog", label: "Blog" },
+  { href: "/a-propos", label: "Qui sommes-nous ?" },
+  { href: "/blog", label: "Conseils pratiques" },
+  { href: "/foire-aux-questions", label: "FAQ" },
   { href: "/contact", label: "Contact" },
 ]
-const NAV_MOBILE = [
-  { href: "/", label: "Accueil" },
-  { href: "/a-propos", label: "À propos" },
-  { href: "/nos-services", label: "Nos services" },
-  { href: "/tarifs", label: "Tarifs" },
-  { href: "/zone-intervention", label: "Zone d'intervention" },
-  { href: "/devis", label: "Demande de devis" },
-  { href: "/temoignages", label: "Avis clients" },
-  { href: "/foire-aux-questions", label: "Questions fréquentes" },
-  { href: "/blog", label: "Blog" },
-  { href: "/contact", label: "Contact" },
-]
+const NAV_MOBILE = [...NAV_LEFT, ...NAV_RIGHT]
 
 interface HeaderProps {
   phoneConfig: { tel: string; display: string }
@@ -85,7 +74,8 @@ export default function Header({ phoneConfig, onContactClick, forceShowHeader }:
       }
 
       const currentScrollY = window.scrollY
-      const isDesktop = window.innerWidth >= 768
+      // Menu complet (masqué au défilement) à partir de 1536 px ; en dessous, bouton MENU toujours visible
+      const isDesktop = window.innerWidth >= 1536
 
       if (!isDesktop) {
         setShowWhiteBand(true)
@@ -128,7 +118,7 @@ export default function Header({ phoneConfig, onContactClick, forceShowHeader }:
       {/* Espace réservé sous le menu fixe : hauteur constante.
           S'il rétrécissait quand la bande blanche se masque, le contenu remonterait,
           le navigateur corrigerait le défilement et le menu se réafficherait en boucle (clignotement). */}
-      <div className="h-[81px] md:h-[141px]" />
+      <div className="h-[81px] md:h-[136px] 2xl:h-[141px]" />
 
       <header className="bg-white fixed top-0 left-0 right-0 z-[9999] font-['Inter',_'Segoe_UI',_system-ui,_sans-serif]">
 
@@ -159,7 +149,7 @@ export default function Header({ phoneConfig, onContactClick, forceShowHeader }:
                       Basé sur <span className="font-bold">{GOOGLE_REVIEW_COUNT} avis</span>
                     </span>
                   ) : (
-                    <Link href="/avis-clients" className="text-sm font-medium opacity-95 hover:underline">
+                    <Link href="/temoignages" className="text-sm font-medium opacity-95 hover:underline">
                       <span className="font-bold">Avis vérifiés</span> sur Google
                     </Link>
                   )}
@@ -186,8 +176,8 @@ export default function Header({ phoneConfig, onContactClick, forceShowHeader }:
         >
           <div className="container mx-auto px-6 py-4">
 
-            {/* Mobile */}
-            <div className="md:hidden flex items-center justify-between w-full gap-2">
+            {/* Mobile et tablette / petit écran (bouton MENU) */}
+            <div className="2xl:hidden flex items-center justify-between w-full gap-2">
               <a href="/" className="flex items-center flex-shrink-0">
                 <Image
                   src="/images/logo-depannage-volet-roulant.png"
@@ -210,8 +200,8 @@ export default function Header({ phoneConfig, onContactClick, forceShowHeader }:
               </Button>
             </div>
 
-            {/* Desktop */}
-            <div className="hidden md:flex items-center justify-between gap-8">
+            {/* Grand écran (1536 px et plus) : 5 onglets de chaque côté du logo */}
+            <div className="hidden 2xl:flex items-center justify-between gap-8">
               <nav className="flex items-center gap-5 text-[15px] font-semibold flex-1 justify-end whitespace-nowrap">
                 {NAV_LEFT.map((item) => <NavLink key={item.href} {...item} active={isActive(item.href)} />)}
               </nav>
@@ -237,8 +227,8 @@ export default function Header({ phoneConfig, onContactClick, forceShowHeader }:
         {/* ── MENU MOBILE ── */}
         {isMobileMenuOpen && (
           <div
-            className="md:hidden fixed inset-x-0 bottom-0 z-[199] flex flex-col"
-            style={{ top: "80px", backgroundImage: "linear-gradient(to right, #0E2452, #0E2452)" }}
+            className="2xl:hidden fixed inset-x-0 bottom-0 top-[80px] md:top-[135px] z-[199] flex flex-col"
+            style={{ backgroundImage: "linear-gradient(to right, #0E2452, #0E2452)" }}
           >
             <nav className="flex-1 flex flex-col justify-between px-4 py-4 overflow-hidden">
 

@@ -1,8 +1,8 @@
 import type { Metadata } from "next"
-import { SITE_URL } from "@/lib/site"
+import { SITE_URL, COMPANY_ADDRESS } from "@/lib/site"
 import { notFound } from "next/navigation"
 import { getPhoneByDepartment } from "@/lib/phone-config"
-import { getDepartmentConfig, getCitiesByDepartment } from "@/lib/service-config"
+import { ACTIVE_DEPARTMENTS, getDepartmentConfig, getCitiesByDepartment } from "@/lib/service-config"
 import DepartmentPageClient from "./client"
 import { getDepartmentFaq } from "@/lib/department-faq"
 
@@ -11,10 +11,10 @@ export const dynamicParams = true
 // qui vide le cache. Chaque page est calculée une seule fois par déploiement.
 export const revalidate = false
 
-// Aucune page pré-générée au build : chaque page est rendue à sa première visite,
-// puis servie depuis le cache Vercel jusqu'au prochain déploiement.
+// Les ~100 pages départements sont pré-générées au build : servies directement par le CDN,
+// sans rendu ni écriture ISR à la première visite
 export async function generateStaticParams() {
-  return []
+  return Object.keys(ACTIVE_DEPARTMENTS).map((departement) => ({ departement }))
 }
 
 export async function generateMetadata({
@@ -97,9 +97,7 @@ export default async function DepartmentPage({
     notFound()
   }
 
-  const phoneConfig = getPhoneByDepartment(
-    departement === "gironde" ? "gironde_debarras" : departement
-  )
+  const phoneConfig = getPhoneByDepartment(departement)
 
   const citiesData = getCitiesByDepartment(departement)
   const cities = Object.entries(citiesData)
@@ -119,6 +117,7 @@ export default async function DepartmentPage({
           "name": "Allo Dépannage Volet",
           "url": SITE_URL,
           "telephone": phoneConfig.display,
+          "address": COMPANY_ADDRESS,
           "areaServed": {
             "@type": "AdministrativeArea",
             "name": deptConfig.name,

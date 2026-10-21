@@ -71,6 +71,3 @@ export const VALID_CITIES = {
   "marais-historique": { name: "Marais Historique (3e-4e)", postalCode: "75003" },
 }
 
-export const CITY_DESCRIPTIONS: { [key: string]: string } = {
-  "paris": "Services de débarras, nettoyage et location de bennes à Paris (75). Intervention rapide dans tous les arrondissements de la capitale.",
-}

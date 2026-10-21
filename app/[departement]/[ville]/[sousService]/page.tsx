@@ -1,8 +1,8 @@
 import type { Metadata } from "next"
-import { SITE_URL } from "@/lib/site"
-import { notFound } from "next/navigation"
-import { getDepartmentConfig, getCityDataByDepartment, getCitiesByDepartment } from "@/lib/service-config"
-import { getPhoneByDepartmentService } from "@/lib/phone-config"
+import { SITE_URL, COMPANY_ADDRESS, cityPath } from "@/lib/site"
+import { notFound, permanentRedirect } from "next/navigation"
+import { getDepartmentConfig, getCityDataByDepartment, getDisplayedDepartmentCities, cityHasSousServices } from "@/lib/service-config"
+import { getPhoneByDepartment } from "@/lib/phone-config"
 import { getSousServiceBySlug, resolveSousServiceConfig } from "@/lib/sous-services/volet-roulant"
 import ClientVillePage from "../client"
 import { redirectToKnownCity } from "@/lib/city-redirect"
@@ -78,9 +78,11 @@ export default async function Page({ params }: { params: Params }) {
 
   if (deptConfig && !cityData) redirectToKnownCity(departement, villeSlug, ssSlug)
   if (!deptConfig || !cityData || !ssConfig) notFound()
+  // Petites villes : pas de page sous-service, renvoi vers la page ville
+  if (!cityHasSousServices(departement, villeSlug)) permanentRedirect(cityPath(departement, villeSlug))
 
-  const phoneConfig = getPhoneByDepartmentService(departement, "debarras-maison")
-  const departmentCities = getCitiesByDepartment(departement)
+  const phoneConfig = getPhoneByDepartment(departement)
+  const departmentCities = getDisplayedDepartmentCities(departement)
 
   const pageUrl = `${SITE_URL}/${departement}/${villeSlug}/${ssSlug}`
   const resolved = resolveSousServiceConfig(ssConfig, cityData.name, cityData.postalCode, deptConfig.displayName, pageUrl)
@@ -100,6 +102,7 @@ export default async function Page({ params }: { params: Params }) {
       "name": "Allo Dépannage Volet",
       "url": "https://www.allo-depannage-volet.fr",
       "telephone": phoneConfig.display,
+      "address": COMPANY_ADDRESS,
       "priceRange": "€€",
     },
     "areaServed": {

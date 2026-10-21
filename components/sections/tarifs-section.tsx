@@ -1,4 +1,4 @@
-// Section « Combien coûte un débarras ? » (tarifs généraux), partagée par les pages ville et département
+// Section « Combien coûte un dépannage de volet roulant ? » (tarifs généraux), partagée par les pages ville et département
 import Link from "next/link"
 import { Calculator, ChevronRight } from "lucide-react"
 

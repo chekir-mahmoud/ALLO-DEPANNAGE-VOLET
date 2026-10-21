@@ -16,15 +16,12 @@ export default function MentionsLegales() {
         <section>
           <h2>Informations légales</h2>
           <p>
-            <strong>Entreprise :</strong> ALLO DÉPANNAGE VOLET<br />
-            <strong>Forme juridique :</strong> SARL<br />
-            <strong>Siège social :</strong> 77 rue Calixte Camelle, 33130 Bègles, France<br />
-            <strong>SIREN :</strong> 790 993 976<br />
-            <strong>SIRET (siège social) :</strong> 790 993 976 00022<br />
-            <strong>RCS :</strong> Bordeaux 790 993 976<br />
-            <strong>Numéro de TVA intracommunautaire :</strong> FR33790993976<br />
-            <strong>Date de création :</strong> 1<sup>er</sup> février 2013<br />
-            <strong>Dirigeant :</strong> Kévin Azaie<br />
+            <strong>Nom commercial :</strong> ALLO DÉPANNAGE VOLET<br />
+            <strong>Raison sociale :</strong> Monsieur Jimmy Ziegler (Entrepreneur individuel)<br />
+            <strong>Numéro SIREN :</strong> 528 225 154<br />
+            <strong>Numéro SIRET :</strong> 528 225 154 00020 (siège social)<br />
+            <strong>Adresse :</strong> 202 Avenue de Soubeyran, 33460 Arsac (Gironde), France<br />
+            <strong>Date de création :</strong> 18 mai 2020<br />
             <strong>Téléphone :</strong> {phoneConfig.display}<br />
             <strong>Email :</strong> contact@allo-depannage-volet.fr
           </p>
@@ -33,7 +30,7 @@ export default function MentionsLegales() {
         <section>
           <h2>Directeur de la publication</h2>
           <p>
-            Le directeur de la publication du site www.allo-depannage-volet.fr est Kévin Azaie, dirigeant de ALLO DÉPANNAGE VOLET.
+            Le directeur de la publication du site www.allo-depannage-volet.fr est Monsieur Jimmy Ziegler, entrepreneur individuel exerçant sous le nom commercial ALLO DÉPANNAGE VOLET.
           </p>
         </section>
 

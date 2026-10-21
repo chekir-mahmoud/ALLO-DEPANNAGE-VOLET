@@ -1,11 +1,12 @@
 import type { Metadata } from "next"
 import { SITE_URL, cityPath } from "@/lib/site"
 import ClientVillePage from "./client"
-import { getPhoneByDepartmentService } from "@/lib/phone-config"
+import { getPhoneByDepartment } from "@/lib/phone-config"
 import {
   getDepartmentConfig,
   getCityDataByDepartment,
-  getCitiesByDepartment,
+  getDisplayedDepartmentCities,
+  cityHasSousServices,
   type CityData,
   type DepartmentServiceConfig,
 } from "@/lib/service-config"
@@ -99,8 +100,8 @@ export default function CityPage({ departement, villeSlug }: { departement: stri
     notFound()
   }
 
-  const phoneConfig = getPhoneByDepartmentService(departement, "debarras-maison")
-  const departmentCities = getCitiesByDepartment(departement)
+  const phoneConfig = getPhoneByDepartment(departement)
+  const departmentCities = getDisplayedDepartmentCities(departement)
 
   return (
     <ClientVillePage
@@ -110,6 +111,7 @@ export default function CityPage({ departement, villeSlug }: { departement: stri
       departmentSlug={departement}
       departmentConfig={deptConfig}
       departmentCities={departmentCities}
+      hasSousServices={cityHasSousServices(departement, villeSlug)}
     />
   )
 }
