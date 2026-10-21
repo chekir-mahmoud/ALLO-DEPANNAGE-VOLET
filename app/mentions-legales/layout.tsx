@@ -3,8 +3,8 @@ import { pageMetadata } from "@/lib/seo"
 import BreadcrumbSchema from "@/components/breadcrumb-schema"
 
 export const metadata = pageMetadata({
-  title: "Mentions légales | Débarras Proximité",
-  description: "Mentions légales du site Débarras Proximité : éditeur, hébergeur, propriété intellectuelle et conditions d'utilisation du site.",
+  title: "Mentions légales | Allo Dépannage Volet",
+  description: "Mentions légales du site Allo Dépannage Volet : éditeur, hébergeur, propriété intellectuelle et conditions d'utilisation du site.",
   path: "/mentions-legales",
 })
 

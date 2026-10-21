@@ -1,4 +1,4 @@
-// Section « Nos formules » (gratuit / remisé / sur devis), partagée
+// Section « Nos formules » (dépannage / réparation et motorisation / entretien), partagée
 import { CheckCircle2, ChevronRight } from "lucide-react"
 
 export default function FormulesSection({
@@ -21,39 +21,39 @@ export default function FormulesSection({
           <div className="mb-10">
             <p className="mb-3 inline-flex items-center gap-3 text-sm font-semibold uppercase tracking-[0.16em] text-[#0E2452]"><span className="h-1 w-8 rounded-full bg-[#FFC629]" aria-hidden="true" />Nos formules</p>
             <h2 className="text-3xl md:text-4xl font-bold text-[#0E2452] mb-3">
-              Nos formules de débarras {place}
+              Nos formules {place}
             </h2>
             <p className="text-gray-600 text-lg max-w-3xl">
-              Chaque situation est unique : la valeur de vos objets détermine le prix de votre débarras.
+              Dépannage ponctuel, réparation durable ou entretien régulier : choisissez la formule adaptée à votre besoin.
             </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 md:gap-6 lg:gap-8 items-stretch pt-4">
             {[
               {
-                name: "Débarras gratuit",
-                price: "Gratuit, voire rémunéré",
-                desc: "Vos biens ont de la valeur ? Nous les rachetons : le débarras peut être entièrement gratuit, voire vous rapporter de l'argent.",
-                items: ["Estimation gratuite sur place", "Rachat de meubles, antiquités et objets", "Valeur déduite du débarras", "Vous pouvez être rémunéré"],
-                ideal: "Successions avec mobilier ancien, maisons meublées, collections, électroménager récent.",
-                cta: "Demander une estimation",
+                name: "Dépannage",
+                price: "Dès 89 €",
+                desc: "Votre volet est bloqué ou ne répond plus ? Un technicien intervient rapidement pour le débloquer et le remettre en service.",
+                items: ["Diagnostic sur place", "Déblocage du volet", "Pièces courantes dans le véhicule", "Intervention d'urgence 7j/7"],
+                ideal: "Volet bloqué ouvert ou fermé, sangle cassée, tablier sorti des coulisses.",
+                cta: "Demander un dépannage",
                 featured: false,
               },
               {
-                name: "Débarras remisé",
-                price: "Tarif réduit",
-                desc: "Une partie de vos biens a de la valeur ? Nous la rachetons et déduisons cette somme du coût total du débarras.",
-                items: ["Réduction directe sur le devis", "Tri et valorisation des objets", "Rachat partiel du contenu", "Débarras complet assuré"],
-                ideal: "Appartements à vider, caves avec objets valorisables, débarras mixtes.",
+                name: "Réparation et motorisation",
+                price: "Prix fixe annoncé",
+                desc: "Moteur en panne, lames abîmées ou volet manuel à motoriser : un devis détaillé avant intervention, sans surprise.",
+                items: ["Devis détaillé gratuit", "Remplacement de moteur ou de tablier", "Motorisation des volets manuels", "Pièces et main-d'œuvre garanties"],
+                ideal: "Moteur hors service, lames cassées, volets à motoriser ou à centraliser.",
                 cta: "Obtenir mon devis gratuit",
                 featured: true,
               },
               {
-                name: "Débarras sur devis",
-                price: "Prix fixe annoncé",
-                desc: "Pour les débarras sans objets valorisables. Un tarif transparent, basé sur le volume, l'accès et le type de déchets.",
-                items: ["Devis détaillé gratuit", "Prix fixe, sans surprise", "Évacuation de tous types de déchets", "Nettoyage en option"],
-                ideal: "Encombrants, garages, greniers, locaux avec beaucoup de déchets ou d'objets sans valeur.",
+                name: "Contrat d'entretien",
+                price: "Dès 99 €/an",
+                desc: "Une visite annuelle pour contrôler vos volets, rideaux métalliques ou stores et anticiper les pannes.",
+                items: ["Contrôle complet du mécanisme", "Nettoyage des coulisses", "Réglage du moteur et des fins de course", "Conseils personnalisés"],
+                ideal: "Copropriétés, commerces avec rideau métallique, maisons équipées de nombreux volets.",
                 cta: "Demander mon devis",
                 featured: false,
               },

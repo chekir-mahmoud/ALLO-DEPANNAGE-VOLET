@@ -3,8 +3,7 @@ import { SITE_URL } from "@/lib/site"
 import { notFound } from "next/navigation"
 import { getDepartmentConfig, getCityDataByDepartment, getCitiesByDepartment } from "@/lib/service-config"
 import { getPhoneByDepartmentService } from "@/lib/phone-config"
-import { getTestimonialsByServiceAndDepartment } from "@/lib/testimonials"
-import { getSousServiceBySlug, resolveSousServiceConfig } from "@/lib/sous-services/debarras-maison"
+import { getSousServiceBySlug, resolveSousServiceConfig } from "@/lib/sous-services/volet-roulant"
 import ClientVillePage from "../client"
 import { redirectToKnownCity } from "@/lib/city-redirect"
 
@@ -26,7 +25,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
     return { title: "Page non trouvée", description: "Cette page n'existe pas." }
   }
 
-  const ogImage = `https://www.debarras-proximite.fr${ssConfig.heroImage}`
+  const ogImage = `https://www.allo-depannage-volet.fr${ssConfig.ogImage ?? ssConfig.heroImage}`
 
   return {
     title: ssConfig.title(cityData.name, cityData.postalCode),
@@ -35,8 +34,8 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
       ...ssConfig.knowsAbout.map((k) => `${k} ${cityData.name}`),
       `${ssConfig.label} ${cityData.name}`,
       `${ssConfig.label} ${cityData.postalCode}`,
-      `débarras ${cityData.name}`,
-      `débarras maison ${cityData.name}`,
+      `dépannage volet roulant ${cityData.name}`,
+      `réparation volet roulant ${cityData.name}`,
     ],
     alternates: {
       canonical: `/${departement}/${villeSlug}/${ssSlug}`,
@@ -45,8 +44,8 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
       title: ssConfig.title(cityData.name, cityData.postalCode),
       description: ssConfig.metaDescription(cityData.name, deptConfig.displayName),
       url: `${SITE_URL}/${departement}/${villeSlug}/${ssSlug}`,
-      siteName: "Débarras Proximité",
-      images: [{ url: ogImage, width: 1200, height: 630, alt: `${ssConfig.label} à ${cityData.name} par Débarras Proximité` }],
+      siteName: "Allo Dépannage Volet",
+      images: [{ url: ogImage, alt: `${ssConfig.label} à ${cityData.name} par Allo Dépannage Volet` }],
       locale: "fr_FR",
       type: "website",
     },
@@ -81,7 +80,6 @@ export default async function Page({ params }: { params: Params }) {
   if (!deptConfig || !cityData || !ssConfig) notFound()
 
   const phoneConfig = getPhoneByDepartmentService(departement, "debarras-maison")
-  const testimonials = getTestimonialsByServiceAndDepartment("debarras-maison", departement)
   const departmentCities = getCitiesByDepartment(departement)
 
   const pageUrl = `${SITE_URL}/${departement}/${villeSlug}/${ssSlug}`
@@ -99,8 +97,8 @@ export default async function Page({ params }: { params: Params }) {
     "serviceType": resolved.label,
     "provider": {
       "@type": "LocalBusiness",
-      "name": "Débarras Proximité",
-      "url": "https://www.debarras-proximite.fr",
+      "name": "Allo Dépannage Volet",
+      "url": "https://www.allo-depannage-volet.fr",
       "telephone": phoneConfig.display,
       "priceRange": "€€",
     },
@@ -140,10 +138,8 @@ export default async function Page({ params }: { params: Params }) {
         cityData={{ ...cityData, population: cityData.population ?? "" }}
         phoneConfig={phoneConfig}
         initialVilleSlug={villeSlug}
-        serviceSlug="debarras-maison"
         departmentSlug={departement}
         departmentConfig={deptConfig}
-        testimonials={testimonials}
         departmentCities={departmentCities}
         sousService={resolved}
       />

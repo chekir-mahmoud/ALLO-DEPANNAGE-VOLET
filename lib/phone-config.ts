@@ -33,22 +33,22 @@ function makeDept(
 }
 
 export const PARTNER_PHONE: PhoneConfig = {
-  display: "07 75 22 90 02",
-  tel: "+33775229002",
+  display: "06 14 46 98 88",
+  tel: "+33614469888",
   department: "National",
 }
 
 export const DEFAULT_PHONE: PhoneConfig = {
-  display: "07 75 22 90 02",
-  tel: "+33775229002",
+  display: "06 14 46 98 88",
+  tel: "+33614469888",
   department: "National",
 }
 
-const D = "07 75 22 90 02"
-const T = "+33775229002"
+const D = "06 14 46 98 88"
+const T = "+33614469888"
 
 // Exceptions
-const DEBARRAS_SW = { display: "07 75 22 90 02", tel: "+33775229002" }
+const DEBARRAS_SW = { display: "06 14 46 98 88", tel: "+33614469888" }
 
 // Pages (service + département) où le bouton flottant WhatsApp remplace l'email
 const WHATSAPP_DEPARTMENTS_BY_SERVICE: Record<string, string[]> = {
@@ -58,11 +58,11 @@ const WHATSAPP_DEPARTMENTS_BY_SERVICE: Record<string, string[]> = {
 export function hasWhatsappButton(serviceSlug: string, departmentSlug?: string): boolean {
   return !!departmentSlug && (WHATSAPP_DEPARTMENTS_BY_SERVICE[serviceSlug] ?? []).includes(departmentSlug)
 }
-const ALSACE_MOSELLE = { display: "07 75 22 90 02", tel: "+33775229002" }
+const ALSACE_MOSELLE = { display: "06 14 46 98 88", tel: "+33614469888" }
 
 export const DEPARTMENT_PHONE_CONFIG: Record<string, DeptConfig> = {
 
-  // ── Charente group — debarras-maison → 07 75 22 90 02 ──────────────────────
+  // ── Charente group — debarras-maison → 06 14 46 98 88 ──────────────────────
 
   "charente":          makeDept(D, T, "Charente (16)",          { "debarras-maison": DEBARRAS_SW }),
   "charente-maritime": makeDept(D, T, "Charente-Maritime (17)", { "debarras-maison": DEBARRAS_SW }),
@@ -71,13 +71,13 @@ export const DEPARTMENT_PHONE_CONFIG: Record<string, DeptConfig> = {
   "landes":            makeDept(D, T, "Landes (40)",            { "debarras-maison": DEBARRAS_SW }),
   "isere":             makeDept(D, T, "Isère (38)",             { "debarras-maison": DEBARRAS_SW }),
 
-  // ── Alsace-Moselle group — debarras-maison → 07 75 22 90 02
+  // ── Alsace-Moselle group — debarras-maison → 06 14 46 98 88
 
   "bas-rhin":  makeDept(D, T, "Bas-Rhin (67)",  { "debarras-maison": ALSACE_MOSELLE }),
   "haut-rhin": makeDept(D, T, "Haut-Rhin (68)", { "debarras-maison": ALSACE_MOSELLE }),
   "moselle":   makeDept(D, T, "Moselle (57)",   { "debarras-maison": ALSACE_MOSELLE }),
 
-  // ── All other departments — default 07 75 22 90 02 ─────────────────────────
+  // ── All other departments — default 06 14 46 98 88 ─────────────────────────
 
   "ain":                        makeDept(D, T, "Ain (01)"),
   "aisne":                      makeDept(D, T, "Aisne (02)"),

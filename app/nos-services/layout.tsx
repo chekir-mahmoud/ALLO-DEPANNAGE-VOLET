@@ -2,8 +2,8 @@ import type React from "react"
 import { pageMetadata } from "@/lib/seo"
 
 export const metadata = pageMetadata({
-  title: "Nos services de débarras partout en France | Débarras Proximité",
-  description: "Nos prestations de débarras partout en France : maison, succession, cave, grenier, garage, fin de chantier et Diogène. Devis gratuit le jour même.",
+  title: "Nos services : volets roulants, rideaux et stores | Allo Dépannage Volet",
+  description: "Dépannage, réparation, installation et motorisation de volets roulants, rideaux métalliques et stores partout en France, 7j/7. Toutes marques, devis gratuit.",
   path: "/nos-services",
 })
 

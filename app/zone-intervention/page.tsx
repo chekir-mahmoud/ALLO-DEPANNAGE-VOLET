@@ -6,27 +6,23 @@ import Header from "@/components/header"
 import Footer from "@/components/Footer"
 import QuoteForm from "@/components/quote-form"
 import { DEFAULT_PHONE } from "@/lib/phone-config"
-import { Building2, CheckCircle2, ChevronDown, ChevronRight, Clock, FileText, MapPin, Phone, ShieldCheck, Star, Users, BadgeEuro } from "lucide-react"
+import { Building2, CheckCircle2, ChevronDown, ChevronRight, Clock, FileText, MapPin, Phone, ShieldCheck, Star, Wrench, BadgeEuro } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { ACTIVE_DEPARTMENTS } from "@/lib/departments"
 import { departmentPath } from "@/lib/site"
 import FloatingButtons from "@/components/FloatingButtons"
 import TestimonialsSection from "@/components/sections/testimonials-section"
-import { DEBARRAS_MAISON_TESTIMONIALS } from "@/lib/testimonials/service-testimonials"
+import { VOLET_INTERVENTIONS } from "@/lib/testimonials/exemples-volet-roulant"
 
 // Questions fréquentes sur la zone d'intervention (affichées et transmises à Google)
 const ZONE_FAQ = [
-  { question: `Intervenez-vous dans ma commune ?`, answer: `Nous intervenons dans toute la France métropolitaine, des grandes villes aux petites communes rurales, ainsi qu'en outre-mer. Si votre commune n'apparaît pas dans nos pages, contactez-nous : nous vous confirmons la disponibilité et vous envoyons un devis gratuit le jour même.` },
-  { question: `Y a-t-il des frais de déplacement ?`, answer: `L'estimation à domicile est gratuite. Le devis que nous vous remettons détaille l'ensemble des frais (main-d'œuvre, transport et traitement des déchets) : le prix validé est celui que vous payez, sans supplément caché.` },
-  { question: `Intervenez-vous en outre-mer ?`, answer: `Oui, nous intervenons également en Guadeloupe, en Martinique, en Guyane et à La Réunion. Les délais peuvent varier selon la commune : nous vous les précisons dès la demande de devis.` },
-  { question: `Quel est le délai d'intervention ?`, answer: `Nous intervenons généralement sous 24 à 48 heures après validation du devis, partout en France. Pour une urgence (succession, vente imminente, fin de bail), nous faisons le maximum pour intervenir encore plus vite.` },
-  { question: `Le service est-il le même partout en France ?`, answer: `Oui. Où que vous soyez, vous bénéficiez de la même méthode : estimation gratuite, tri soigneux, dons et recyclage des objets, logement rendu vide et propre, et un interlocuteur unique du devis à la fin du chantier.` },
+  { question: `Intervenez-vous dans ma commune ?`, answer: `Nous intervenons dans toute la France métropolitaine, des grandes villes aux petites communes rurales, ainsi qu'en outre-mer. Si votre commune n'apparaît pas dans nos pages, contactez-nous : nous vous confirmons la disponibilité d'un technicien et le délai d'intervention.` },
+  { question: `Y a-t-il des frais de déplacement ?`, answer: `Le déplacement et le diagnostic sont proposés dès 69 €, montant annoncé avant l'intervention. Le devis détaille ensuite les pièces et la main-d'œuvre : le prix validé est celui que vous payez, sans supplément caché.` },
+  { question: `Intervenez-vous en urgence le week-end ?`, answer: `Oui. Notre service de dépannage fonctionne 7j/7, y compris le week-end et les jours fériés, pour les volets roulants bloqués et les rideaux métalliques de commerces.` },
+  { question: `Intervenez-vous en outre-mer ?`, answer: `Oui, nous intervenons également en Guadeloupe, en Martinique, en Guyane et à La Réunion. Les délais peuvent varier selon la commune : nous vous les précisons dès votre demande.` },
+  { question: `Le service est-il le même partout en France ?`, answer: `Oui. Où que vous soyez, vous bénéficiez de la même méthode : diagnostic précis, devis clair avant toute intervention, réparation sur toutes les marques, pièces et main-d'œuvre garanties.` },
 ]
-
-// Avis affichés avec des villes réparties dans toute la France
-const NATIONAL_CITIES = ["Paris", "Lyon", "Marseille", "Toulouse", "Nantes", "Lille", "Strasbourg", "Montpellier", "Rennes", "Nice"]
-const NATIONAL_TESTIMONIALS = DEBARRAS_MAISON_TESTIMONIALS.map((t, i) => ({ ...t, location: NATIONAL_CITIES[i % NATIONAL_CITIES.length] }))
 
 export default function ZonesInterventionPage() {
   const phoneConfig = DEFAULT_PHONE
@@ -44,13 +40,13 @@ export default function ZonesInterventionPage() {
 
       {/* HERO — même style que la page À propos */}
       <section
-        aria-label="Zone d'intervention de Débarras Proximité"
+        aria-label="Zone d'intervention de Allo Dépannage Volet"
         className="relative isolate overflow-hidden bg-[#0E2452] text-white"
         id="hero"
       >
         <Image
-          src="/images/debarras-gratuit-768x512.jpg"
-          alt="Équipe Débarras Proximité en intervention de débarras partout en France"
+          src="/images/volet/rideau-metallique-depannage.jpg"
+          alt="Technicien Allo Dépannage Volet en intervention partout en France"
           fill
           priority
           className="object-cover object-center opacity-30"
@@ -63,11 +59,11 @@ export default function ZonesInterventionPage() {
           </p>
 
           <h1 className="text-4xl font-bold leading-tight md:text-6xl lg:min-h-[2lh] xl:min-h-0">
-            Débarras partout en <span className="text-[#FFC629]">France</span>
+            Dépannage partout en <span className="text-[#FFC629]">France</span>
           </h1>
 
-          <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300 md:text-xl md:min-h-24 text-justify hyphens-auto" lang="fr">
-            Grandes villes, villes moyennes ou petites communes rurales : nos équipes interviennent dans toute la France métropolitaine et en outre-mer, avec le même niveau de service et un devis gratuit le jour même.
+          <p className="mt-6 text-lg leading-8 text-slate-300 md:text-xl md:min-h-24 text-justify hyphens-auto" lang="fr">
+            Grandes villes, villes moyennes ou petites communes rurales : nos techniciens dépannent, réparent et motorisent vos volets roulants dans toute la France métropolitaine et en outre-mer, 7j/7.
           </p>
 
           <div className="mt-9 flex flex-col gap-4 sm:flex-row sm:gap-6">
@@ -92,7 +88,7 @@ export default function ZonesInterventionPage() {
 
         <div className="relative mx-auto grid max-w-7xl grid-cols-2 gap-3 border-t border-white/15 px-5 py-6 lg:grid-cols-4 md:px-8">
           <div className="flex items-center gap-3"><CheckCircle2 className="h-5 w-5 text-[#FFC629]" /><span className="text-sm text-slate-200">Devis 100% gratuit</span></div>
-          <div className="flex items-center gap-3"><ShieldCheck className="h-5 w-5 text-[#FFC629]" /><span className="text-sm text-slate-200">Équipe assurée</span></div>
+          <div className="flex items-center gap-3"><Clock className="h-5 w-5 text-[#FFC629]" /><span className="text-sm text-slate-200">Dépannage 7j/7</span></div>
           <div className="flex items-center gap-3"><Star className="h-5 w-5 fill-[#FFC629] text-[#FFC629]" /><span className="text-sm text-slate-200">4,8/5 par nos clients</span></div>
           <div className="flex items-center gap-3"><BadgeEuro className="h-5 w-5 text-[#FFC629]" /><span className="text-sm text-slate-200">Tarifs transparents</span></div>
         </div>
@@ -106,7 +102,7 @@ export default function ZonesInterventionPage() {
               <p className="mb-3 inline-flex items-center gap-3 text-sm font-semibold uppercase tracking-[0.16em] text-[#0E2452]"><span className="h-1 w-8 rounded-full bg-[#FFC629]" aria-hidden="true" />Présence nationale</p>
               <h2 className="text-3xl md:text-4xl font-bold text-[#0E2452] mb-3">Les départements que nous desservons</h2>
               <p className="text-gray-600 text-lg max-w-3xl">
-                Choisissez votre département pour découvrir les villes où nous intervenons et nos prestations de débarras.
+                Choisissez votre département pour découvrir les villes où nous intervenons et nos prestations de volets roulants.
               </p>
             </div>
 
@@ -115,7 +111,7 @@ export default function ZonesInterventionPage() {
               {[
                 { Icon: MapPin, val: `${departments.length}`, label: "Départements couverts" },
                 { Icon: Building2, val: "5 500+", label: "Communes desservies" },
-                { Icon: Clock, val: "24/48h", label: "Délai d'intervention" },
+                { Icon: Clock, val: "7j/7", label: "Dépannage d'urgence" },
                 { Icon: Star, val: "4,8/5", label: "Note Google (480 avis)" },
               ].map(({ Icon, val, label }) => (
                 <li key={label} className="flex flex-col items-center gap-3 rounded-2xl border border-gray-200 bg-gray-50 px-3 py-5 text-center sm:flex-row sm:gap-4 sm:p-5 sm:text-left">
@@ -164,10 +160,10 @@ export default function ZonesInterventionPage() {
             </div>
             <ul className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
               {[
-                { Icon: Users, title: "Des équipes proches de vous", text: "Des intervenants qui connaissent votre secteur et se déplacent rapidement." },
-                { Icon: FileText, title: "Le même devis gratuit", text: "Une estimation gratuite et un devis clair, établi le jour même, partout." },
-                { Icon: ShieldCheck, title: "Aucun frais caché", text: "Main-d'œuvre, transport et traitement des déchets inclus dans le devis." },
-                { Icon: Clock, title: "Intervention sous 24/48h", text: "Un délai rapide après validation du devis, y compris pour les urgences." },
+                { Icon: Wrench, title: "Des techniciens proches de vous", text: "Des techniciens qualifiés qui connaissent votre secteur et se déplacent rapidement." },
+                { Icon: FileText, title: "Le même devis gratuit", text: "Un diagnostic précis et un devis clair, remis avant toute intervention, partout." },
+                { Icon: ShieldCheck, title: "Aucun frais caché", text: "Déplacement, pièces et main-d'œuvre détaillés dans le devis." },
+                { Icon: Clock, title: "Dépannage d'urgence 7j/7", text: "Volet bloqué ou rideau coincé : intervention rapide, y compris le week-end." },
               ].map(({ Icon, title, text }) => (
                 <li key={title} className="flex items-start gap-4 rounded-2xl border border-gray-200 bg-white p-6">
                   <span className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-[#0E2452]">
@@ -184,7 +180,7 @@ export default function ZonesInterventionPage() {
         </div>
       </section>
 
-      <TestimonialsSection testimonials={NATIONAL_TESTIMONIALS} className="bg-white" padding="py-10 md:py-14" />
+      <TestimonialsSection testimonials={VOLET_INTERVENTIONS} examples className="bg-white" padding="py-10 md:py-14" />
 
       {/* FAQ zone d'intervention */}
       <section className="bg-gray-50 py-10 md:py-14" id="faq-zone">
@@ -230,7 +226,7 @@ export default function ZonesInterventionPage() {
                 </span>
                 <h3 className="mb-1 text-lg font-bold md:text-xl">Vous ne trouvez pas votre département ?</h3>
                 <p className="text-sm leading-relaxed text-slate-300">
-                  Contactez-nous : nous intervenons dans toute la France et vous envoyons un devis gratuit le jour même.
+                  Contactez-nous : nos techniciens interviennent dans toute la France, 7j/7, avec un devis gratuit avant toute intervention.
                 </p>
               </div>
               <Button

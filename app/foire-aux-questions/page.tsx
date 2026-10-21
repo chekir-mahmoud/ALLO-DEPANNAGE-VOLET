@@ -9,7 +9,7 @@ import Header from "@/components/header"
 import Footer from "@/components/Footer"
 import QuoteForm from "@/components/quote-form"
 import FloatingButtons from "@/components/FloatingButtons"
-import { Phone, ChevronDown, Package, Euro, Calendar, Shield, UserPlus, DollarSign, Laptop, TrendingUp, FileText, CheckCircle2, ShieldCheck, Star, BadgeEuro } from "lucide-react"
+import { Phone, ChevronDown, Wrench, Zap, MapPin, Euro, DollarSign, Clock, FileText, CheckCircle2, ShieldCheck, Star, BadgeEuro } from "lucide-react"
 
 export default function FAQPage() {
   const phoneConfig = DEFAULT_PHONE // ← Ajoutez cette ligne
@@ -17,82 +17,80 @@ export default function FAQPage() {
 
   // Icônes mapping
   const iconMap: { [key: string]: React.ComponentType<{ className?: string; strokeWidth?: number }> } = {
-    Package,
+    Wrench,
+    Zap,
+    MapPin,
     Euro,
-    Calendar,
-    Shield,
-    UserPlus,
     DollarSign,
-    Laptop,
-    TrendingUp,
+    ShieldCheck,
   }
 
   const faqData = {
     clients: {
-      title: "Tout savoir sur nos services de débarras",
-      subtitle: "Débarras de maison, d'appartement, de cave ou de succession : nos réponses sur nos services, le tri de vos objets et notre zone d'intervention partout en France.",
+      title: "Tout savoir sur nos interventions",
+      subtitle: "Dépannage, réparation, motorisation, installation, rideaux métalliques et stores : nos réponses sur nos prestations et notre zone d'intervention partout en France.",
       categories: [
         {
-          id: "services",
-          title: "Nos prestations de débarras",
-          icon: "Package",
+          id: "depannage",
+          title: "Dépannage et réparation",
+          icon: "Wrench",
           subcategories: [
             {
-              id: "services-disponibles",
-              title: "Types de débarras",
+              id: "depannage-details",
+              title: "Pannes et réparations",
               faqs: [
                 {
-                  question: "Quels types de débarras réalisez-vous ?",
-                  answer: "Nous réalisons tous les débarras : maison, appartement, cave, grenier, garage, dépendances, locaux professionnels et fins de chantier. Nous intervenons aussi pour les débarras après décès, les vide-maisons avant une vente ou un déménagement, et les situations de syndrome de Diogène. Chaque chantier est traité avec discrétion et efficacité.",
+                  question: "Mon volet roulant est bloqué : que faire ?",
+                  answer: "Ne forcez pas sur la sangle, la manivelle ou la commande. Pour un volet électrique, vérifiez le disjoncteur et la pile de la télécommande, puis attendez 15 à 30 minutes si le volet a été manœuvré plusieurs fois de suite. Si le volet reste bloqué, contactez-nous : un technicien intervient 7j/7.",
                 },
                 {
-                  question: "Comment se passe un débarras de maison après un décès ?",
-                  answer: "Le débarras de succession est l'une de nos spécialités. Nous intervenons avec respect, mettons de côté les papiers, photos et souvenirs que la famille souhaite garder, et pouvons coordonner l'intervention avec le notaire, les héritiers ou l'agence immobilière. Les objets de valeur peuvent être rachetés pour alléger le coût.",
+                  question: "Intervenez-vous en urgence le week-end ?",
+                  answer: "Oui. Notre service de dépannage fonctionne 7j/7, y compris le week-end et les jours fériés, pour les volets bloqués en position ouverte ou fermée et les rideaux métalliques de commerces.",
                 },
                 {
-                  question: "Proposez-vous un débarras en urgence ?",
-                  answer: "Oui. Pour une vente immobilière imminente, une fin de bail ou une remise des clés, nous organisons une intervention rapide, parfois le jour même selon nos disponibilités dans votre secteur. Appelez-nous pour connaître le délai le plus court possible.",
+                  question: "Réparez-vous toutes les marques de volets roulants ?",
+                  answer: "Oui. Nous intervenons sur toutes les marques de volets et de moteurs : Somfy, Bubendorff, Profalux, Simu, Nice, Franciaflex et la plupart des autres fabricants, sur les volets manuels comme électriques.",
                 },
                 {
-                  question: "Intervenez-vous pour un débarras de syndrome de Diogène ?",
-                  answer: "Oui. Nos équipes sont formées aux logements très encombrés ou insalubres. Nous intervenons sans jugement et en toute discrétion : tri, évacuation complète, puis désinfection et remise en état si nécessaire, en lien avec la famille, le bailleur ou les services sociaux.",
+                  question: "Faut-il remplacer tout le volet quand une lame est cassée ?",
+                  answer: "Non. Une à trois lames abîmées se remplacent individuellement par des lames de même profil et de même couleur. Le remplacement du tablier complet n'est conseillé que si de nombreuses lames sont endommagées ou si le PVC est devenu cassant.",
                 },
                 {
-                  question: "Dois-je être présent le jour du débarras ?",
-                  answer: "Non, votre présence n'est pas obligatoire. Vous pouvez nous confier les clés après validation du devis : notre équipe est assurée et de confiance. Nous vous conseillons simplement d'être joignable en début et en fin de chantier pour vos dernières consignes.",
+                  question: "Le dépannage est-il réalisé en une seule visite ?",
+                  answer: "Dans la grande majorité des cas, oui : nos véhicules transportent les pièces les plus courantes (sangles, enrouleurs, treuils, attaches, lames). Si une pièce spécifique doit être commandée, le volet est mis en sécurité en attendant la réparation définitive.",
                 },
               ],
             },
           ],
         },
         {
-          id: "tri",
-          title: "Tri, dons et recyclage des objets",
-          icon: "Shield",
+          id: "prestations",
+          title: "Motorisation, installation, rideaux et stores",
+          icon: "Zap",
           subcategories: [
             {
-              id: "tri-details",
-              title: "Que deviennent vos objets ?",
+              id: "prestations-details",
+              title: "Nos autres prestations",
               faqs: [
                 {
-                  question: "Que deviennent les meubles et objets après un débarras ?",
-                  answer: "Tout est trié sur place. Les objets en bon état sont donnés à des associations et recycleries ou revendus, les matériaux recyclables partent dans les filières adaptées, et le reste est déposé en déchetterie agréée. Cette démarche éco-responsable limite les déchets et peut réduire le prix de votre débarras.",
+                  question: "Peut-on motoriser un volet roulant manuel ?",
+                  answer: "Oui, dans la grande majorité des cas. Un moteur tubulaire remplace la sangle ou la manivelle, sans changer le coffre ni le tablier s'ils sont en bon état. Le moteur peut être filaire, radio avec télécommande ou solaire, sans raccordement électrique.",
                 },
                 {
-                  question: "Rachetez-vous les meubles anciens et objets de valeur ?",
-                  answer: "Oui. Avant l'intervention, nous estimons gratuitement les meubles, antiquités, bibelots et objets de collection. Leur valeur est déduite du prix du débarras et peut même le couvrir entièrement.",
+                  question: "Mon moteur ne répond plus : faut-il le changer ?",
+                  answer: "Pas forcément. L'alimentation, la commande, la protection thermique ou le réglage des fins de course peuvent être en cause. Le technicien vérifie chaque point et ne remplace le moteur que s'il est réellement hors service.",
                 },
                 {
-                  question: "Puis-je garder certains objets ou documents ?",
-                  answer: "Bien sûr. Indiquez-nous ce que vous souhaitez conserver avant l'intervention. Pendant le tri, nous mettons aussi de côté tout ce qui peut avoir de l'importance : papiers administratifs, photos, bijoux, courriers. Rien de personnel n'est jeté sans votre accord.",
+                  question: "Posez-vous des volets roulants neufs ?",
+                  answer: "Oui. Nous posons des volets roulants sur mesure en rénovation, sur des fenêtres existantes et sans gros travaux, ainsi qu'en construction neuve. Ils peuvent être manuels, électriques ou solaires, en PVC ou en aluminium.",
                 },
                 {
-                  question: "Où sont emmenés les déchets après un débarras ?",
-                  answer: "Ce qui ne peut être ni donné ni revendu est acheminé vers des déchetteries et filières de recyclage agréées : bois, métaux, électroménager, textiles, cartons. Aucun dépôt sauvage : chaque déchet est traité conformément à la réglementation.",
+                  question: "Intervenez-vous sur les rideaux métalliques des commerces ?",
+                  answer: "Oui. Nous dépannons, réparons, motorisons et posons les rideaux métalliques des commerces, ateliers et entrepôts, 7j/7, et proposons un contrat d'entretien annuel pour anticiper les pannes.",
                 },
                 {
-                  question: "Le nettoyage est-il inclus après le débarras ?",
-                  answer: "Oui, un nettoyage sommaire est inclus : balayage, dépoussiérage et évacuation des derniers déchets. Les lieux sont rendus vides et propres, prêts pour une visite, une vente ou un état des lieux. Un nettoyage approfondi peut être ajouté sur demande.",
+                  question: "Réparez-vous les stores bannes ?",
+                  answer: "Oui. Nous remplaçons les toiles, les bras articulés et les moteurs des stores bannes, motorisons les stores manuels et posons des stores bannes et intérieurs sur mesure.",
                 },
               ],
             },
@@ -101,31 +99,31 @@ export default function FAQPage() {
         {
           id: "zone",
           title: "Zone d'intervention et délais",
-          icon: "Calendar",
+          icon: "MapPin",
           subcategories: [
             {
-              id: "zones",
+              id: "zone-details",
               title: "Où et quand intervenons-nous ?",
               faqs: [
                 {
-                  question: "Dans quelles villes faites-vous des débarras ?",
-                  answer: "Nous intervenons partout en France : grandes villes, villes moyennes et petites communes, en France métropolitaine comme en outre-mer. Consultez notre page Zone d'intervention pour trouver votre département et les villes desservies.",
+                  question: "Où intervenez-vous ?",
+                  answer: "Nous intervenons dans toute la France métropolitaine, des grandes villes aux petites communes rurales, ainsi qu'en Guadeloupe, en Martinique, en Guyane et à La Réunion.",
                 },
                 {
-                  question: "Intervenez-vous dans les petites communes et zones rurales ?",
-                  answer: "Oui. Nos équipes se déplacent aussi dans les communes rurales et les zones difficiles d'accès, avec le même niveau de service et un devis gratuit. C'est pratique si vous gérez à distance une succession ou un logement situé loin de chez vous.",
+                  question: "Quel est le délai d'intervention ?",
+                  answer: "Pour un volet bloqué ou un rideau métallique coincé, nous intervenons le plus rapidement possible, 7j/7. Pour une installation ou une motorisation, le rendez-vous est fixé selon vos disponibilités après validation du devis.",
                 },
                 {
-                  question: "Quel est le délai d'intervention pour un débarras ?",
-                  answer: "Nous intervenons généralement sous 24 à 48 h après validation du devis. Pour les gros volumes, nous planifions le chantier à la date qui vous convient, en tenant compte de vos contraintes de vente, de bail ou de déménagement.",
+                  question: "Travaillez-vous pour les copropriétés et les professionnels ?",
+                  answer: "Oui. Nous intervenons pour les particuliers, les syndics de copropriété, les bailleurs, les commerces et les entreprises, ponctuellement ou dans le cadre d'un contrat d'entretien.",
                 },
                 {
-                  question: "Faites-vous des débarras le week-end ?",
-                  answer: "Oui, sur rendez-vous, 7 jours sur 7. C'est utile pour les débarras urgents ou si vous n'êtes disponible que le samedi ou le dimanche.",
+                  question: "Dois-je être présent pendant l'intervention ?",
+                  answer: "Oui, ou une personne de confiance : le technicien doit accéder au volet et au coffre, souvent depuis l'intérieur, et vous montrer le bon fonctionnement du volet à la fin de l'intervention.",
                 },
                 {
-                  question: "Combien de temps dure un débarras de maison ?",
-                  answer: "Un studio ou une cave se vide le plus souvent en une demi-journée, un appartement en une journée, et une maison entière en un à trois jours selon le volume et l'accessibilité. La durée exacte est indiquée sur votre devis.",
+                  question: "Comment préparer l'intervention ?",
+                  answer: "Dégagez l'accès à la fenêtre concernée et, si possible, envoyez-nous une photo du volet et du coffre ainsi que la marque du moteur. Ces informations permettent au technicien de prévoir les bonnes pièces.",
                 },
               ],
             },
@@ -134,37 +132,37 @@ export default function FAQPage() {
       ],
     },
     pratique: {
-      title: "Devis et prix d'un débarras",
-      subtitle: "Devis gratuit, tarifs, déroulement et paiement : tout ce qu'il faut savoir avant de réserver votre débarras.",
+      title: "Devis, prix et paiement",
+      subtitle: "Devis gratuit, tarifs, paiement et garanties : tout ce qu'il faut savoir avant de faire appel à nos techniciens.",
       categories: [
         {
           id: "devis",
-          title: "Devis de débarras gratuit",
+          title: "Devis gratuit",
           icon: "Euro",
           subcategories: [
             {
-              id: "devis-gratuit",
+              id: "devis-details",
               title: "Votre devis",
               faqs: [
                 {
-                  question: "Le devis de débarras est-il gratuit et sans engagement ?",
-                  answer: "Oui, le devis est 100 % gratuit et sans engagement. Selon le volume, nous l'établissons à partir de vos photos ou après une visite gratuite sur place.",
+                  question: "Le devis est-il gratuit ?",
+                  answer: "Oui. Le devis est 100 % gratuit et sans engagement. Il vous est toujours remis avant toute intervention : vous connaissez le prix avant de donner votre accord.",
                 },
                 {
-                  question: "Comment obtenir un devis de débarras rapidement ?",
-                  answer: "Remplissez notre formulaire de demande de devis, appelez-nous ou envoyez-nous des photos des pièces à vider. Nous vous rappelons en moins de 30 minutes et vous transmettons une estimation claire le jour même.",
+                  question: "Comment obtenir un devis ?",
+                  answer: "Remplissez le formulaire de demande de devis, appelez-nous ou écrivez-nous sur WhatsApp. Une photo du volet et la marque du moteur nous aident à vous donner une première estimation rapidement. Nous vous rappelons en moins de 30 minutes.",
                 },
                 {
-                  question: "Peut-on faire un devis de débarras sur photos ?",
-                  answer: "Oui, pour la plupart des débarras. Quelques photos de chaque pièce, l'étage et la présence d'un ascenseur suffisent pour estimer le volume. Pour une maison complète ou un chantier complexe, nous préférons une visite gratuite afin de vous donner un prix ferme.",
+                  question: "Le devis est-il détaillé ?",
+                  answer: "Oui. Il précise le déplacement, chaque pièce remplacée (avec la marque et la référence du moteur), la main-d'œuvre, le taux de TVA et la durée de garantie.",
                 },
                 {
-                  question: "Combien de temps le devis est-il valable ?",
-                  answer: "Notre devis est valable 15 jours. Si la quantité d'objets à évacuer change d'ici l'intervention, nous l'ajustons avec vous avant le début du chantier.",
+                  question: "Le prix peut-il changer après le devis ?",
+                  answer: "Non, le prix validé est celui que vous payez. Si le technicien découvre une panne supplémentaire pendant l'intervention, il vous la signale et aucun travail supplémentaire n'est réalisé sans votre accord.",
                 },
                 {
-                  question: "Comment se déroule un débarras, du devis à la remise des clés ?",
-                  answer: "1) Demande de devis en ligne ou par téléphone. 2) Estimation sur photos ou visite, puis devis détaillé. 3) Intervention à la date convenue : tri, évacuation, dons et recyclage. 4) Nettoyage sommaire et remise des clés.",
+                  question: "Puis-je estimer le prix en ligne ?",
+                  answer: "Oui. Notre simulateur d'estimation vous donne une fourchette de prix immédiate en quelques questions. Pour un prix ferme, demandez un devis gratuit.",
                 },
               ],
             },
@@ -172,32 +170,32 @@ export default function FAQPage() {
         },
         {
           id: "tarifs",
-          title: "Prix d'un débarras",
+          title: "Prix des interventions",
           icon: "DollarSign",
           subcategories: [
             {
               id: "tarifs-details",
-              title: "Combien coûte un débarras ?",
+              title: "Combien coûte une intervention ?",
               faqs: [
                 {
-                  question: "Quel est le prix d'un débarras de maison ?",
-                  answer: "À titre indicatif, comptez dès 250 € pour un studio, dès 450 € pour un T2, dès 650 € pour un T3 et dès 900 € pour une maison. Le prix final dépend du volume, de l'accessibilité et de la valeur des objets récupérables : seul le devis gratuit vous donne un tarif exact.",
+                  question: "Combien coûte un dépannage de volet roulant ?",
+                  answer: "Le diagnostic et le déplacement sont proposés dès 69 €, un déblocage dès 89 € et le remplacement d'une sangle ou d'une manivelle dès 79 €. Le prix final dépend de la panne et des pièces à remplacer.",
                 },
                 {
-                  question: "Comment est calculé le prix d'un débarras ?",
-                  answer: "Le tarif dépend du volume à évacuer (en m³), de l'accessibilité (étage, ascenseur, stationnement), du temps de tri et de la valeur des objets revendables. Exemples : dès 150 € pour moins de 5 m³, dès 550 € de 15 à 30 m³, dès 1 400 € au-delà de 50 m³.",
+                  question: "Combien coûte le remplacement d'un moteur ?",
+                  answer: "Le remplacement d'un moteur filaire est proposé dès 290 € et celui d'un moteur radio (Somfy et autres marques) dès 390 €, selon la puissance nécessaire et la marque.",
                 },
                 {
-                  question: "Un débarras peut-il être gratuit ?",
-                  answer: "Oui, lorsque la valeur des meubles et objets que nous rachetons couvre le coût de l'intervention. C'est souvent le cas pour les successions avec du mobilier ancien. Nous vous l'indiquons dès l'estimation.",
+                  question: "Combien coûte la motorisation d'un volet manuel ?",
+                  answer: "La motorisation d'un volet roulant manuel est proposée dès 450 €. Le prix varie selon la taille du volet et le type de moteur : filaire, radio ou solaire.",
                 },
                 {
-                  question: "Combien coûte le débarras d'une cave ou d'un garage ?",
-                  answer: "Le débarras d'une cave ou d'un garage démarre à 199 €. Pour un ou deux objets seulement, l'enlèvement est possible dès 39 € (matelas, électroménager) ou 69 € (canapé).",
+                  question: "Combien coûte la pose d'un volet roulant ?",
+                  answer: "La pose d'un volet roulant en rénovation est proposée dès 390 €, fourniture et pose comprises pour une fenêtre standard. Les grandes dimensions et les volets solaires font l'objet d'un devis.",
                 },
                 {
-                  question: "Y a-t-il des frais cachés sur le devis ?",
-                  answer: "Non. Le devis détaille la main-d'œuvre, le transport et le traitement des déchets en déchetterie. Le prix validé ensemble est celui que vous payez, sans supplément le jour de l'intervention.",
+                  question: "Quel taux de TVA s'applique ?",
+                  answer: "Pour les travaux réalisés dans un logement achevé depuis plus de deux ans, la réparation et le remplacement de volets roulants peuvent bénéficier d'un taux de TVA réduit de 10 %, sous conditions. Le taux applicable figure sur le devis.",
                 },
               ],
             },
@@ -205,32 +203,32 @@ export default function FAQPage() {
         },
         {
           id: "paiement",
-          title: "Paiement du débarras",
-          icon: "TrendingUp",
+          title: "Paiement et garanties",
+          icon: "ShieldCheck",
           subcategories: [
             {
               id: "paiement-details",
-              title: "Modalités de paiement",
+              title: "Paiement et garanties",
               faqs: [
                 {
                   question: "Quels moyens de paiement acceptez-vous ?",
                   answer: "Nous acceptons la carte bancaire (CB, Visa, Mastercard), le virement, le chèque et les espèces dans la limite légale de 1 000 €.",
                 },
                 {
-                  question: "Quand faut-il payer le débarras ?",
-                  answer: "Le paiement se fait à la fin de l'intervention, une fois le travail terminé et validé par vous. Aucun paiement à l'avance n'est demandé pour les chantiers courants.",
+                  question: "Quand dois-je payer ?",
+                  answer: "Le paiement se fait à la fin de l'intervention, une fois que vous avez constaté le bon fonctionnement de votre volet. Aucun paiement à l'avance n'est demandé pour un dépannage.",
                 },
                 {
                   question: "Un acompte est-il demandé ?",
-                  answer: "Uniquement pour les chantiers de plus de 3 000 € : un acompte de 30 % est alors demandé à la signature du devis. Le solde est réglé à la fin de l'intervention.",
+                  answer: "Uniquement pour les chantiers de plus de 3 000 €, par exemple l'installation de plusieurs volets neufs : un acompte de 30 % est alors demandé à la signature du devis. Le solde est réglé à la fin de l'intervention.",
                 },
                 {
-                  question: "Le rachat des objets est-il déduit de la facture ?",
-                  answer: "Oui. La valeur des meubles et objets que nous rachetons est déduite directement du montant du débarras et apparaît clairement sur le devis puis sur la facture.",
+                  question: "Recevrai-je une facture ?",
+                  answer: "Oui, une facture détaillée vous est remise à la fin de l'intervention. Conservez-la : elle sert de justificatif pour la garantie des pièces et de la main-d'œuvre.",
                 },
                 {
-                  question: "Recevrai-je une facture pour mon débarras ?",
-                  answer: "Oui, une facture détaillée vous est remise à la fin de l'intervention. Elle peut être transmise au notaire dans le cadre d'une succession ou servir de justificatif pour un bailleur ou une agence.",
+                  question: "Les réparations sont-elles garanties ?",
+                  answer: "Oui. Les pièces remplacées et la main-d'œuvre sont garanties. Les moteurs bénéficient en plus de la garantie du fabricant. Les durées figurent sur le devis et la facture.",
                 },
               ],
             },
@@ -246,13 +244,13 @@ export default function FAQPage() {
       <Header phoneConfig={phoneConfig} onContactClick={() => setIsQuoteFormOpen(true)} forceShowHeader={isQuoteFormOpen} />
       {/* HERO — même style que la page À propos */}
       <section
-        aria-label="Questions fréquentes sur le débarras"
+        aria-label="Questions fréquentes sur les volets roulants"
         className="relative isolate overflow-hidden bg-[#0E2452] text-white"
         id="hero"
       >
         <Image
-          src="/images/debarras-gratuit-768x512.jpg"
-          alt="Équipe Débarras Proximité en intervention de débarras"
+          src="/images/volet/axe-support-volet-roulant.jpg"
+          alt="Axe et support de volet roulant en réparation"
           fill
           priority
           className="object-cover object-center opacity-30"
@@ -265,11 +263,11 @@ export default function FAQPage() {
           </p>
 
           <h1 className="text-4xl font-bold leading-tight md:text-6xl lg:min-h-[2lh] xl:min-h-0">
-            Vos questions sur le <span className="text-[#FFC629]">débarras</span>
+            Vos questions sur nos <span className="text-[#FFC629]">services</span>
           </h1>
 
-          <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300 md:text-xl md:min-h-24 text-justify hyphens-auto" lang="fr">
-            Devis, tarifs, délais, succession, tri et recyclage : trouvez rapidement les réponses à vos questions sur nos débarras partout en France.
+          <p className="mt-6 text-lg leading-8 text-slate-300 md:text-xl md:min-h-24 text-justify hyphens-auto" lang="fr">
+            Pannes, dépannage, motorisation, installation, devis, tarifs et garanties : trouvez rapidement les réponses à vos questions sur nos interventions partout en France.
           </p>
 
           <div className="mt-9 flex flex-col gap-4 sm:flex-row sm:gap-6">
@@ -294,7 +292,7 @@ export default function FAQPage() {
 
         <div className="relative mx-auto grid max-w-7xl grid-cols-2 gap-3 border-t border-white/15 px-5 py-6 lg:grid-cols-4 md:px-8">
           <div className="flex items-center gap-3"><CheckCircle2 className="h-5 w-5 text-[#FFC629]" /><span className="text-sm text-slate-200">Devis 100% gratuit</span></div>
-          <div className="flex items-center gap-3"><ShieldCheck className="h-5 w-5 text-[#FFC629]" /><span className="text-sm text-slate-200">Équipe assurée</span></div>
+          <div className="flex items-center gap-3"><Clock className="h-5 w-5 text-[#FFC629]" /><span className="text-sm text-slate-200">Dépannage 7j/7</span></div>
           <div className="flex items-center gap-3"><Star className="h-5 w-5 fill-[#FFC629] text-[#FFC629]" /><span className="text-sm text-slate-200">4,8/5 par nos clients</span></div>
           <div className="flex items-center gap-3"><BadgeEuro className="h-5 w-5 text-[#FFC629]" /><span className="text-sm text-slate-200">Tarifs transparents</span></div>
         </div>

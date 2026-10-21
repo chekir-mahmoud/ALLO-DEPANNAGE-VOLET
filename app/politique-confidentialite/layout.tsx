@@ -3,8 +3,8 @@ import { pageMetadata } from "@/lib/seo"
 import BreadcrumbSchema from "@/components/breadcrumb-schema"
 
 export const metadata = pageMetadata({
-  title: "Politique de confidentialité | Débarras Proximité",
-  description: "Politique de confidentialité de Débarras Proximité : données collectées, utilisation, conservation et exercice de vos droits (RGPD).",
+  title: "Politique de confidentialité | Allo Dépannage Volet",
+  description: "Politique de confidentialité de Allo Dépannage Volet : données collectées, utilisation, conservation et exercice de vos droits (RGPD).",
   path: "/politique-confidentialite",
 })
 

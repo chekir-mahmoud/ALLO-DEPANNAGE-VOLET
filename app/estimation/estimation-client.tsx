@@ -13,24 +13,24 @@ import QuoteForm from "@/components/quote-form"
 import FloatingButtons from "@/components/FloatingButtons"
 import { DEFAULT_PHONE } from "@/lib/phone-config"
 import {
-  BIENS, ENCOMBREMENTS, ETAGES, OPTIONS, STATIONNEMENTS,
-  calculerEstimation, tailleChoices,
-  type BienId, type EncombrementId, type EstimationChoix, type EtageId, type StationnementId,
+  ACCES, BESOINS, DELAIS, MANOEUVRES, NOMBRES, OPTIONS, TAILLES,
+  calculerEstimation,
+  type BesoinId, type EstimationChoix,
 } from "@/lib/estimation"
-import { Archive, Briefcase, Building2, Car, Check, CheckCircle2, ChevronLeft, ChevronRight, Clock, FileText, HardHat, Home, Layers, Package, Phone, ShieldCheck, Star, BadgeEuro } from "lucide-react"
+import { CalendarCheck, Check, CheckCircle2, ChevronLeft, ChevronRight, Clock, Cog, FileText, Hammer, Home, Phone, ShieldCheck, Star, Store, Sun, BadgeEuro, Wrench, Zap } from "lucide-react"
 
-const BIEN_ICONS: Record<BienId, React.ComponentType<{ className?: string }>> = {
-  maison: Home,
-  appartement: Building2,
-  local: Briefcase,
-  cave: Layers,
-  garage: Car,
-  grenier: Archive,
-  chantier: HardHat,
-  autre: Package,
+const BESOIN_ICONS: Record<BesoinId, React.ComponentType<{ className?: string }>> = {
+  depannage: Wrench,
+  moteur: Zap,
+  reparation: Hammer,
+  motorisation: Cog,
+  installation: Home,
+  rideau: Store,
+  store: Sun,
+  entretien: CalendarCheck,
 }
 
-const ETAPES = ["Type de bien", "Taille", "Encombrement", "Accès", "Options", "Vos coordonnées", "Adresse et envoi"]
+const ETAPES = ["Votre besoin", "Type de volet", "Taille et nombre", "Accès et délai", "Options", "Vos coordonnées", "Adresse et envoi"]
 const DERNIERE_ETAPE = ETAPES.length - 1
 const telephoneValide = (t: string) => t.replace(/\D/g, "").length >= 10
 
@@ -89,18 +89,21 @@ export default function EstimationClient() {
   const champ = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setCoord((c) => ({ ...c, [e.target.name]: e.target.value }))
 
   const estimation = calculerEstimation(choix)
-  const bien = BIENS.find((b) => b.id === choix.bien)
-  const tailles = tailleChoices(choix.bien)
-  const taille = tailles.find((t) => t.id === choix.taille)
-  const encombrement = ENCOMBREMENTS.find((e) => e.id === choix.encombrement)
-  const etage = ETAGES.find((e) => e.id === choix.etage)
-  const stationnement = STATIONNEMENTS.find((s) => s.id === choix.stationnement)
+  const besoin = BESOINS.find((b) => b.id === choix.besoin)
+  const manoeuvre = MANOEUVRES.find((m) => m.id === choix.manoeuvre)
+  const taille = TAILLES.find((t) => t.id === choix.taille)
+  const nombre = NOMBRES.find((n) => n.id === choix.nombre)
+  const acces = ACCES.find((a) => a.id === choix.acces)
+  const delai = DELAIS.find((d) => d.id === choix.delai)
+  // Pour une pose ou une motorisation, on demande la manœuvre souhaitée
+  const manoeuvreSouhaitee = choix.besoin === "installation" || choix.besoin === "motorisation"
+  const estRideauOuStore = choix.besoin === "rideau" || choix.besoin === "store"
 
   const etapeValide = [
-    !!choix.bien,
-    !!choix.taille,
-    !!choix.encombrement,
-    !!choix.etage && (etage?.niveau === 0 || choix.ascenseur !== undefined) && !!choix.stationnement,
+    !!choix.besoin,
+    !!choix.manoeuvre,
+    !!choix.taille && !!choix.nombre,
+    !!choix.acces && !!choix.delai,
     true,
     !!coord.prenom.trim() && !!coord.nom.trim() && telephoneValide(coord.telephone),
     coord.adresse.trim().length >= 3,
@@ -141,7 +144,7 @@ export default function EstimationClient() {
     const v = coord
     const recap = [
       `Préférence de contact : ${v.contact}`,
-      `Accès : ${etage?.label ?? "-"}${etage && etage.niveau > 0 ? (choix.ascenseur ? ", avec ascenseur" : ", sans ascenseur") : ""} · stationnement ${stationnement?.label.toLowerCase() ?? "-"}`,
+      `Accès : ${acces?.label ?? "-"} · délai souhaité : ${delai?.label.toLowerCase() ?? "-"}`,
       v.message ? `\n${v.message}` : "",
     ].join("\n")
     try {
@@ -180,17 +183,17 @@ export default function EstimationClient() {
       <Header phoneConfig={phoneConfig} onContactClick={() => setIsQuoteFormOpen(true)} forceShowHeader={isQuoteFormOpen} />
 
       {/* HERO — même style que les autres pages */}
-      <section aria-label="Simulateur de prix de débarras" className="relative isolate overflow-hidden bg-[#0E2452] text-white" id="hero">
-        <Image src="/images/debarras-gratuit-768x512.jpg" alt="" aria-hidden="true" fill priority sizes="100vw" className="-z-10 object-cover object-center opacity-30" />
+      <section aria-label="Simulateur de prix de volet roulant" className="relative isolate overflow-hidden bg-[#0E2452] text-white" id="hero">
+        <Image src="/images/volet/moteur-tubulaire-volet-roulant.jpg" alt="" aria-hidden="true" fill priority sizes="100vw" className="-z-10 object-cover object-center opacity-30" />
         <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(14,36,82,0.97)_0%,rgba(14,36,82,0.86)_48%,rgba(14,36,82,0.38)_100%)]" />
 
         <div className="relative mx-auto max-w-7xl px-5 py-10 md:px-8 md:py-14">
           <p className="mb-4 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.18em] text-[#FFC629]">Simulateur gratuit</p>
           <h1 className="text-4xl font-bold leading-tight md:text-6xl lg:min-h-[2lh] xl:min-h-0">
-            Estimez le prix de votre <span className="text-[#FFC629]">débarras</span>
+            Estimez le prix de votre <span className="text-[#FFC629]">intervention</span>
           </h1>
-          <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300 md:text-xl md:min-h-24 text-justify hyphens-auto" lang="fr">
-            Répondez à 5 questions et obtenez une estimation indicative en moins d&apos;une minute. Gratuit et sans engagement.
+          <p className="mt-6 text-lg leading-8 text-slate-300 md:text-xl md:min-h-24 text-justify hyphens-auto" lang="fr">
+            Dépannage, réparation, moteur, motorisation ou pose : répondez à 5 questions et obtenez une estimation indicative en moins d&apos;une minute. Gratuit et sans engagement.
           </p>
           <div className="mt-9 flex flex-col gap-4 sm:flex-row sm:gap-6">
             <Button
@@ -213,7 +216,7 @@ export default function EstimationClient() {
 
         <div className="relative mx-auto grid max-w-7xl grid-cols-2 gap-3 border-t border-white/15 px-5 py-6 lg:grid-cols-4 md:px-8">
           <div className="flex items-center gap-3"><Clock className="h-5 w-5 text-[#FFC629]" /><span className="text-sm text-slate-200">Moins d&apos;une minute</span></div>
-          <div className="flex items-center gap-3"><CheckCircle2 className="h-5 w-5 text-[#FFC629]" /><span className="text-sm text-slate-200">Gratuit et sans engagement</span></div>
+          <div className="flex items-center gap-3"><CheckCircle2 className="h-5 w-5 text-[#FFC629]" /><span className="text-sm text-slate-200">100% gratuit</span></div>
           <div className="flex items-center gap-3"><Star className="h-5 w-5 fill-[#FFC629] text-[#FFC629]" /><span className="text-sm text-slate-200">4,8/5 par nos clients</span></div>
           <div className="flex items-center gap-3"><BadgeEuro className="h-5 w-5 text-[#FFC629]" /><span className="text-sm text-slate-200">Tarifs transparents</span></div>
         </div>
@@ -238,16 +241,16 @@ export default function EstimationClient() {
 
               {etape === 0 && (
                 <fieldset>
-                  <legend className="mb-5 text-2xl font-bold text-[#0E2452]">Quel bien faut-il débarrasser ?</legend>
+                  <legend className="mb-5 text-2xl font-bold text-[#0E2452]">Quel est votre besoin ?</legend>
                   <div className="grid gap-3 sm:grid-cols-2">
-                    {BIENS.map((b) => (
+                    {BESOINS.map((b) => (
                       <Choice
                         key={b.id}
-                        selected={choix.bien === b.id}
-                        onClick={() => set({ bien: b.id, taille: choix.bien && BIENS.find((x) => x.id === choix.bien)?.parSurface === b.parSurface ? choix.taille : undefined })}
+                        selected={choix.besoin === b.id}
+                        onClick={() => set({ besoin: b.id, manoeuvre: b.id === choix.besoin ? choix.manoeuvre : undefined })}
                         label={b.label}
                         desc={b.desc}
-                        icon={BIEN_ICONS[b.id]}
+                        icon={BESOIN_ICONS[b.id]}
                       />
                     ))}
                   </div>
@@ -257,62 +260,56 @@ export default function EstimationClient() {
               {etape === 1 && (
                 <fieldset>
                   <legend className="mb-5 text-2xl font-bold text-[#0E2452]">
-                    {bien?.parSurface
-                      ? "Quelle est la surface à vider ?"
-                      : choix.bien === "chantier"
-                        ? "Quel volume de déchets faut-il évacuer ?"
-                        : `Quelle est la taille de votre ${bien?.label.toLowerCase()} ?`}
+                    {manoeuvreSouhaitee
+                      ? "Quelle commande souhaitez-vous ?"
+                      : estRideauOuStore
+                        ? `Comment fonctionne votre ${choix.besoin === "rideau" ? "rideau métallique" : "store"} ?`
+                        : "Comment fonctionne votre volet ?"}
                   </legend>
                   <div className="grid gap-3 sm:grid-cols-2">
-                    {tailles.map((t) => (
-                      <Choice key={t.id} selected={choix.taille === t.id} onClick={() => set({ taille: t.id })} label={t.label} desc={t.desc || undefined} />
+                    {MANOEUVRES.filter((m) => !(manoeuvreSouhaitee && (m.id === "inconnu" || (choix.besoin === "motorisation" && m.id === "manuel")))).map((m) => (
+                      <Choice key={m.id} selected={choix.manoeuvre === m.id} onClick={() => set({ manoeuvre: m.id })} label={m.label} desc={m.desc} />
                     ))}
                   </div>
                 </fieldset>
               )}
 
               {etape === 2 && (
-                <fieldset>
-                  <legend className="mb-5 text-2xl font-bold text-[#0E2452]">Quel est le niveau d&apos;encombrement ?</legend>
-                  <div className="grid gap-3 sm:grid-cols-2">
-                    {ENCOMBREMENTS.map((e) => (
-                      <Choice key={e.id} selected={choix.encombrement === e.id} onClick={() => set({ encombrement: e.id as EncombrementId })} label={e.label} desc={e.desc} />
-                    ))}
-                  </div>
-                </fieldset>
+                <div className="space-y-8">
+                  <fieldset>
+                    <legend className="mb-4 text-2xl font-bold text-[#0E2452]">Quelle est la taille {estRideauOuStore ? "de l'ouverture" : "du volet"} ?</legend>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      {TAILLES.map((t) => (
+                        <Choice key={t.id} selected={choix.taille === t.id} onClick={() => set({ taille: t.id })} label={t.label} desc={t.desc} />
+                      ))}
+                    </div>
+                  </fieldset>
+                  <fieldset>
+                    <legend className="mb-4 text-lg font-bold text-[#0E2452]">Combien {estRideauOuStore ? "d'équipements" : "de volets"} sont concernés ?</legend>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      {NOMBRES.map((n) => (
+                        <Choice key={n.id} selected={choix.nombre === n.id} onClick={() => set({ nombre: n.id })} label={n.label} />
+                      ))}
+                    </div>
+                  </fieldset>
+                </div>
               )}
 
               {etape === 3 && (
                 <div className="space-y-8">
                   <fieldset>
-                    <legend className="mb-4 text-2xl font-bold text-[#0E2452]">À quel étage se trouve le bien ?</legend>
+                    <legend className="mb-4 text-2xl font-bold text-[#0E2452]">Comment accède-t-on au coffre ?</legend>
                     <div className="grid gap-3 sm:grid-cols-2">
-                      {ETAGES.map((e) => (
-                        <Choice
-                          key={e.id}
-                          selected={choix.etage === e.id}
-                          onClick={() => set({ etage: e.id as EtageId, ascenseur: e.niveau === 0 ? undefined : choix.ascenseur })}
-                          label={e.label}
-                        />
+                      {ACCES.map((a) => (
+                        <Choice key={a.id} selected={choix.acces === a.id} onClick={() => set({ acces: a.id })} label={a.label} desc={a.desc} />
                       ))}
                     </div>
                   </fieldset>
-
-                  {etage && etage.niveau > 0 && (
-                    <fieldset>
-                      <legend className="mb-4 text-lg font-bold text-[#0E2452]">Y a-t-il un ascenseur ?</legend>
-                      <div className="grid gap-3 sm:grid-cols-2">
-                        <Choice selected={choix.ascenseur === true} onClick={() => set({ ascenseur: true })} label="Oui" />
-                        <Choice selected={choix.ascenseur === false} onClick={() => set({ ascenseur: false })} label="Non" />
-                      </div>
-                    </fieldset>
-                  )}
-
                   <fieldset>
-                    <legend className="mb-4 text-lg font-bold text-[#0E2452]">Où peut stationner le camion ?</legend>
+                    <legend className="mb-4 text-lg font-bold text-[#0E2452]">Quand souhaitez-vous l&apos;intervention ?</legend>
                     <div className="grid gap-3 sm:grid-cols-2">
-                      {STATIONNEMENTS.map((s) => (
-                        <Choice key={s.id} selected={choix.stationnement === s.id} onClick={() => set({ stationnement: s.id as StationnementId })} label={s.label} />
+                      {DELAIS.map((d) => (
+                        <Choice key={d.id} selected={choix.delai === d.id} onClick={() => set({ delai: d.id })} label={d.label} desc={d.desc} />
                       ))}
                     </div>
                   </fieldset>
@@ -425,7 +422,7 @@ export default function EstimationClient() {
                             value={coord.message}
                             onChange={champ}
                             rows={3}
-                            placeholder="Date souhaitée, objets de valeur à faire estimer, contraintes d'accès..."
+                            placeholder="Marque du moteur, panne constatée, date souhaitée, contraintes d'accès..."
                             className="resize-none text-sm border-gray-300 focus-visible:border-[#0E2452] focus-visible:ring-[#0E2452]/20"
                           />
                           <p className="mt-3 flex items-center gap-1 text-xs text-gray-500">
@@ -482,14 +479,15 @@ export default function EstimationClient() {
 
             {/* Récapitulatif */}
             <aside className="flex flex-col rounded-2xl bg-[#0E2452] p-6 text-white">
-              <p className="mb-4 text-sm font-semibold uppercase tracking-[0.16em] text-[#FFC629]">Votre débarras</p>
+              <p className="mb-4 text-sm font-semibold uppercase tracking-[0.16em] text-[#FFC629]">Votre intervention</p>
               <dl className="space-y-3 text-sm">
                 {[
-                  ["Bien", bien?.label],
+                  ["Besoin", besoin?.label],
+                  ["Commande", manoeuvre?.label],
                   ["Taille", taille?.label],
-                  ["Encombrement", encombrement?.label],
-                  ["Accès", etage ? `${etage.label}${etage.niveau > 0 && choix.ascenseur !== undefined ? (choix.ascenseur ? ", ascenseur" : ", sans ascenseur") : ""}` : undefined],
-                  ["Stationnement", stationnement?.label],
+                  ["Nombre", nombre?.label],
+                  ["Accès", acces?.label],
+                  ["Délai", delai?.label],
                   ["Options", choix.options.length ? choix.options.map((id) => OPTIONS.find((o) => o.id === id)?.label).join(", ") : undefined],
                 ].map(([k, v]) => (
                   <div key={k} className="flex justify-between gap-4 border-b border-white/10 pb-3">
@@ -507,7 +505,7 @@ export default function EstimationClient() {
                 </p>
               </div>
               <p className="mt-4 text-xs leading-relaxed text-slate-300">
-                Estimation indicative, non contractuelle. Le prix définitif est confirmé par un devis gratuit, après photos ou visite.
+                Estimation indicative, non contractuelle. Le prix définitif est confirmé par un devis gratuit, après photos ou diagnostic sur place.
               </p>
             </aside>
           </div>

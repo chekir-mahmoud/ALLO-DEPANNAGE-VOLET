@@ -1,5 +1,5 @@
-// Section « Pourquoi choisir Débarras Proximité ? » (6 engagements), partagée
-import { CheckCircle2, Clock, FileText, Recycle, ShieldCheck, Users } from "lucide-react"
+// Section « Pourquoi nous choisir ? » (6 engagements), partagée
+import { BadgeCheck, CheckCircle2, Clock, FileText, ShieldCheck, Users } from "lucide-react"
 
 export default function WhyChooseUsSection({ className = "bg-white", padding = "py-10 md:py-14" }: { className?: string; padding?: string }) {
   return (
@@ -10,10 +10,10 @@ export default function WhyChooseUsSection({ className = "bg-white", padding = "
         <div className="max-w-7xl mx-auto mb-12">
           <p className="mb-3 inline-flex items-center gap-3 text-sm font-semibold uppercase tracking-[0.16em] text-[#0E2452]"><span className="h-1 w-8 rounded-full bg-[#FFC629]" aria-hidden="true" />Nos engagements</p>
           <h2 className="text-3xl md:text-4xl font-bold text-[#0E2452] mb-3">
-            Pourquoi choisir Débarras Proximité ?
+            Pourquoi nous choisir ?
           </h2>
           <p className="text-gray-600 text-lg max-w-3xl">
-            Un service professionnel et transparent, du devis à la remise des clés.
+            Un service professionnel et transparent, du diagnostic à la remise en service de vos volets.
           </p>
         </div>
 
@@ -22,32 +22,32 @@ export default function WhyChooseUsSection({ className = "bg-white", padding = "
             {
               Icon: FileText,
               title: "Devis gratuit et sans engagement",
-              text: "Estimation gratuite à domicile ou sur photos, avec un devis clair et détaillé.",
+              text: "Diagnostic clair et devis détaillé : vous connaissez le prix avant toute intervention.",
             },
             {
               Icon: Clock,
-              title: "Intervention sous 24/48h",
-              text: "Intervention possible dès le lendemain de votre demande, 7j/7 sur rendez-vous.",
+              title: "Dépannage d'urgence 7j/7",
+              text: "Volet bloqué ouvert ou fermé : intervention rapide, y compris le week-end.",
             },
             {
               Icon: CheckCircle2,
-              title: "Service tout compris",
-              text: "Tri, évacuation, nettoyage et recyclage : nous gérons tout de A à Z.",
+              title: "Toutes marques",
+              text: "Somfy, Bubendorff, Profalux, Simu, Nice… volets manuels, électriques, radio ou solaires.",
             },
             {
-              Icon: Recycle,
-              title: "Démarche éco-responsable",
-              text: "Objets donnés à des associations ou revendus, déchets recyclés en filières agréées.",
+              Icon: BadgeCheck,
+              title: "Pièces de qualité",
+              text: "Moteurs, lames, sangles et mécanismes de marque, adaptés à votre installation.",
             },
             {
               Icon: Users,
-              title: "Équipe professionnelle",
-              text: "Une équipe formée, discrète et respectueuse. Plus de 500 interventions réalisées.",
+              title: "Techniciens qualifiés",
+              text: "Des techniciens formés aux volets roulants, rideaux métalliques et stores.",
             },
             {
               Icon: ShieldCheck,
-              title: "Équipe assurée",
-              text: "Intervention sécurisée et suivi personnalisé de votre projet du début à la fin.",
+              title: "Pièces et main-d'œuvre garanties",
+              text: "Intervention assurée et garantie, avec un suivi personnalisé après réparation.",
             },
           ].map(({ Icon, title, text }) => (
             <li key={title} className="flex items-start gap-4 rounded-2xl border border-gray-200 bg-white p-6 transition-shadow hover:shadow-lg">

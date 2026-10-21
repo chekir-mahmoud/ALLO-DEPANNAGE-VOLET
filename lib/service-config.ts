@@ -409,7 +409,7 @@ export function generateServiceMetadata(
   cityPostalCode: string
 ) {
   return {
-    title: `${service.name} ${cityName} (${cityPostalCode}) - Devis Gratuit | Débarras Proximité`,
+    title: `${service.name} ${cityName} (${cityPostalCode}) - Devis Gratuit | Allo Dépannage Volet`,
     description: `${service.description} à ${cityName} ${department.displayName}. Devis gratuit le jour même. Service professionnel et rapide.`,
     keywords: [
       service.name.toLowerCase(),

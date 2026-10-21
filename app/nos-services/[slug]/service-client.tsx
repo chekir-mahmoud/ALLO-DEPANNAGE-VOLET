@@ -11,16 +11,14 @@ import QuoteForm from "@/components/quote-form"
 import FloatingButtons from "@/components/FloatingButtons"
 import HeroQuoteForm from "@/components/hero-quote-form"
 import HowItWorksSection from "@/components/sections/how-it-works-section"
+import BrandsSection from "@/components/sections/brands-section"
+import PannesSection from "@/components/sections/pannes-section"
 import WhyChooseUsSection from "@/components/sections/why-choose-us-section"
 import TestimonialsSection from "@/components/sections/testimonials-section"
 import { DEFAULT_PHONE } from "@/lib/phone-config"
-import { DEBARRAS_MAISON_TESTIMONIALS } from "@/lib/testimonials/service-testimonials"
-import type { ResolvedSousServiceConfig } from "@/lib/sous-services/debarras-maison"
-import { CheckCircle2, ChevronDown, ChevronRight, FileText, Phone, ShieldCheck, Users } from "lucide-react"
-
-// Avis affichés avec des villes réparties dans toute la France
-const NATIONAL_CITIES = ["Paris", "Lyon", "Marseille", "Toulouse", "Nantes", "Lille", "Strasbourg", "Montpellier", "Rennes", "Nice"]
-const NATIONAL_TESTIMONIALS = DEBARRAS_MAISON_TESTIMONIALS.map((t, i) => ({ ...t, location: NATIONAL_CITIES[i % NATIONAL_CITIES.length] }))
+import { VOLET_INTERVENTIONS } from "@/lib/testimonials/exemples-volet-roulant"
+import { SERVICES_SECTION_TITLE, type ResolvedSousServiceConfig } from "@/lib/sous-services/volet-roulant"
+import { CheckCircle2, ChevronDown, ChevronRight, FileText, Phone, ShieldCheck, Wrench } from "lucide-react"
 
 const Eyebrow = ({ children }: { children: React.ReactNode }) => (
   <p className="mb-3 inline-flex items-center gap-3 text-sm font-semibold uppercase tracking-[0.16em] text-[#0E2452]">
@@ -59,14 +57,8 @@ export default function ServiceClient({ ss, others }: { ss: ResolvedSousServiceC
         <div className="max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-12">
           <div className="grid lg:grid-cols-[3fr_2fr] gap-10 lg:gap-14 items-center">
             <div className="lg:self-stretch lg:flex lg:flex-col lg:-mb-6">
-              <nav aria-label="Fil d'Ariane" className="mb-4 flex items-center gap-2 text-sm text-slate-300">
-                <Link href="/" className="transition-colors hover:text-[#FFC629]">Accueil</Link>
-                <ChevronRight className="h-4 w-4" aria-hidden="true" />
-                <Link href="/nos-services" className="transition-colors hover:text-[#FFC629]">Nos services</Link>
-              </nav>
-
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight text-white mb-5">
-                {h1Main}.
+                {h1Main} <span className="text-[#FFC629]">partout en France</span>.
                 {h1Rest.length > 0 && <span className="mt-2 block text-base md:text-lg font-medium text-[#FFC629]">{h1Rest.join(" – ")}.</span>}
               </h1>
 
@@ -105,8 +97,8 @@ export default function ServiceClient({ ss, others }: { ss: ResolvedSousServiceC
 
               <ul className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 border-t border-white/15 pt-5 sm:grid sm:grid-cols-2 lg:mt-auto lg:pt-6">
                 {[
-                  { Icon: ShieldCheck, label: "Visite gratuite et rapide" },
-                  { Icon: Users, label: "Plus de 500 clients" },
+                  { Icon: ShieldCheck, label: "Diagnostic sur place" },
+                  { Icon: Wrench, label: "Techniciens qualifiés" },
                 ].map(({ Icon, label }) => (
                   <li key={label} className="flex items-center gap-1.5 whitespace-nowrap text-xs font-medium text-slate-100 min-[380px]:gap-2 min-[380px]:text-sm">
                     <Icon className="h-3.5 w-3.5 flex-shrink-0 text-[#FFC629] sm:h-4 sm:w-4" aria-hidden="true" />
@@ -126,7 +118,7 @@ export default function ServiceClient({ ss, others }: { ss: ResolvedSousServiceC
         <div className="container mx-auto px-4 md:px-8">
           <div className="max-w-7xl mx-auto mb-10">
             <Eyebrow>Nos services</Eyebrow>
-            <h2 className="text-3xl md:text-4xl font-bold text-[#0E2452]">{ss.label} : nos prestations</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-[#0E2452]">{SERVICES_SECTION_TITLE[ss.slug] ?? `${ss.label} : nos interventions`}</h2>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
             {ss.serviceCards.map((card) => (
@@ -150,6 +142,9 @@ export default function ServiceClient({ ss, others }: { ss: ResolvedSousServiceC
         </div>
       </section>
 
+      {["depannage-volet-roulant", "reparation-volet-roulant"].includes(ss.slug) && <PannesSection className="bg-white" padding="pt-0 pb-10 md:pb-14" />}
+      {!["rideau-metallique", "store-banne"].includes(ss.slug) && <BrandsSection className="bg-white" padding="pt-0 pb-10 md:pb-14" />}
+
       <HowItWorksSection className="bg-gray-50" />
 
       {/* TARIFS */}
@@ -172,7 +167,7 @@ export default function ServiceClient({ ss, others }: { ss: ResolvedSousServiceC
               </dl>
             </div>
             <p className="mt-8 mx-auto max-w-4xl text-center text-xs text-gray-500">
-              Prix indicatifs TTC. Le tarif définitif dépend du volume, de l&apos;accessibilité et du type de biens à évacuer. Devis gratuit et sans engagement, établi le jour même.
+              Prix indicatifs TTC. Le tarif définitif dépend de la panne, des pièces à remplacer, des dimensions et de l&apos;accès. Devis gratuit et sans engagement, remis avant toute intervention.
             </p>
           </div>
         </div>
@@ -219,7 +214,7 @@ export default function ServiceClient({ ss, others }: { ss: ResolvedSousServiceC
 
       <WhyChooseUsSection className="bg-gray-50" />
 
-      <TestimonialsSection testimonials={NATIONAL_TESTIMONIALS} className="bg-white" padding="py-10 md:py-14" />
+      <TestimonialsSection testimonials={VOLET_INTERVENTIONS} examples className="bg-white" padding="py-10 md:py-14" />
 
       {/* FAQ */}
       <section className="bg-gray-50 py-10 md:py-14" id="faq">
@@ -270,7 +265,7 @@ export default function ServiceClient({ ss, others }: { ss: ResolvedSousServiceC
         <div className="container mx-auto px-4 md:px-8">
           <div className="max-w-7xl mx-auto mb-10">
             <Eyebrow>Nos autres prestations</Eyebrow>
-            <h2 className="text-3xl md:text-4xl font-bold text-[#0E2452]">Découvrez nos autres services de débarras</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-[#0E2452]">Découvrez nos autres prestations</h2>
           </div>
           <ul className="max-w-7xl mx-auto grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
             {others.map((o) => (

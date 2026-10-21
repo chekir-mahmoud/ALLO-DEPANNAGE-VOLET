@@ -17,7 +17,7 @@ interface ContactFormInlineProps {
 export default function ContactFormInline({
   title = "Demande de contact",
   subtitle = "Rappel en moins de 30 minutes",
-  messagePlaceholder = "Décrivez votre projet...",
+  messagePlaceholder = "Décrivez votre panne ou votre projet...",
 }: ContactFormInlineProps = {}) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitSuccess, setSubmitSuccess] = useState(false)
@@ -128,7 +128,7 @@ export default function ContactFormInline({
 
         <div>
           <Label htmlFor="adresse" className="text-sm font-semibold text-[#0E2452] mb-1 block">
-            Adresse complète *
+            Adresse d'intervention *
           </Label>
           <Input
             id="adresse"
@@ -141,7 +141,7 @@ export default function ContactFormInline({
 
         <div>
           <Label htmlFor="message" className="text-sm font-semibold text-[#0E2452] mb-1 block">
-            Message (optionnel)
+            Votre panne ou projet (optionnel)
           </Label>
           <Textarea
             id="message"

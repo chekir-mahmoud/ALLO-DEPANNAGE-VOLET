@@ -8,7 +8,7 @@ import Footer from "@/components/Footer"
 import { articles } from "./data"
 import ArticleCard from "./article-card"
 import QuoteForm from "@/components/quote-form"
-import { Phone, FileText, CheckCircle2, ShieldCheck, Star, BadgeEuro } from "lucide-react"
+import { Phone, FileText, CheckCircle2, Clock, Star, BadgeEuro } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { DEFAULT_PHONE } from "@/lib/phone-config"
 import FloatingButtons from "@/components/FloatingButtons"
@@ -33,13 +33,13 @@ function BlogContent() {
 
       {/* HERO — même style que la page À propos */}
       <section
-        aria-label="Blog Débarras Proximité"
+        aria-label="Blog Allo Dépannage Volet"
         className="relative isolate overflow-hidden bg-[#0E2452] text-white"
         id="hero"
       >
         <Image
-          src="/images/debarras-gratuit-768x512.jpg"
-          alt="Équipe Débarras Proximité en intervention de débarras"
+          src="/images/volet/mecanisme-coffre-volet-roulant.jpg"
+          alt="Mécanisme de volet roulant en réparation"
           fill
           priority
           className="object-cover object-center opacity-30"
@@ -52,11 +52,11 @@ function BlogContent() {
           </p>
 
           <h1 className="text-4xl font-bold leading-tight md:text-6xl lg:min-h-[2lh] xl:min-h-0">
-            Nos conseils pour réussir votre <span className="text-[#FFC629]">débarras</span>
+            Nos conseils pour vos <span className="text-[#FFC629]">volets roulants</span>
           </h1>
 
-          <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300 md:text-xl md:min-h-24 text-justify hyphens-auto" lang="fr">
-            Guides pratiques, prix, succession, tri et recyclage : les conseils de nos équipes pour préparer et organiser votre débarras sereinement.
+          <p className="mt-6 text-lg leading-8 text-slate-300 md:text-xl md:min-h-24 text-justify hyphens-auto" lang="fr">
+            Pannes, prix, motorisation, réparation et entretien : nos conseils pour des volets roulants fiables. Retrouvez les réponses à vos questions les plus fréquentes.
           </p>
 
           <div className="mt-9 flex flex-col gap-4 sm:flex-row sm:gap-6">
@@ -81,7 +81,7 @@ function BlogContent() {
 
         <div className="relative mx-auto grid max-w-7xl grid-cols-2 gap-3 border-t border-white/15 px-5 py-6 lg:grid-cols-4 md:px-8">
           <div className="flex items-center gap-3"><CheckCircle2 className="h-5 w-5 text-[#FFC629]" /><span className="text-sm text-slate-200">Devis 100% gratuit</span></div>
-          <div className="flex items-center gap-3"><ShieldCheck className="h-5 w-5 text-[#FFC629]" /><span className="text-sm text-slate-200">Équipe assurée</span></div>
+          <div className="flex items-center gap-3"><Clock className="h-5 w-5 text-[#FFC629]" /><span className="text-sm text-slate-200">Dépannage 7j/7</span></div>
           <div className="flex items-center gap-3"><Star className="h-5 w-5 fill-[#FFC629] text-[#FFC629]" /><span className="text-sm text-slate-200">4,8/5 par nos clients</span></div>
           <div className="flex items-center gap-3"><BadgeEuro className="h-5 w-5 text-[#FFC629]" /><span className="text-sm text-slate-200">Tarifs transparents</span></div>
         </div>
@@ -93,9 +93,9 @@ function BlogContent() {
           <div className="container mx-auto px-4 md:px-8">
             <div className="max-w-7xl mx-auto mb-10">
               <p className="mb-3 inline-flex items-center gap-3 text-sm font-semibold uppercase tracking-[0.16em] text-[#0E2452]"><span className="h-1 w-8 rounded-full bg-[#FFC629]" aria-hidden="true" />À la une</p>
-              <h2 className="text-3xl md:text-4xl font-bold text-[#0E2452] mb-3">Nos guides pour préparer votre débarras</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-[#0E2452] mb-3">Nos guides pour vos volets roulants</h2>
               <p className="text-gray-600 text-lg max-w-3xl">
-                Organisation, choix du professionnel, tri des objets : l&apos;essentiel à savoir avant de vider une maison ou un appartement.
+                Volet bloqué, prix d&apos;un dépannage : l&apos;essentiel à savoir avant de faire appel à un technicien.
               </p>
             </div>
 
@@ -114,7 +114,7 @@ function BlogContent() {
           <div className="container mx-auto px-4 md:px-8">
             <div className="max-w-7xl mx-auto mb-10">
               <p className="mb-3 inline-flex items-center gap-3 text-sm font-semibold uppercase tracking-[0.16em] text-[#0E2452]"><span className="h-1 w-8 rounded-full bg-[#FFC629]" aria-hidden="true" />Tous nos articles</p>
-              <h2 className="text-3xl md:text-4xl font-bold text-[#0E2452]">Conseils et actualités du débarras</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-[#0E2452]">Conseils et actualités des volets roulants</h2>
             </div>
 
             <div className="max-w-7xl mx-auto grid md:grid-cols-2 lg:grid-cols-3 gap-6">

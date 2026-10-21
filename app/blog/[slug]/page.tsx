@@ -13,7 +13,7 @@ import QuoteForm from "@/components/quote-form"
 import { Button } from "@/components/ui/button"
 import { DEFAULT_PHONE } from "@/lib/phone-config"
 import { Children, isValidElement, useState, useEffect } from "react"
-import { FileText, Clock, Calendar, Share2, ChevronRight, ChevronDown, Check, Link2, CheckCircle2, ShieldCheck, Star, BadgeEuro } from "lucide-react"
+import { FileText, Clock, Calendar, Share2, ChevronRight, ChevronDown, Check, Link2, CheckCircle2, Star, BadgeEuro } from "lucide-react"
 import Link from "next/link"
 import FloatingButtons from "@/components/FloatingButtons"
 
@@ -195,7 +195,7 @@ export default function BlogPostPage() {
 
         <div className="relative mx-auto grid max-w-7xl grid-cols-2 gap-3 border-t border-white/15 px-5 py-6 lg:grid-cols-4 md:px-8">
           <div className="flex items-center gap-3"><CheckCircle2 className="h-5 w-5 text-[#FFC629]" /><span className="text-sm text-slate-200">Devis 100% gratuit</span></div>
-          <div className="flex items-center gap-3"><ShieldCheck className="h-5 w-5 text-[#FFC629]" /><span className="text-sm text-slate-200">Équipe assurée</span></div>
+          <div className="flex items-center gap-3"><Clock className="h-5 w-5 text-[#FFC629]" /><span className="text-sm text-slate-200">Dépannage 7j/7</span></div>
           <div className="flex items-center gap-3"><Star className="h-5 w-5 fill-[#FFC629] text-[#FFC629]" /><span className="text-sm text-slate-200">4,8/5 par nos clients</span></div>
           <div className="flex items-center gap-3"><BadgeEuro className="h-5 w-5 text-[#FFC629]" /><span className="text-sm text-slate-200">Tarifs transparents</span></div>
         </div>
@@ -288,9 +288,9 @@ export default function BlogPostPage() {
                   <span className="mb-2 inline-block rounded-full bg-[#FFC629] px-3 py-1 text-xs font-bold uppercase tracking-widest text-[#0E2452]">
                     Rappel sous 30 min
                   </span>
-                  <h2 className="mb-1 text-lg font-bold md:text-xl">Un débarras à prévoir ?</h2>
+                  <h2 className="mb-1 text-lg font-bold md:text-xl">Un volet roulant en panne ?</h2>
                   <p className="text-sm leading-relaxed text-slate-300">
-                    Devis gratuit le jour même, intervention sous 24h/48h, équipe assurée partout en France.
+                    Dépannage d'urgence 7j/7, devis gratuit, techniciens qualifiés partout en France.
                   </p>
                 </div>
                 <Button

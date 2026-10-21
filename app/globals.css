@@ -3,7 +3,7 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Couleurs de marque Débarras Proximité : bleu #0E2452 et jaune #FFC629.
+/* Couleurs de marque Allo Dépannage Volet : bleu #0E2452 et jaune #FFC629.
    La palette "orange" de Tailwind est redéfinie en jaune pour tout le site. */
 @theme {
   --color-orange-50: #FFFAEB;
@@ -144,4 +144,9 @@
   .pt-safe {
     padding-top: env(safe-area-inset-top);
   }
+}
+/* Bande de logos des marques : défilement continu vers la gauche */
+@keyframes defilement-marques {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
 }

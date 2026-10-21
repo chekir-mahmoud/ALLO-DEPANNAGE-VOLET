@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { X, Phone, Star, Check, CheckCircle } from "lucide-react"
-import { DEBARRAS_MAISON_TESTIMONIALS } from "@/lib/testimonials/service-testimonials"
+import { VOLET_INTERVENTIONS } from "@/lib/testimonials/exemples-volet-roulant"
 
 interface QuoteFormProps {
   isOpen: boolean
@@ -21,10 +21,10 @@ interface QuoteFormProps {
 }
 
 // Mêmes engagements que la bande des en-têtes de page
-const ENGAGEMENTS = ["Devis gratuit et sans engagement", "Rappel sous 30 minutes", "Équipe assurée", "Tarifs transparents"]
+const ENGAGEMENTS = ["Devis gratuit et sans engagement", "Dépannage d'urgence 7j/7", "Toutes marques : Somfy, Bubendorff…", "Pièces et main-d'œuvre garanties"]
 
 // Avis du site (mêmes textes que la section témoignages)
-const AVIS = DEBARRAS_MAISON_TESTIMONIALS.slice(0, 8)
+const AVIS = VOLET_INTERVENTIONS
 
 const inputClass =
   "h-10 md:h-11 text-sm border-gray-300 focus-visible:border-[#0E2452] focus-visible:ring-[#0E2452]/20"
@@ -41,7 +41,7 @@ export default function QuoteForm({ isOpen, onClose, phoneConfig, title, subtitl
 
   // Rotation des avis
   useEffect(() => {
-    if (!isOpen) return
+    if (!isOpen || AVIS.length < 2) return
     const interval = setInterval(() => {
       setAnimating(true)
       setTimeout(() => {
@@ -125,7 +125,7 @@ export default function QuoteForm({ isOpen, onClose, phoneConfig, title, subtitl
         {/* ── PANNEAU GAUCHE (ordinateur) — même style que les en-têtes de page ── */}
         <aside className="relative isolate hidden w-[40%] flex-col justify-between gap-8 overflow-hidden bg-[#0E2452] p-8 text-white md:flex">
           <Image
-            src="/images/debarras-gratuit-768x512.jpg"
+            src="/images/volet/technicien-reparation-volet-roulant.jpg"
             alt=""
             aria-hidden="true"
             fill
@@ -135,9 +135,9 @@ export default function QuoteForm({ isOpen, onClose, phoneConfig, title, subtitl
           <div className="absolute inset-0 -z-10 bg-[linear-gradient(160deg,rgba(14,36,82,0.97)_0%,rgba(14,36,82,0.88)_60%,rgba(14,36,82,0.7)_100%)]" />
 
           <Image
-            src="/images/logo-debarras-proximite-blanc.png"
-            alt="Débarras Proximité"
-            width={210}
+            src="/images/logo-depannage-volet-roulant-blanc.png"
+            alt="Allo Dépannage Volet"
+            width={236}
             height={52}
             className="object-contain"
                   style={{ width: "auto" }}
@@ -158,7 +158,8 @@ export default function QuoteForm({ isOpen, onClose, phoneConfig, title, subtitl
           </div>
 
           <div className="space-y-4">
-            {/* Avis client en rotation */}
+            {/* Avis client en rotation (masqué s'il n'y a aucun avis à afficher) */}
+            {avis && (<>
             <div className="overflow-hidden">
               <figure
                 style={{
@@ -180,7 +181,7 @@ export default function QuoteForm({ isOpen, onClose, phoneConfig, title, subtitl
                   </span>
                   <span>
                     <span className="block text-xs font-semibold text-white">{avis.name}</span>
-                    <span className="block text-xs text-slate-300">4,8/5 par nos clients</span>
+                    <span className="block text-xs text-slate-300">{avis.location}</span>
                   </span>
                 </figcaption>
               </figure>
@@ -195,6 +196,7 @@ export default function QuoteForm({ isOpen, onClose, phoneConfig, title, subtitl
                 />
               ))}
             </div>
+            </>)}
 
             <a
               href={`tel:${phoneConfig.tel}`}
@@ -276,18 +278,18 @@ export default function QuoteForm({ isOpen, onClose, phoneConfig, title, subtitl
                 </div>
 
                 <div>
-                  <Label htmlFor="qf-adresse" className={labelClass}>Adresse complète *</Label>
+                  <Label htmlFor="qf-adresse" className={labelClass}>Adresse d'intervention *</Label>
                   <Input id="qf-adresse" name="adresse" placeholder="Adresse, code postal et ville" autoComplete="street-address" required className={inputClass} />
                 </div>
 
                 <div>
                   <Label htmlFor="qf-message" className={labelClass}>
-                    Message <span className="font-normal text-gray-500">(optionnel)</span>
+                    Votre panne ou projet <span className="font-normal text-gray-500">(optionnel)</span>
                   </Label>
                   <Textarea
                     id="qf-message"
                     name="message"
-                    placeholder="Type de bien, pièces à vider, date souhaitée..."
+                    placeholder="Volet bloqué, moteur, sangle, motorisation, nombre de volets..."
                     rows={3}
                     className="h-16 min-h-0 resize-none text-sm md:h-auto md:min-h-16 border-gray-300 focus-visible:border-[#0E2452] focus-visible:ring-[#0E2452]/20"
                   />

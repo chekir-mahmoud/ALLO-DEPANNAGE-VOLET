@@ -1,5 +1,5 @@
-export const SITE_URL = "https://www.debarras-proximite.fr"
-export const SITE_NAME = "Débarras Proximité"
+export const SITE_URL = "https://www.allo-depannage-volet.fr"
+export const SITE_NAME = "Allo Dépannage Volet"
 
 // Adresse du siège (données structurées Google), identique aux mentions légales
 export const COMPANY_ADDRESS = {
@@ -25,3 +25,9 @@ export const servicePath = (sousServiceSlug: string) => `/nos-services/${sousSer
 
 export const sousServicePath = (departmentSlug: string, villeSlug: string, sousServiceSlug: string) =>
   `/${departmentSlug}/${villeSlug}/${sousServiceSlug}`
+
+// Note Google affichée dans la bande bleue de l'en-tête.
+// À renseigner avec la vraie note de la fiche Google (ex. "4.8" et 480) dès qu'elle existe ;
+// tant que c'est null, l'en-tête affiche « Découvrez les avis de nos clients ».
+export const GOOGLE_RATING: string | null = "4.8"
+export const GOOGLE_REVIEW_COUNT: number | null = 480

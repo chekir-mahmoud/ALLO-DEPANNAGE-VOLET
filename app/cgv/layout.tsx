@@ -3,8 +3,8 @@ import { pageMetadata } from "@/lib/seo"
 import BreadcrumbSchema from "@/components/breadcrumb-schema"
 
 export const metadata = pageMetadata({
-  title: "Conditions générales de vente | Débarras Proximité",
-  description: "Conditions générales de vente de Débarras Proximité : devis, commande, paiement, délais d'intervention et responsabilités.",
+  title: "Conditions générales de vente | Allo Dépannage Volet",
+  description: "Conditions générales de vente de Allo Dépannage Volet : devis, commande, paiement, délais d'intervention et responsabilités.",
   path: "/cgv",
 })
 

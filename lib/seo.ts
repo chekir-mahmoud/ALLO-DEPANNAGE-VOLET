@@ -4,7 +4,7 @@ import type { Metadata } from "next"
 // (Open Graph / Twitter) propres à la page. Les pages qui n'utilisaient que la configuration
 // générale annonçaient l'URL et l'image de l'accueil au partage.
 
-const DEFAULT_IMAGE = "/images/debarras-gratuit-768x512.jpg"
+const DEFAULT_IMAGE = "/images/volet/technicien-reparation-volet-roulant.jpg"
 
 export function pageMetadata({
   title,
@@ -27,7 +27,7 @@ export function pageMetadata({
     openGraph: {
       type: "website",
       locale: "fr_FR",
-      siteName: "Débarras Proximité",
+      siteName: "Allo Dépannage Volet",
       title,
       description,
       url: path,

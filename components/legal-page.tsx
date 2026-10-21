@@ -47,7 +47,7 @@ export default function LegalPage({
 
       {/* EN-TÊTE — même style et même hauteur que les autres pages */}
       <section aria-label={title} className="relative isolate overflow-hidden bg-[#0E2452] text-white" id="hero">
-        <Image src="/images/debarras-gratuit-768x512.jpg" alt="" aria-hidden="true" fill priority sizes="100vw" className="-z-10 object-cover object-center opacity-30" />
+        <Image src="/images/volet/mecanisme-coffre-volet-roulant.jpg" alt="" aria-hidden="true" fill priority sizes="100vw" className="-z-10 object-cover object-center opacity-30" />
         <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(14,36,82,0.97)_0%,rgba(14,36,82,0.86)_48%,rgba(14,36,82,0.38)_100%)]" />
 
         <div className="relative mx-auto max-w-7xl px-5 py-10 md:px-8 md:py-14">
@@ -55,7 +55,7 @@ export default function LegalPage({
             Informations légales
           </p>
           <h1 className="text-4xl font-bold leading-tight md:text-6xl lg:min-h-[2lh] xl:min-h-0">{title}</h1>
-          <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300 md:text-xl md:min-h-24 text-justify hyphens-auto" lang="fr">
+          <p className="mt-6 text-lg leading-8 text-slate-300 md:text-xl md:min-h-24 text-justify hyphens-auto" lang="fr">
             {intro}
           </p>
           <div className="mt-9 flex flex-col gap-4 sm:flex-row sm:gap-6">
@@ -111,7 +111,7 @@ export default function LegalPage({
             </div>
             <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
               <a
-                href="mailto:contact@debarras-proximite.fr"
+                href="mailto:contact@allo-depannage-volet.fr"
                 className="inline-flex h-12 w-full items-center justify-center rounded-lg border-2 border-white/40 px-5 font-semibold transition-colors hover:border-white hover:bg-white hover:text-[#0E2452] sm:w-56"
               >
                 <Mail className="mr-2 h-5 w-5" aria-hidden="true" /> Nous écrire

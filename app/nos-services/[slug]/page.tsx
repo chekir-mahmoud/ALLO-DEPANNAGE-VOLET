@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { SITE_URL } from "@/lib/site"
 import { DEFAULT_PHONE } from "@/lib/phone-config"
-import { SOUS_SERVICES_DEBARRAS, getSousServiceBySlug, resolveSousServiceNational } from "@/lib/sous-services/debarras-maison"
+import { SOUS_SERVICES_VOLET, getSousServiceBySlug, resolveSousServiceNational } from "@/lib/sous-services/volet-roulant"
 import ServiceClient from "./service-client"
 import BreadcrumbSchema from "@/components/breadcrumb-schema"
 
@@ -12,7 +12,7 @@ import BreadcrumbSchema from "@/components/breadcrumb-schema"
 export const dynamicParams = false
 
 export function generateStaticParams() {
-  return SOUS_SERVICES_DEBARRAS.map((ss) => ({ slug: ss.slug }))
+  return SOUS_SERVICES_VOLET.map((ss) => ({ slug: ss.slug }))
 }
 
 type Params = { params: Promise<{ slug: string }> }
@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const config = getSousServiceBySlug(slug)
   if (!config) return { title: "Page non trouvée" }
   const ss = resolveSousServiceNational(config, pageUrl(slug))
-  const title = `${ss.label} partout en France | Débarras Proximité`
+  const title = `${ss.label} partout en France | Allo Dépannage Volet`
   return {
     title,
     description: ss.metaDescription,
@@ -33,13 +33,13 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
     openGraph: {
       type: "website",
       locale: "fr_FR",
-      siteName: "Débarras Proximité",
+      siteName: "Allo Dépannage Volet",
       title,
       description: ss.metaDescription,
       url: pageUrl(slug),
-      images: [{ url: ss.heroImage, alt: `${ss.label} par Débarras Proximité` }],
+      images: [{ url: ss.ogImage ?? ss.heroImage, alt: `${ss.label} par Allo Dépannage Volet` }],
     },
-    twitter: { card: "summary_large_image", title, description: ss.metaDescription, images: [ss.heroImage] },
+    twitter: { card: "summary_large_image", title, description: ss.metaDescription, images: [ss.ogImage ?? ss.heroImage] },
   }
 }
 
@@ -57,7 +57,7 @@ export default async function Page({ params }: Params) {
     description: ss.schemaDescription,
     slogan: ss.schemaSlogan,
     serviceType: ss.label,
-    provider: { "@type": "Organization", name: "Débarras Proximité", url: SITE_URL, telephone: DEFAULT_PHONE.display },
+    provider: { "@type": "Organization", name: "Allo Dépannage Volet", url: SITE_URL, telephone: DEFAULT_PHONE.display },
     areaServed: { "@type": "Country", name: "France" },
     hasOfferCatalog: {
       "@type": "OfferCatalog",
@@ -71,7 +71,7 @@ export default async function Page({ params }: Params) {
     },
   }
 
-  const others = SOUS_SERVICES_DEBARRAS.filter((s) => s.slug !== slug).map((s) => ({
+  const others = SOUS_SERVICES_VOLET.filter((s) => s.slug !== slug).map((s) => ({
     slug: s.slug,
     label: s.label,
     sub: s.heroCardSub,

@@ -10,24 +10,28 @@ import FloatingButtons from "@/components/FloatingButtons"
 import TarifsSection from "@/components/sections/tarifs-section"
 import FormulesSection from "@/components/sections/formules-section"
 import TestimonialsSection from "@/components/sections/testimonials-section"
-import { DEBARRAS_MAISON_TESTIMONIALS } from "@/lib/testimonials/service-testimonials"
+import { VOLET_INTERVENTIONS } from "@/lib/testimonials/exemples-volet-roulant"
 import Link from "next/link"
-import { CheckCircle2, ChevronDown, ChevronRight, BadgeEuro, FileText, ShieldCheck, Star, Boxes, Building2, Recycle, Coins, Plus, Calculator } from "lucide-react"
+import { CheckCircle2, ChevronDown, ChevronRight, BadgeEuro, FileText, Clock, Star, Building2, Cog, Ruler, Wrench, Plus, Calculator } from "lucide-react"
 
 interface TarifsClientProps {
   phoneConfig: { tel: string; display: string }
 }
 
-// Avis affichés avec des villes réparties dans toute la France
-const NATIONAL_CITIES = ["Paris", "Lyon", "Marseille", "Toulouse", "Nantes", "Lille", "Strasbourg", "Montpellier", "Rennes", "Nice"]
-const NATIONAL_TESTIMONIALS = DEBARRAS_MAISON_TESTIMONIALS.map((t, i) => ({ ...t, location: NATIONAL_CITIES[i % NATIONAL_CITIES.length] }))
-
 const FAQ = [
-  { question: `Comment est calculé le prix d'un débarras ?`, answer: `Le prix dépend du volume à évacuer, de l'accessibilité (étage, ascenseur, stationnement), du temps de tri et de la valeur des objets récupérables. Le devis détaille la main-d'œuvre, le transport et le traitement des déchets.` },
-  { question: `Le débarras de maison peut-il être gratuit ?`, answer: `Dans certains cas, la revente des meubles et objets de valeur compense tout ou partie des frais. Nous vous l'indiquons dès l'estimation, toujours gratuite et sans engagement.` },
-  { question: `Le devis est-il payant ?`, answer: `Non. Le devis est 100 % gratuit et sans engagement, établi le jour même après une visite sur place ou à partir de vos photos.` },
-  { question: `Les prix sont-ils les mêmes partout en France ?`, answer: `Nos prix indicatifs s'appliquent partout en France. Le tarif définitif dépend surtout du volume, de l'accès au logement et du type de déchets, que nous évaluons lors de l'estimation gratuite.` },
-  { question: `Quand dois-je payer ?`, answer: `Le paiement s'effectue à la fin de l'intervention, une fois que vous avez constaté que les lieux sont vidés et propres. Une facture vous est remise.` },
+  { question: `Comment est calculé le prix d'un dépannage de volet roulant ?`, answer: `Le prix dépend de la panne, des pièces à remplacer, des dimensions du volet et de son accessibilité. Le devis détaille le déplacement, les pièces et la main-d'œuvre : vous connaissez le prix avant l'intervention.` },
+  { question: `Le déplacement est-il payant ?`, answer: `Le déplacement et le diagnostic sont proposés dès 69 €. Ce montant vous est toujours annoncé avant le déplacement du technicien.` },
+  { question: `Le devis est-il payant ?`, answer: `Non. Le devis est 100 % gratuit et sans engagement. Il est établi à partir de votre description et de vos photos, ou après le diagnostic sur place.` },
+  { question: `Vaut-il mieux réparer ou remplacer son volet roulant ?`, answer: `La réparation est presque toujours plus économique. Le remplacement complet ne se justifie que si le coffre, les coulisses ou le tablier sont très abîmés, ou si vous souhaitez améliorer l'isolation.` },
+  { question: `Quand dois-je payer ?`, answer: `Le paiement s'effectue à la fin de l'intervention, une fois que vous avez constaté le bon fonctionnement de votre volet. Une facture détaillée vous est remise.` },
+]
+
+// Ce qui fait varier le prix
+const PRICE_FACTORS = [
+  { Icon: Wrench, label: "Type de panne" },
+  { Icon: Cog, label: "Pièces à remplacer" },
+  { Icon: Ruler, label: "Dimensions du volet" },
+  { Icon: Building2, label: "Accès et hauteur" },
 ]
 
 export default function TarifsClient({ phoneConfig }: TarifsClientProps) {
@@ -39,13 +43,13 @@ export default function TarifsClient({ phoneConfig }: TarifsClientProps) {
 
       {/* HERO — même style que la page À propos */}
       <section
-        aria-label="Tarifs de débarras"
+        aria-label="Tarifs de volets roulants"
         className="relative isolate overflow-hidden bg-[#0E2452] text-white"
         id="hero"
       >
         <Image
-          src="/images/debarras-gratuit-768x512.jpg"
-          alt="Estimation du prix d'un débarras de maison"
+          src="/images/volet/mecanisme-coffre-volet-roulant.jpg"
+          alt="Mécanisme de volet roulant en réparation"
           fill
           priority
           className="object-cover object-center opacity-30"
@@ -58,11 +62,11 @@ export default function TarifsClient({ phoneConfig }: TarifsClientProps) {
           </p>
 
           <h1 className="text-4xl font-bold leading-tight md:text-6xl lg:min-h-[2lh] xl:min-h-0">
-            Tarifs de <span className="text-[#FFC629]">débarras</span>
+            Des tarifs <span className="text-[#FFC629]">transparents</span> et sans surprise
           </h1>
 
-          <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300 md:text-xl md:min-h-24 text-justify hyphens-auto" lang="fr">
-            Des prix clairs pour le débarras de maison, appartement, cave, grenier ou succession. Votre devis est détaillé, gratuit, sans engagement et sans frais cachés.
+          <p className="mt-6 text-lg leading-8 text-slate-300 md:text-xl md:min-h-24 text-justify hyphens-auto" lang="fr">
+            Des prix clairs pour le dépannage, la réparation, l'installation et la motorisation de vos volets roulants. Votre devis est détaillé, gratuit, sans engagement et sans frais cachés.
           </p>
 
           <div className="mt-9 flex flex-col gap-4 sm:flex-row sm:gap-6">
@@ -87,7 +91,7 @@ export default function TarifsClient({ phoneConfig }: TarifsClientProps) {
 
         <div className="relative mx-auto grid max-w-7xl grid-cols-2 gap-3 border-t border-white/15 px-5 py-6 lg:grid-cols-4 md:px-8">
           <div className="flex items-center gap-3"><CheckCircle2 className="h-5 w-5 text-[#FFC629]" /><span className="text-sm text-slate-200">Devis 100% gratuit</span></div>
-          <div className="flex items-center gap-3"><ShieldCheck className="h-5 w-5 text-[#FFC629]" /><span className="text-sm text-slate-200">Équipe assurée</span></div>
+          <div className="flex items-center gap-3"><Clock className="h-5 w-5 text-[#FFC629]" /><span className="text-sm text-slate-200">Dépannage 7j/7</span></div>
           <div className="flex items-center gap-3"><Star className="h-5 w-5 fill-[#FFC629] text-[#FFC629]" /><span className="text-sm text-slate-200">4,8/5 par nos clients</span></div>
           <div className="flex items-center gap-3"><BadgeEuro className="h-5 w-5 text-[#FFC629]" /><span className="text-sm text-slate-200">Tarifs transparents</span></div>
         </div>
@@ -99,39 +103,34 @@ export default function TarifsClient({ phoneConfig }: TarifsClientProps) {
           <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             <div>
               <p className="mb-3 inline-flex items-center gap-3 text-sm font-semibold uppercase tracking-[0.16em] text-[#0E2452]"><span className="h-1 w-8 rounded-full bg-[#FFC629]" aria-hidden="true" />Prix transparents</p>
-              <h2 className="text-3xl md:text-4xl font-bold text-[#0E2452] mb-6 leading-tight">Comment est calculé le prix d&apos;un débarras ?</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-[#0E2452] mb-6 leading-tight">Comment est calculé le prix d&apos;une intervention ?</h2>
               <div className="space-y-4 text-gray-600 text-base md:text-lg leading-relaxed text-justify hyphens-auto" lang="fr">
                 <p>
-                  Chaque débarras est différent : le prix dépend avant tout du <strong className="text-[#0E2452]">volume à évacuer</strong>,
-                  de l&apos;<strong className="text-[#0E2452]">accessibilité</strong> du logement et du <strong className="text-[#0E2452]">temps de tri</strong> nécessaire.
+                  Chaque intervention est différente : le prix dépend avant tout de la <strong className="text-[#0E2452]">panne</strong>,
+                  des <strong className="text-[#0E2452]">pièces à remplacer</strong> et des <strong className="text-[#0E2452]">dimensions</strong> de votre volet.
                 </p>
                 <p>
-                  Nos devis incluent la main-d&apos;œuvre, le transport et le traitement des déchets en filières agréées. Le rachat des
-                  meubles et objets de valeur peut réduire votre facture, voire la couvrir entièrement.
+                  Nos devis détaillent le déplacement, les pièces et la main-d&apos;œuvre. Le diagnostic permet de réparer uniquement
+                  ce qui doit l&apos;être : une réparation coûte le plus souvent bien moins cher qu&apos;un remplacement complet.
                 </p>
               </div>
-              <ul className="mt-8 grid sm:grid-cols-2 gap-3">
-                {[
-                  { Icon: Boxes, label: "Volume à évacuer" },
-                  { Icon: Building2, label: "Étage, ascenseur, accès" },
-                  { Icon: Recycle, label: "Tri et recyclage" },
-                  { Icon: Coins, label: "Rachat déduit du prix" },
-                ].map(({ Icon, label }) => (
-                  <li key={label} className="flex items-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-3">
+              <ul className="mt-8 grid grid-cols-2 gap-3">
+                {PRICE_FACTORS.map(({ Icon, label }) => (
+                  <li key={label} className="flex min-h-[64px] items-center gap-3 rounded-xl border border-gray-200 bg-white px-3 py-3 sm:px-4">
                     <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[#0E2452]">
                       <Icon className="h-5 w-5 text-[#FFC629]" aria-hidden="true" />
                     </span>
-                    <span className="text-sm md:text-base font-semibold text-[#0E2452]">{label}</span>
+                    <span className="text-sm md:text-base font-semibold leading-tight text-[#0E2452]">{label}</span>
                   </li>
                 ))}
               </ul>
             </div>
             <div className="rounded-2xl overflow-hidden shadow-xl">
               <Image
-                src="/images/debarras-maison.jpg"
-                alt="Estimation du volume d'un débarras de maison"
-                width={768}
-                height={512}
+                src="/images/volet/moteur-tubulaire-volet-roulant.jpg"
+                alt="Moteur tubulaire et pièces de volet roulant"
+                width={1128}
+                height={720}
                 className="w-full h-auto object-cover"
               />
             </div>
@@ -156,13 +155,13 @@ export default function TarifsClient({ phoneConfig }: TarifsClientProps) {
               {[
                 {
                   title: "Inclus dans le prix",
-                  items: ["Estimation gratuite à domicile", "Main-d'œuvre et manutention", "Transport et évacuation", "Tri, dons et recyclage", "Traitement des déchets en filières agréées", "Nettoyage sommaire des lieux"],
+                  items: ["Diagnostic de la panne", "Déplacement du technicien", "Main-d'œuvre et réglages", "Pièces détaillées sur le devis", "Tests de fonctionnement", "Garantie pièces et main-d'œuvre"],
                   Icon: CheckCircle2,
                   dark: true,
                 },
                 {
                   title: "En option, sur demande",
-                  items: ["Nettoyage complet (sols, murs, surfaces)", "Désinfection du logement", "Intervention en urgence ou le week-end", "Rachat de meubles et objets de valeur", "Coordination avec le notaire ou les héritiers", "Attestation de traitement des déchets"],
+                  items: ["Motorisation des volets manuels", "Télécommande supplémentaire", "Centralisation et domotique", "Lames isolantes en aluminium", "Volet roulant solaire", "Contrat d'entretien annuel"],
                   Icon: Plus,
                   dark: false,
                 },
@@ -182,7 +181,7 @@ export default function TarifsClient({ phoneConfig }: TarifsClientProps) {
               ))}
             </div>
             <p className="mt-8 text-center text-sm text-gray-600">
-              Vous hésitez sur le type de débarras ?{" "}
+              Vous hésitez sur la prestation ?{" "}
               <Link href="/nos-services" className="font-semibold text-[#0E2452] underline-offset-4 hover:underline">
                 Découvrir toutes nos prestations
               </Link>
@@ -191,7 +190,7 @@ export default function TarifsClient({ phoneConfig }: TarifsClientProps) {
         </div>
       </section>
 
-      <TestimonialsSection testimonials={NATIONAL_TESTIMONIALS} className="bg-white" padding="py-10 md:py-14" />
+      <TestimonialsSection testimonials={VOLET_INTERVENTIONS} examples className="bg-white" padding="py-10 md:py-14" />
 
       {/* FAQ tarifs */}
       <section className="bg-gray-50 py-10 md:py-14" id="faq-tarifs">
@@ -233,11 +232,11 @@ export default function TarifsClient({ phoneConfig }: TarifsClientProps) {
             <div className="flex w-full flex-col items-center justify-between gap-6 md:flex-row">
               <div className="min-w-0 flex-1 text-center md:text-left">
                 <span className="mb-2 inline-block rounded-full bg-[#FFC629] px-3 py-1 text-xs font-bold uppercase tracking-widest text-[#0E2452]">
-                  Devis gratuit le jour même
+                  Devis gratuit et sans engagement
                 </span>
                 <h3 className="mb-1 text-lg font-bold md:text-xl">Besoin d&apos;un prix précis ?</h3>
                 <p className="text-sm leading-relaxed text-slate-300">
-                  Décrivez votre débarras : nous vous rappelons en moins de 30 minutes et vous envoyons un devis détaillé, partout en France.
+                  Décrivez votre panne ou votre projet : nous vous rappelons en moins de 30 minutes et vous remettons un devis détaillé, partout en France.
                 </p>
               </div>
               <Button
@@ -261,8 +260,8 @@ export default function TarifsClient({ phoneConfig }: TarifsClientProps) {
         isOpen={isQuoteFormOpen}
         onClose={() => setIsQuoteFormOpen(false)}
         phoneConfig={phoneConfig}
-        title="Demandez votre devis débarras gratuit"
-        subtitle="Maison, appartement, cave, grenier, et autres locaux"
+        title="Demandez votre devis gratuit"
+        subtitle="Dépannage, réparation, installation et motorisation"
       />
     </div>
   )

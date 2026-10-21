@@ -3,8 +3,8 @@ import { pageMetadata } from "@/lib/seo"
 import BreadcrumbSchema from "@/components/breadcrumb-schema"
 
 export const metadata = pageMetadata({
-  title: "FAQ débarras : prix, délais, succession | Débarras Proximité",
-  description: "Toutes les réponses sur nos débarras partout en France : devis, tarifs, délais, succession, tri et recyclage des objets.",
+  title: "FAQ volet roulant : panne, prix, motorisation | Allo Dépannage Volet",
+  description: "Toutes les réponses sur le dépannage, la réparation, la motorisation et l'installation de volets roulants : devis, tarifs, délais, paiement et garanties.",
   path: "/foire-aux-questions",
 })
 

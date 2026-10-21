@@ -9,21 +9,23 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Phone, MapPin, CheckCircle2, FileText, Users, ShieldCheck, ChevronRight } from "lucide-react"
+import { Phone, MapPin, CheckCircle2, FileText, Users, ShieldCheck, ChevronRight, Wrench } from "lucide-react"
 import DepartmentMap from "@/components/department-map"
 import Header from "@/components/header"
 import QuoteFormHeading from "@/components/quote-form-heading"
 import Footer from "@/components/Footer"
 import QuoteForm from "@/components/QuoteForm"
-import type { Testimonial } from "@/lib/testimonials"
-import type { ResolvedSousServiceConfig } from "@/lib/sous-services/debarras-maison"
-import { replaceTestimonialCitiesWithDepartmentCities } from "@/lib/testimonials"
+import { SERVICES_SECTION_TITLE, type ResolvedSousServiceConfig } from "@/lib/sous-services/volet-roulant"
+import { VOLET_INTERVENTIONS } from "@/lib/testimonials/exemples-volet-roulant"
+import { VOLET_SERVICES } from "@/lib/services-volet-roulant"
+import { getCityFaq } from "@/lib/city-faq"
 import DynamicHead from "@/components/DynamicHead"
 import FloatingButtons from "@/components/FloatingButtons"
-import RealisationsSection from "@/components/sections/realisations-section"
 import TestimonialsSection from "@/components/sections/testimonials-section"
 import TarifsSection from "@/components/sections/tarifs-section"
 import HowItWorksSection from "@/components/sections/how-it-works-section"
+import BrandsSection from "@/components/sections/brands-section"
+import PannesSection from "@/components/sections/pannes-section"
 import WhyChooseUsSection from "@/components/sections/why-choose-us-section"
 import FormulesSection from "@/components/sections/formules-section"
 import { getDepartmentAreaPhrase } from "@/lib/department-area-phrase"
@@ -35,17 +37,9 @@ interface ClientVillePageProps {
   serviceSlug?: string
   departmentSlug?: string
   departmentConfig?: { slug: string; name: string; displayName: string; postalCode: string } | null
-  testimonials?: Testimonial[]
   cities?: { name: string; slug: string }[]
   departmentCities?: Record<string, { name: string }>
-  cityContent?: {
-    intro: string
-    accessText: string | null
-    activityText: string | null
-    quartiers: string[]
-    hasSpecificContent: boolean
-  }
-  // Page de sous-service (ex. /gironde/bordeaux/debarras-maison) : même design, contenu adapté
+  // Page de sous-service (ex. /gironde/bordeaux/depannage-volet-roulant) : même design, contenu adapté
   sousService?: ResolvedSousServiceConfig
 }
 
@@ -104,6 +98,13 @@ const DEPT_COORDINATES: Record<string, { lat: string; lng: string }> = {
   "mayotte": { lat: "-12.8275", lng: "45.1662" },
 }
 
+// ─── Nom de la ville en jaune dans le titre ──────────────────────────────────
+const highlightCity = (text: string, city: string) => {
+  const i = text.lastIndexOf(city)
+  if (i === -1) return text
+  return <>{text.slice(0, i)}<span className="text-[#FFC629]">{city}</span>{text.slice(i + city.length)}</>
+}
+
 // ─── Helpers JSON-LD ──────────────────────────────────────────────────────────
 const serializeJsonLd = (data: unknown): string => {
   try { return JSON.stringify(data) } catch { return "{}" }
@@ -117,20 +118,19 @@ const buildLocalBusinessData = (
   phoneConfig: { tel: string },
   departmentConfig: { name: string; displayName: string } | null,
   gps: { lat: string; lng: string },
-  allTestimonials: Array<{ name: string; rating: number; text: string }>,
 ) => ({
   "@context": "https://schema.org",
   "@type": ["LocalBusiness", "HomeAndConstructionBusiness"],
   "@id": `${SITE_URL}${cityPath(departmentSlug, initialVilleSlug)}`,
-  "name": `DÉBARRAS PROXIMITÉ - Débarras de Maison ${cityData.name}`,
-  "alternateName": `Débarrasseur professionnel ${cityData.name} - DÉBARRAS PROXIMITÉ`,
+  "name": `ALLO DÉPANNAGE VOLET - Dépannage volet roulant ${cityData.name}`,
+  "alternateName": `Dépannage et réparation de volets roulants ${cityData.name} - ALLO DÉPANNAGE VOLET`,
   "image": [
-    "https://www.debarras-proximite.fr/images/debarras-gratuit-768x512.jpg",
-    "https://www.debarras-proximite.fr/images/debarras-vide-maison.jpg",
-    "https://www.debarras-proximite.fr/images/debarras-grenier.jpg",
+    "https://www.allo-depannage-volet.fr/images/volet/technicien-reparation-volet-roulant.jpg",
+    "https://www.allo-depannage-volet.fr/images/volet/depannage-volet-roulant-bloque.jpg",
+    "https://www.allo-depannage-volet.fr/images/volet/moteur-tubulaire-volet-roulant.jpg",
   ],
-  "logo": "https://www.debarras-proximite.fr/images/logo-debarras-proximite.png",
-  "description": `Service professionnel de débarras à ${cityData.name} (${cityData.postalCode}). Débarras maison, appartement, cave, grenier, fin de chantier, locaux professionnels et succession. Devis gratuit le jour même, rachat meubles possible, recyclage inclus.`,
+  "logo": "https://www.allo-depannage-volet.fr/images/logo-depannage-volet-roulant.png",
+  "description": `Dépannage, réparation, installation et motorisation de volets roulants à ${cityData.name} (${cityData.postalCode}), 7j/7. Rideaux métalliques et stores, toutes marques, devis gratuit.`,
   "address": COMPANY_ADDRESS,
   "geo": {
     "@type": "GeoCoordinates",
@@ -138,7 +138,7 @@ const buildLocalBusinessData = (
     "longitude": gps.lng,
   },
   "telephone": phoneConfig.tel,
-  "email": "contact@debarras-proximite.fr",
+  "email": "contact@allo-depannage-volet.fr",
   "url": `${SITE_URL}${cityPath(departmentSlug, initialVilleSlug)}`,
   "sameAs": [
   ],
@@ -153,14 +153,6 @@ const buildLocalBusinessData = (
       "closes": "23:59",
     },
   ],
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "4.8",
-    "bestRating": "5",
-    "worstRating": "1",
-    "ratingCount": "480",
-    "reviewCount": "480",
-  },
   "areaServed": [
     { "@type": "City", "name": cityData.name },
     { "@type": "AdministrativeArea", "name": departmentConfig?.name ?? departmentSlug },
@@ -171,75 +163,72 @@ const buildLocalBusinessData = (
     "geoRadius": "30000",
   },
   "knowsAbout": [
-    "Débarras de maison", "Vide maison succession",
-    "Débarras appartement", "Débarras cave et grenier",
-    "Débarras fin de chantier", "Débarras locaux professionnels",
-    "Enlèvement encombrants", "Rachat meubles anciens",
-    "Estimation antiquités", "Débarras syndrome de Diogène",
-    "Débarras garde-meubles", "Débarras après sinistre",
+    "Dépannage volet roulant", "Réparation volet roulant",
+    "Remplacement moteur volet roulant", "Motorisation volet roulant",
+    "Installation volet roulant", "Remplacement lames volet roulant",
+    "Rideau métallique", "Store banne",
   ],
   "hasOfferCatalog": {
     "@type": "OfferCatalog",
-    "name": `Services de Débarras à ${cityData.name}`,
+    "name": `Dépannage de volets roulants à ${cityData.name}`,
     "itemListElement": [
       {
-        "@type": "Offer", "name": `Débarras de maison complet à ${cityData.name}`,
-        "description": `Vidage complet de maison à ${cityData.name} : meubles, objets, vêtements, électroménager. Tri sélectif et recyclage inclus.`,
-        "priceSpecification": { "@type": "UnitPriceSpecification", "price": "299", "priceCurrency": "EUR", "minPrice": "299", "unitText": "prestation" },
-        "itemOffered": { "@type": "Service", "name": `Débarras de maison complet à ${cityData.name}`, "description": `Vidage complet de maison à ${cityData.name} : dépose, tri, évacuation et nettoyage. Rachat possible de meubles et objets de valeur.`, "provider": { "@id": `${SITE_URL}${cityPath(departmentSlug, initialVilleSlug)}` }, "areaServed": { "@type": "City", "name": cityData.name }, "availableChannel": { "@type": "ServiceChannel", "servicePhone": phoneConfig.tel, "serviceUrl": `${SITE_URL}${cityPath(departmentSlug, initialVilleSlug)}` } },
+        "@type": "Offer", "name": `Diagnostic et déplacement à ${cityData.name}`,
+        "description": `Diagnostic complet d'un volet roulant en panne à ${cityData.name}.`,
+        "priceSpecification": { "@type": "UnitPriceSpecification", "price": "69", "priceCurrency": "EUR", "minPrice": "69", "unitText": "intervention" },
+        "itemOffered": { "@type": "Service", "name": `Diagnostic et déplacement à ${cityData.name}`, "provider": { "@id": `${SITE_URL}${cityPath(departmentSlug, initialVilleSlug)}` }, "areaServed": { "@type": "City", "name": cityData.name } },
       },
       {
-        "@type": "Offer", "name": `Débarras appartement à ${cityData.name}`,
-        "description": `Vidage complet ou partiel d'appartement à ${cityData.name}. Devis gratuit, intervention rapide.`,
-        "priceSpecification": { "@type": "UnitPriceSpecification", "price": "199", "priceCurrency": "EUR", "minPrice": "199", "unitText": "prestation" },
-        "itemOffered": { "@type": "Service", "name": `Débarras appartement à ${cityData.name}`, "description": `Débarras d'appartement à ${cityData.name} avant vente, location ou succession. Enlèvement meubles, électroménager et encombrants.`, "provider": { "@id": `${SITE_URL}${cityPath(departmentSlug, initialVilleSlug)}` }, "areaServed": { "@type": "City", "name": cityData.name } },
+        "@type": "Offer", "name": `Déblocage de volet roulant à ${cityData.name}`,
+        "description": `Déblocage d'un volet roulant coincé en position ouverte, fermée ou à mi-hauteur à ${cityData.name}.`,
+        "priceSpecification": { "@type": "UnitPriceSpecification", "price": "89", "priceCurrency": "EUR", "minPrice": "89", "unitText": "intervention" },
+        "itemOffered": { "@type": "Service", "name": `Déblocage de volet roulant à ${cityData.name}`, "provider": { "@id": `${SITE_URL}${cityPath(departmentSlug, initialVilleSlug)}` }, "areaServed": { "@type": "City", "name": cityData.name } },
       },
       {
-        "@type": "Offer", "name": `Vide maison succession à ${cityData.name}`,
-        "description": `Débarras succession à ${cityData.name} : estimation, rachat objets de valeur et vidage complet. Service discret et respectueux.`,
-        "priceSpecification": { "@type": "UnitPriceSpecification", "price": "299", "priceCurrency": "EUR", "minPrice": "299", "unitText": "prestation" },
-        "itemOffered": { "@type": "Service", "name": `Vide maison succession à ${cityData.name}`, "description": `Vide maison succession à ${cityData.name} : estimation et rachat d'antiquités, meubles et objets de valeur. Service discret et accompagnement personnalisé.`, "provider": { "@id": `${SITE_URL}${cityPath(departmentSlug, initialVilleSlug)}` }, "areaServed": { "@type": "City", "name": cityData.name } },
+        "@type": "Offer", "name": `Remplacement de sangle ou manivelle à ${cityData.name}`,
+        "description": `Remplacement de sangle, d'enrouleur, de manivelle ou de treuil à ${cityData.name}.`,
+        "priceSpecification": { "@type": "UnitPriceSpecification", "price": "79", "priceCurrency": "EUR", "minPrice": "79", "unitText": "intervention" },
+        "itemOffered": { "@type": "Service", "name": `Remplacement de sangle ou manivelle à ${cityData.name}`, "provider": { "@id": `${SITE_URL}${cityPath(departmentSlug, initialVilleSlug)}` }, "areaServed": { "@type": "City", "name": cityData.name } },
       },
       {
-        "@type": "Offer", "name": `Débarras cave et grenier à ${cityData.name}`,
-        "description": `Vidage de cave, grenier ou sous-sol à ${cityData.name}. Encombrants, meubles anciens et objets divers évacués.`,
-        "priceSpecification": { "@type": "UnitPriceSpecification", "price": "149", "priceCurrency": "EUR", "minPrice": "149", "unitText": "prestation" },
-        "itemOffered": { "@type": "Service", "name": `Débarras cave et grenier à ${cityData.name}`, "description": `Vidage de cave, grenier et sous-sol à ${cityData.name}. Tri sélectif, évacuation et recyclage des objets encombrants.`, "provider": { "@id": `${SITE_URL}${cityPath(departmentSlug, initialVilleSlug)}` }, "areaServed": { "@type": "City", "name": cityData.name } },
+        "@type": "Offer", "name": `Remplacement de lames à ${cityData.name}`,
+        "description": `Remplacement de lames de volet roulant cassées ou déformées à ${cityData.name}.`,
+        "priceSpecification": { "@type": "UnitPriceSpecification", "price": "119", "priceCurrency": "EUR", "minPrice": "119", "unitText": "intervention" },
+        "itemOffered": { "@type": "Service", "name": `Remplacement de lames à ${cityData.name}`, "provider": { "@id": `${SITE_URL}${cityPath(departmentSlug, initialVilleSlug)}` }, "areaServed": { "@type": "City", "name": cityData.name } },
       },
       {
-        "@type": "Offer", "name": `Débarras fin de chantier à ${cityData.name}`,
-        "description": `Évacuation gravats, matériaux et encombrants après travaux à ${cityData.name}. Chantier propre garanti.`,
-        "priceSpecification": { "@type": "UnitPriceSpecification", "price": "199", "priceCurrency": "EUR", "minPrice": "199", "unitText": "prestation" },
-        "itemOffered": { "@type": "Service", "name": `Débarras fin de chantier à ${cityData.name}`, "description": `Évacuation de gravats, matériaux de construction et encombrants après travaux à ${cityData.name}. Nettoyage de chantier inclus.`, "provider": { "@id": `${SITE_URL}${cityPath(departmentSlug, initialVilleSlug)}` }, "areaServed": { "@type": "City", "name": cityData.name } },
+        "@type": "Offer", "name": `Remplacement de moteur à ${cityData.name}`,
+        "description": `Remplacement de moteur de volet roulant filaire ou radio, toutes marques à ${cityData.name}.`,
+        "priceSpecification": { "@type": "UnitPriceSpecification", "price": "290", "priceCurrency": "EUR", "minPrice": "290", "unitText": "intervention" },
+        "itemOffered": { "@type": "Service", "name": `Remplacement de moteur à ${cityData.name}`, "provider": { "@id": `${SITE_URL}${cityPath(departmentSlug, initialVilleSlug)}` }, "areaServed": { "@type": "City", "name": cityData.name } },
       },
       {
-        "@type": "Offer", "name": `Débarras locaux professionnels à ${cityData.name}`,
-        "description": `Vidage de bureaux, commerces, entrepôts ou locaux professionnels à ${cityData.name}. Intervention rapide.`,
-        "priceSpecification": { "@type": "UnitPriceSpecification", "price": "299", "priceCurrency": "EUR", "minPrice": "299", "unitText": "prestation" },
-        "itemOffered": { "@type": "Service", "name": `Débarras locaux professionnels à ${cityData.name}`, "description": `Débarras de bureaux, commerces, entrepôts et locaux industriels à ${cityData.name}. Meubles, équipements et encombrants évacués rapidement.`, "provider": { "@id": `${SITE_URL}${cityPath(departmentSlug, initialVilleSlug)}` }, "areaServed": { "@type": "City", "name": cityData.name } },
+        "@type": "Offer", "name": `Motorisation de volet roulant à ${cityData.name}`,
+        "description": `Motorisation d'un volet roulant à sangle ou à manivelle à ${cityData.name}.`,
+        "priceSpecification": { "@type": "UnitPriceSpecification", "price": "450", "priceCurrency": "EUR", "minPrice": "450", "unitText": "intervention" },
+        "itemOffered": { "@type": "Service", "name": `Motorisation de volet roulant à ${cityData.name}`, "provider": { "@id": `${SITE_URL}${cityPath(departmentSlug, initialVilleSlug)}` }, "areaServed": { "@type": "City", "name": cityData.name } },
       },
       {
-        "@type": "Offer", "name": `Enlèvement encombrants à ${cityData.name}`,
-        "description": `Enlèvement de meubles, électroménager et encombrants à ${cityData.name}. Rachat possible.`,
-        "priceSpecification": { "@type": "UnitPriceSpecification", "price": "99", "priceCurrency": "EUR", "minPrice": "99", "unitText": "prestation" },
-        "itemOffered": { "@type": "Service", "name": `Enlèvement encombrants à ${cityData.name}`, "description": `Enlèvement de meubles, appareils électroménager et encombrants à ${cityData.name}. Estimation et rachat possible des objets de valeur.`, "provider": { "@id": `${SITE_URL}${cityPath(departmentSlug, initialVilleSlug)}` }, "areaServed": { "@type": "City", "name": cityData.name }, "availableChannel": { "@type": "ServiceChannel", "servicePhone": phoneConfig.tel, "serviceUrl": `${SITE_URL}${cityPath(departmentSlug, initialVilleSlug)}` } },
+        "@type": "Offer", "name": `Pose de volet roulant à ${cityData.name}`,
+        "description": `Fourniture et pose de volet roulant sur mesure en rénovation à ${cityData.name}.`,
+        "priceSpecification": { "@type": "UnitPriceSpecification", "price": "390", "priceCurrency": "EUR", "minPrice": "390", "unitText": "intervention" },
+        "itemOffered": { "@type": "Service", "name": `Pose de volet roulant à ${cityData.name}`, "provider": { "@id": `${SITE_URL}${cityPath(departmentSlug, initialVilleSlug)}` }, "areaServed": { "@type": "City", "name": cityData.name } },
       },
       {
-        "@type": "Offer", "name": `Devis gratuit débarras à ${cityData.name}`,
-        "description": `Devis gratuit débarras à ${cityData.name}. Rappel sous 30 minutes. Sans engagement.`,
-        "priceSpecification": { "@type": "UnitPriceSpecification", "price": "0", "priceCurrency": "EUR", "minPrice": "0", "unitText": "devis" },
-        "itemOffered": { "@type": "Service", "name": `Devis gratuit débarras à ${cityData.name}`, "description": `Estimation gratuite et sans engagement à ${cityData.name} pour tous vos besoins de débarras. Rappel sous 30 minutes, intervention sous 24h/48h.`, "provider": { "@id": `${SITE_URL}${cityPath(departmentSlug, initialVilleSlug)}` }, "areaServed": { "@type": "City", "name": cityData.name }, "availableChannel": { "@type": "ServiceChannel", "servicePhone": phoneConfig.tel, "serviceUrl": `${SITE_URL}${cityPath(departmentSlug, initialVilleSlug)}` } },
+        "@type": "Offer", "name": `Dépannage de rideau métallique à ${cityData.name}`,
+        "description": `Déblocage et réparation de rideau métallique pour les commerces à ${cityData.name}.`,
+        "priceSpecification": { "@type": "UnitPriceSpecification", "price": "149", "priceCurrency": "EUR", "minPrice": "149", "unitText": "intervention" },
+        "itemOffered": { "@type": "Service", "name": `Dépannage de rideau métallique à ${cityData.name}`, "provider": { "@id": `${SITE_URL}${cityPath(departmentSlug, initialVilleSlug)}` }, "areaServed": { "@type": "City", "name": cityData.name } },
       },
     ],
   },
-  "foundingDate": "2017",
-  "slogan": "Débarras professionnel, devis gratuit le jour même, particuliers et professionnels",
+  "slogan": "Dépannage de volets roulants 7j/7, toutes marques, devis gratuit",
   "mainEntityOfPage": {
     "@type": "WebPage",
     "@id": `${SITE_URL}${cityPath(departmentSlug, initialVilleSlug)}`,
     "address": COMPANY_ADDRESS,
     "potentialAction": [
-      { "@type": "ReserveAction", "target": { "@type": "EntryPoint", "urlTemplate": `${SITE_URL}${cityPath(departmentSlug, initialVilleSlug)}`, "actionPlatform": ["http://schema.org/DesktopWebPlatform", "http://schema.org/MobileWebPlatform"] }, "result": { "@type": "Reservation", "name": "Demande de devis débarras" } },
+      { "@type": "ReserveAction", "target": { "@type": "EntryPoint", "urlTemplate": `${SITE_URL}${cityPath(departmentSlug, initialVilleSlug)}`, "actionPlatform": ["http://schema.org/DesktopWebPlatform", "http://schema.org/MobileWebPlatform"] }, "result": { "@type": "Reservation", "name": "Demande de devis volet roulant" } },
       { "@type": "CommunicateAction", "target": { "@type": "EntryPoint", "urlTemplate": `tel:${phoneConfig.tel}` } },
     ],
   },
@@ -249,16 +238,7 @@ const buildLocalBusinessData = (
 const buildFaqData = (cityData: { name: string; postalCode: string }) => ({
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  "mainEntity": [
-    { "@type": "Question", "name": `Quel est le prix d'un débarras de maison à ${cityData.name} ?`, "acceptedAnswer": { "@type": "Answer", "text": `Le débarras de maison à ${cityData.name} démarre à partir de 299 €. Le tarif dépend du volume à évacuer, du type de bien (maison, appartement, cave) et de l'accessibilité. Un rachat de meubles ou objets de valeur peut réduire le coût final. Devis gratuit établi le jour même.` } },
-    { "@type": "Question", "name": `Combien coûte un vide maison suite à succession à ${cityData.name} ?`, "acceptedAnswer": { "@type": "Answer", "text": `Le vide maison succession à ${cityData.name} démarre à 299 €. Selon la valeur des meubles et objets présents, le rachat peut réduire significativement ou compenser totalement le coût. Nous réalisons une estimation gratuite et transparente avant toute intervention.` } },
-    { "@type": "Question", "name": `Quel est le délai d'intervention pour un débarras à ${cityData.name} ?`, "acceptedAnswer": { "@type": "Answer", "text": `Nous intervenons généralement sous 24 à 72 heures à ${cityData.name} après confirmation du devis. Pour les situations urgentes (sinistre, délai de vente), nous pouvons intervenir plus rapidement selon nos disponibilités.` } },
-    { "@type": "Question", "name": `Rachetez-vous les meubles et objets lors d'un débarras à ${cityData.name} ?`, "acceptedAnswer": { "@type": "Answer", "text": `Oui, nous estimons et rachetons meubles, antiquités, tableaux, vaisselle, argenterie et objets de valeur lors de chaque débarras à ${cityData.name}. Le montant du rachat est déduit du coût de la prestation, pouvant la rendre gratuite ou payante selon le contenu.` } },
-    { "@type": "Question", "name": `Débarrassez-vous les caves et greniers à ${cityData.name} ?`, "acceptedAnswer": { "@type": "Answer", "text": `Oui, nous réalisons le vidage complet de caves, greniers, sous-sols et combles à ${cityData.name}. Qu'il s'agisse d'objets encombrants, de vieux meubles ou de déchets divers, nous trions, évacuons et recyclons l'ensemble du contenu.` } },
-    { "@type": "Question", "name": `Faites-vous des débarras de locaux professionnels à ${cityData.name} ?`, "acceptedAnswer": { "@type": "Answer", "text": `Oui, nous intervenons dans les bureaux, commerces, entrepôts et locaux industriels à ${cityData.name}. Meubles de bureau, équipements informatiques, rayonnages, stocks et encombrants sont évacués rapidement avec un camion adapté.` } },
-    { "@type": "Question", "name": `Proposez-vous un devis gratuit avant le débarras ?`, "acceptedAnswer": { "@type": "Answer", "text": `Oui, tous nos devis de débarras sont entièrement gratuits et sans engagement. Nous nous déplaçons à ${cityData.name} pour évaluer le volume, estimer les objets de valeur et vous remettre un devis détaillé et transparent avant toute intervention.` } },
-    { "@type": "Question", "name": `Quels types de biens débarrassez-vous à ${cityData.name} ?`, "acceptedAnswer": { "@type": "Answer", "text": `À ${cityData.name}, nous débarrassons : maisons, appartements, caves, greniers, garages, fin de chantier, locaux professionnels, bureaux, commerces et entrepôts. Nous intervenons aussi pour les débarras d'urgence, les syndromes de Diogène et les débarras après sinistre.` } },
-  ],
+  "mainEntity": getCityFaq(cityData.name).map((f) => ({ "@type": "Question", "name": f.question, "acceptedAnswer": { "@type": "Answer", "text": f.answer } })),
 })
 
 // ─── Builder BreadcrumbList ───────────────────────────────────────────────────
@@ -290,34 +270,34 @@ const buildServiceData = (
     "@context": "https://schema.org",
     "@type": "Service",
     "@id": `${pageUrl}#service`,
-    "name": `Débarras de maison à ${cityData.name}`,
+    "name": `Dépannage de volet roulant à ${cityData.name}`,
     "alternateName": [
-      `Vide maison ${cityData.name}`,
-      `Débarras appartement ${cityData.name}`,
-      `Débarras succession ${cityData.name}`,
-      `Débarras cave grenier ${cityData.name}`,
+      `Réparation volet roulant ${cityData.name}`,
+      `Motorisation volet roulant ${cityData.name}`,
+      `Installation volet roulant ${cityData.name}`,
+      `Rideau métallique ${cityData.name}`,
     ],
-    "description": `Service professionnel de débarras de maison à ${cityData.name} (${cityData.postalCode}). Intervention sous 24h/48h pour maisons, appartements, caves, greniers et successions.`,
+    "description": `Dépannage, réparation, installation et motorisation de volets roulants à ${cityData.name} (${cityData.postalCode}), 7j/7, toutes marques.`,
     "url": pageUrl,
-    "serviceType": "Débarras de maison",
+    "serviceType": "Dépannage de volets roulants",
     "provider": {
       "@type": "LocalBusiness",
       "@id": pageUrl,
-      "name": `DÉBARRAS PROXIMITÉ - Débarras de Maison ${cityData.name}`,
+      "name": `ALLO DÉPANNAGE VOLET - Dépannage volet roulant ${cityData.name}`,
       "telephone": phoneConfig.tel,
       "address": COMPANY_ADDRESS,
     },
     "areaServed": { "@type": "City", "name": cityData.name },
     "hasOfferCatalog": {
       "@type": "OfferCatalog",
-      "name": `Prestations de débarras à ${cityData.name}`,
+      "name": `Tarifs volets roulants à ${cityData.name}`,
       "itemListElement": [
-        { "@type": "Offer", "name": `Débarras maison à ${cityData.name}`, "price": "900", "priceCurrency": "EUR", "availability": "https://schema.org/InStock", "itemOffered": { "@type": "Service", "name": "Débarras maison complet", "description": "Vidage intégral, tri et évacuation" } },
-        { "@type": "Offer", "name": `Débarras appartement à ${cityData.name}`, "price": "250", "priceCurrency": "EUR", "availability": "https://schema.org/InStock", "itemOffered": { "@type": "Service", "name": "Débarras appartement", "description": "Studio au grand logement, succession ou vente" } },
-        { "@type": "Offer", "name": `Débarras cave grenier à ${cityData.name}`, "price": "199", "priceCurrency": "EUR", "availability": "https://schema.org/InStock", "itemOffered": { "@type": "Service", "name": "Débarras cave et grenier", "description": "Stockage, combles, sous-sol" } },
-        { "@type": "Offer", "name": `Débarras succession à ${cityData.name}`, "price": "299", "priceCurrency": "EUR", "availability": "https://schema.org/InStock", "itemOffered": { "@type": "Service", "name": "Vide maison succession", "description": "Accompagnement discret et respectueux" } },
-        { "@type": "Offer", "name": `Débarras garage à ${cityData.name}`, "price": "199", "priceCurrency": "EUR", "availability": "https://schema.org/InStock", "itemOffered": { "@type": "Service", "name": "Débarras garage", "description": "Véhicules, outils, encombrants" } },
-        { "@type": "Offer", "name": `Enlèvement encombrants à ${cityData.name}`, "price": "39", "priceCurrency": "EUR", "availability": "https://schema.org/InStock", "itemOffered": { "@type": "Service", "name": "Enlèvement encombrants", "description": "Meubles, électroménager, objets volumineux" } },
+        { "@type": "Offer", "name": `Déblocage de volet roulant à ${cityData.name}`, "price": "89", "priceCurrency": "EUR", "availability": "https://schema.org/InStock", "itemOffered": { "@type": "Service", "name": "Déblocage de volet roulant", "description": "Volet bloqué ouvert, fermé ou à mi-hauteur" } },
+        { "@type": "Offer", "name": `Remplacement de sangle à ${cityData.name}`, "price": "79", "priceCurrency": "EUR", "availability": "https://schema.org/InStock", "itemOffered": { "@type": "Service", "name": "Remplacement de sangle ou manivelle", "description": "Sangle, enrouleur, manivelle, treuil" } },
+        { "@type": "Offer", "name": `Remplacement de lames à ${cityData.name}`, "price": "119", "priceCurrency": "EUR", "availability": "https://schema.org/InStock", "itemOffered": { "@type": "Service", "name": "Remplacement de lames", "description": "Lames PVC ou aluminium" } },
+        { "@type": "Offer", "name": `Remplacement de moteur à ${cityData.name}`, "price": "290", "priceCurrency": "EUR", "availability": "https://schema.org/InStock", "itemOffered": { "@type": "Service", "name": "Remplacement de moteur", "description": "Moteur filaire ou radio, toutes marques" } },
+        { "@type": "Offer", "name": `Pose de volet roulant à ${cityData.name}`, "price": "390", "priceCurrency": "EUR", "availability": "https://schema.org/InStock", "itemOffered": { "@type": "Service", "name": "Pose de volet roulant", "description": "Volet sur mesure en rénovation" } },
+        { "@type": "Offer", "name": `Motorisation de volet roulant à ${cityData.name}`, "price": "450", "priceCurrency": "EUR", "availability": "https://schema.org/InStock", "itemOffered": { "@type": "Service", "name": "Motorisation de volet roulant", "description": "Moteur filaire, radio ou solaire" } },
       ],
     },
     "availableChannel": {
@@ -328,8 +308,8 @@ const buildServiceData = (
     },
     "offers": {
       "@type": "AggregateOffer",
-      "lowPrice": "39",
-      "highPrice": "900",
+      "lowPrice": "79",
+      "highPrice": "450",
       "priceCurrency": "EUR",
       "offerCount": "6",
     },
@@ -346,21 +326,20 @@ const buildHowToData = (
   return {
     "@context": "https://schema.org",
     "@type": "HowTo",
-    "name": `Comment faire débarrasser sa maison à ${cityData.name} ?`,
-    "description": `Guide pratique pour faire débarrasser votre maison à ${cityData.name} (${cityData.postalCode}) en 4 étapes simples. Devis gratuit, intervention sous 24h/48h, recyclage inclus.`,
-    "image": "https://www.debarras-proximite.fr/images/debarras-gratuit-768x512.jpg",
-    "totalTime": "PT48H",
+    "name": `Comment faire dépanner son volet roulant à ${cityData.name} ?`,
+    "description": `Les 4 étapes pour faire dépanner ou réparer votre volet roulant à ${cityData.name} (${cityData.postalCode}) : devis gratuit, diagnostic, réparation et tests.`,
+    "image": "https://www.allo-depannage-volet.fr/images/volet/technicien-reparation-volet-roulant.jpg",
     "estimatedCost": { "@type": "MonetaryAmount", "currency": "EUR", "value": "0" },
     "supply": [
-      { "@type": "HowToSupply", "name": "Accès au logement à débarrasser" },
-      { "@type": "HowToSupply", "name": "Liste des objets à conserver si succession" },
+      { "@type": "HowToSupply", "name": "Accès au volet roulant et au coffre" },
+      { "@type": "HowToSupply", "name": "Marque du moteur si possible" },
     ],
     "tool": [{ "@type": "HowToTool", "name": "Formulaire de devis en ligne ou téléphone" }],
     "step": [
-      { "@type": "HowToStep", "position": "1", "name": "Demandez votre devis gratuit", "text": `Contactez DÉBARRAS PROXIMITÉ par téléphone, formulaire ou WhatsApp. Décrivez le logement à débarrasser à ${cityData.name} (type, surface, contenu estimé). Devis gratuit le jour même, sans engagement.`, "url": `${pageUrl}#hero`, "image": "https://www.debarras-proximite.fr/images/debarras-gratuit-768x512.jpg" },
-      { "@type": "HowToStep", "position": "2", "name": "Visite et estimation sur place", "text": `Un expert DÉBARRAS PROXIMITÉ se déplace gratuitement à ${cityData.name} pour évaluer le volume à débarrasser, estimer les objets de valeur et vous remettre un devis détaillé et transparent.`, "url": `${pageUrl}#how-it-works`, "image": "https://www.debarras-proximite.fr/images/debarras-maison.jpg" },
-      { "@type": "HowToStep", "position": "3", "name": "Intervention rapide", "text": `Notre équipe intervient à la date convenue à ${cityData.name} pour vider entièrement les lieux, trier les objets (rachat, don, recyclage) et effectuer le débarras avec soin et efficacité.`, "url": `${pageUrl}#how-it-works`, "image": "https://www.debarras-proximite.fr/images/debarras-maison.jpg" },
-      { "@type": "HowToStep", "position": "4", "name": "Recyclage et remise en état", "text": `Nous assurons le tri, le recyclage et le don des objets réutilisables. Les lieux sont laissés propres après intervention. Nettoyage complet disponible en option à ${cityData.name}.`, "url": `${pageUrl}#how-it-works`, "image": "https://www.debarras-proximite.fr/images/debarras-recyclage.jpg" },
+      { "@type": "HowToStep", "position": "1", "name": "Vous nous contactez", "text": `Contactez ALLO DÉPANNAGE VOLET par téléphone, formulaire ou WhatsApp et décrivez la panne de votre volet roulant à ${cityData.name}. Une photo du volet aide à préparer l'intervention.`, "url": `${pageUrl}#hero` },
+      { "@type": "HowToStep", "position": "2", "name": "Diagnostic et devis", "text": `Un technicien établit le diagnostic à ${cityData.name}, identifie les pièces à remplacer et vous remet un devis clair avant toute intervention.`, "url": `${pageUrl}#how-it-works` },
+      { "@type": "HowToStep", "position": "3", "name": "Réparation ou installation", "text": "Déblocage, remplacement du moteur, de la sangle ou des lames, motorisation ou pose : l'intervention est réalisée le plus souvent en une seule visite.", "url": `${pageUrl}#how-it-works` },
+      { "@type": "HowToStep", "position": "4", "name": "Tests et garantie", "text": "Le technicien teste le volet, règle les fins de course et vous explique l'entretien. Les pièces et la main-d'œuvre sont garanties.", "url": `${pageUrl}#how-it-works` },
     ],
   }
 }
@@ -372,23 +351,18 @@ export default function ClientVillePage({
   serviceSlug,
   departmentSlug = "gironde",
   departmentConfig,
-  testimonials = [],
   cities = [],
   departmentCities,
-  cityContent,
   sousService: ss,
 }: ClientVillePageProps) {
   if (!cityData) { notFound() }
 
-  const safeTestimonials = Array.isArray(testimonials) ? testimonials : []
-  const allTestimonials = replaceTestimonialCitiesWithDepartmentCities(safeTestimonials, departmentCities)
 
   const [isQuoteFormOpen, setIsQuoteFormOpen] = useState(false)
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
-    typeDebarras: "",
     ville: cityData?.name || "",
     message: "",
     adresse: "", // Added adresse to formData
@@ -478,7 +452,6 @@ export default function ClientVillePage({
             name: "",
             email: "",
             phone: "",
-            typeDebarras: "", // Keep original fields, even if not directly used in this form
             ville: cityData?.name || "",
             adresse: "",
             message: "",
@@ -496,13 +469,22 @@ export default function ClientVillePage({
     }
   }
 
+  // Photo de la section « Réparer plutôt que remplacer » : la première qui n'est pas déjà affichée sur la page
+  const imagesPage = ss ? [ss.heroImage, ss.aboutImage, ...ss.serviceCards.map((x) => x.image), ...ss.seoBlocks.map((x) => x.image)] : []
+  const rseImage = [
+    "/images/volet/installation-volet-roulant.jpg",
+    "/images/volet/mecanisme-coffre-volet-roulant.jpg",
+    "/images/volet/axe-support-volet-roulant.jpg",
+    "/images/volet/moteur-somfy-volet-roulant.jpg",
+  ].find((img) => !imagesPage.includes(img)) ?? "/images/volet/installation-volet-roulant.jpg"
+
   const gps = DEPT_COORDINATES[departmentSlug] ?? { lat: "46.603354", lng: "1.888334" }
 
   return (
     <div className="min-h-screen bg-white">
 
       {/* ── Scripts JSON-LD injectés SSR ── */}
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(buildLocalBusinessData(cityData, departmentSlug, initialVilleSlug, phoneConfig, departmentConfig ?? null, gps, allTestimonials)) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(buildLocalBusinessData(cityData, departmentSlug, initialVilleSlug, phoneConfig, departmentConfig ?? null, gps)) }} />
       {ss ? (
         <>
           <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd({
@@ -549,7 +531,7 @@ export default function ClientVillePage({
       >
         <div
           className="absolute inset-0 -z-10 bg-cover bg-center opacity-35"
-          style={{ backgroundImage: `url(${ss?.heroImage ?? "/images/debarras-gratuit-768x512.jpg"})` }}
+          style={{ backgroundImage: `url(${ss?.heroImage ?? "/images/volet/depannage-volet-roulant-bloque.jpg"})` }}
         />
         <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(14,36,82,0.97)_0%,rgba(14,36,82,0.88)_55%,rgba(14,36,82,0.6)_100%)]" />
 
@@ -560,19 +542,19 @@ export default function ClientVillePage({
           <div className="grid lg:grid-cols-[3fr_2fr] gap-10 lg:gap-14 items-center">
             <div className="lg:self-stretch lg:flex lg:flex-col lg:-mb-6">
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight text-white mb-5">
-                {ss ? (<>{ss.h1.split(" – ")[0]}.{ss.h1.includes(" – ") && <span className="mt-2 block text-base md:text-lg font-medium text-[#FFC629]">{ss.h1.split(" – ").slice(1).join(" – ")}.</span>}</>) : <>Débarras de logements à <span className="text-[#FFC629]">{cityData.name}</span> et {getDepartmentAreaPhrase(departmentConfig, departmentSlug)}.</>}
+                {ss ? (<>{highlightCity(ss.h1.split(" – ")[0], cityData.name)} et {getDepartmentAreaPhrase(departmentConfig, departmentSlug)}.{ss.h1.includes(" – ") && <span className="mt-2 block text-base md:text-lg font-medium text-[#FFC629]">{ss.h1.split(" – ").slice(1).join(" – ")}.</span>}</>) : <>Dépannage de volets roulants à <span className="text-[#FFC629]">{cityData.name}</span> et {getDepartmentAreaPhrase(departmentConfig, departmentSlug)}.</>}
               </h1>
 
-              <p className={`text-lg leading-relaxed text-slate-200 mb-6 max-w-2xl ${ss ? "text-justify hyphens-auto" : ""}`} lang="fr">
-                {ss ? ss.heroIntro : "Maison, appartement, cave, grenier, garage ou local professionnel : nous vidons, trions et recyclons, et vous rendons un logement propre et dégagé."}
+              <p className="text-lg leading-relaxed text-slate-200 mb-6 max-w-2xl text-justify hyphens-auto" lang="fr">
+                {ss ? ss.heroIntro : "Volet bloqué, moteur en panne, lames cassées ou sangle usée : nos techniciens dépannent, réparent et motorisent vos volets roulants, rideaux métalliques et stores, 7j/7."}
               </p>
 
               <ul className="grid sm:grid-cols-2 gap-x-6 gap-y-3 mb-6">
                 {(ss ? ss.checkpoints : [
-                  "Devis gratuit le jour même",
-                  "Intervention sous 24/48h",
-                  "Tri, dons et recyclage inclus",
-                  "Équipe assurée et discrète",
+                  "Devis gratuit et sans engagement",
+                  "Dépannage d'urgence 7j/7",
+                  "Toutes marques : Somfy, Bubendorff…",
+                  "Pièces et main-d'œuvre garanties",
                 ]).map((item) => (
                   <li key={item} className="flex items-center gap-3 text-slate-100">
                     <CheckCircle2 className="w-5 h-5 flex-shrink-0 text-[#FFC629]" aria-hidden="true" />
@@ -605,8 +587,8 @@ export default function ClientVillePage({
 
               <ul className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 border-t border-white/15 pt-5 sm:grid sm:grid-cols-2 lg:mt-auto lg:pt-6">
                 {[
-                  { Icon: ShieldCheck, label: "Visite gratuite et rapide" },
-                  { Icon: Users, label: "Plus de 500 clients" },
+                  { Icon: ShieldCheck, label: "Diagnostic sur place" },
+                  { Icon: Wrench, label: "Techniciens qualifiés" },
                 ].map(({ Icon, label }) => (
                   <li key={label} className="flex items-center gap-1.5 whitespace-nowrap text-xs font-medium text-slate-100 min-[380px]:gap-2 min-[380px]:text-sm">
                     <Icon className="h-3.5 w-3.5 flex-shrink-0 text-[#FFC629] sm:h-4 sm:w-4" aria-hidden="true" />
@@ -652,13 +634,13 @@ export default function ClientVillePage({
                     </div>
 
                     <div>
-                      <Input id="adresse" name="adresse" placeholder="Adresse du logement *" aria-label="Adresse du logement" required autoComplete="street-address"
+                      <Input id="adresse" name="adresse" placeholder="Adresse d'intervention *" aria-label="Adresse d'intervention" required autoComplete="street-address"
                         value={formData.adresse} onChange={handleInputChange} className="h-11 border border-gray-200 focus:border-[#FFC629] focus-visible:ring-[#FFC629] rounded-lg" />
                     </div>
 
                     <div>
                       <Textarea id="message" name="message" rows={2}
-                        placeholder="Votre projet : type de bien, pièces à vider, date souhaitée..." aria-label="Votre projet"
+                        placeholder={ss?.messagePlaceholder ?? "Votre besoin : volet bloqué, moteur, sangle, motorisation, nombre de volets..."} aria-label="Votre besoin"
                         value={formData.message} onChange={handleInputChange}
                         className="border border-gray-200 focus:border-[#FFC629] focus-visible:ring-[#FFC629] resize-none rounded-lg" />
                     </div>
@@ -726,57 +708,15 @@ export default function ClientVillePage({
               NOS SERVICES
             </h3>
             <h2 className="text-3xl md:text-4xl font-bold text-[#0E2452]">
-              {ss ? `${ss.label} à ${cityData.name} : nos prestations` : "Nos prestations de débarras"}
+              {ss ? `${SERVICES_SECTION_TITLE[ss.slug] ?? ss.label} à ${cityData.name}` : `Nos prestations de volets roulants à ${cityData.name}`}
             </h2>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
             {(ss
               ? ss.serviceCards.map((c) => ({ slug: "", title: c.title, short: c.desc, image: c.image }))
-              : [
-              {
-                slug: "debarras-maison",
-                title: "Débarras complet de maison",
-                short: "Vidage intégral, tri, évacuation et recyclage en une seule intervention.",
-                desc: `Vidage intégral de votre maison à ${cityData.name}, quelle que soit la situation : succession, déménagement, vente ou logement insalubre. Nos équipes trient, évacuent et recyclent l'ensemble des biens en une seule intervention rapide et soignée.`,
-                image: "/images/vide-maison-debarras.jpg",
-              },
-              {
-                slug: "debarras-succession",
-                title: "Débarras après succession",
-                short: "Intervention discrète, en lien avec le notaire ou les héritiers.",
-                desc: `Intervention discrète et respectueuse pour le débarras d'un logement après une succession à ${cityData.name}. Nous trions les effets personnels, valorisons les objets récupérables et évacuons le reste, en coordination avec le notaire ou les héritiers si nécessaire.`,
-                image: "/images/Rachat_successions.jpg",
-              },
-              {
-                slug: "debarras-cave-grenier",
-                title: "Débarras cave et grenier",
-                short: "Caves, greniers et combles désencombrés et remis en état.",
-                desc: `Désencombrement complet de caves, greniers et combles à ${cityData.name}. Nous évacuons meubles, cartons, outils et objets accumulés avec un tri sélectif rigoureux, acheminement en déchetterie agréée et remise en état des espaces vidés.`,
-                image: "/images/service-3.jpg",
-              },
-              {
-                slug: "debarras-garage",
-                title: "Débarras de garage",
-                short: "Outillage, pièces et objets stockés évacués dans les règles.",
-                desc: `Vidage complet de garages encombrés à ${cityData.name} : véhicules hors d'usage, outillage, pièces détachées, huiles usagées et tout type d'objets stockés. Intervention rapide avec évacuation conforme et remise en état du sol et des murs.`,
-                image: "/images/service-4.jpg",
-              },
-              {
-                slug: "debarras-syndrome-diogene",
-                title: "Débarras syndrome de Diogène",
-                short: "Logements très encombrés traités avec méthode et bienveillance.",
-                desc: `Débarras de logements insalubres ou fortement encombrés à ${cityData.name}, y compris les situations de syndrome de Diogène. Notre équipe spécialisée intervient avec méthode, discrétion et bienveillance pour remettre le logement dans un état habitable.`,
-                image: "/images/debarras-syndrome-diogene.jpg",
-              },
-              {
-                slug: "debarras-fin-de-chantier",
-                title: "Débarras fin de chantier",
-                short: "Gravats, bois, métaux et tout-venant évacués et recyclés.",
-                desc: `Évacuation complète de vos déchets de travaux à ${cityData.name} : gravats, ferraille et métaux, plâtre, bois, menuiseries et tout-venant de chantier. Tri, recyclage en filières agréées et nettoyage pour une réception de chantier sereine.`,
-                image: "/images/debarras-fin-de-chantier.jpg",
-              },
-            ]).map((service, i) => {
+              : VOLET_SERVICES.map((v) => ({ slug: v.slug, title: v.label, short: v.sub, image: v.image }))
+            ).map((service, i) => {
               const cardClass = "group relative block h-96 overflow-hidden rounded-2xl shadow-lg focus:outline-none focus-visible:ring-4 focus-visible:ring-[#FFC629]"
               const content = (
                 <>
@@ -815,10 +755,11 @@ export default function ClientVillePage({
           </div>
         </div>
       </section>
+      {["depannage-volet-roulant", "reparation-volet-roulant"].includes(ss?.slug ?? "") && <PannesSection className="bg-white" padding="pt-0 pb-10 md:pb-14" />}
+      {!["rideau-metallique", "store-banne"].includes(ss?.slug ?? "") && <BrandsSection className="bg-white" padding="pt-0 pb-10 md:pb-14" />}
       <HowItWorksSection />
       <WhyChooseUsSection />
-      <RealisationsSection padding="py-10 md:py-14" place={`à ${cityData.name}`} className="bg-gray-50" />
-      <TestimonialsSection padding="py-10 md:py-14" testimonials={allTestimonials} className="bg-white" />
+      <TestimonialsSection padding="py-10 md:py-14" testimonials={VOLET_INTERVENTIONS} examples className="bg-white" />
       <FormulesSection place={`à ${cityData.name}`} onQuote={() => setIsQuoteFormOpen(true)} />
       {/* Nos Prestations et Tarifs Section */}
       {ss ? (
@@ -841,7 +782,7 @@ export default function ClientVillePage({
               </dl>
             </div>
             <p className="mt-8 mx-auto max-w-4xl text-center text-xs text-gray-500">
-              Prix indicatifs TTC. Le tarif définitif dépend du volume, de l'accessibilité et du type de biens à évacuer. Devis gratuit et sans engagement, établi le jour même.
+              Prix indicatifs TTC. Le tarif définitif dépend de la panne, des pièces à remplacer, des dimensions et de l&apos;accès. Devis gratuit et sans engagement, remis avant toute intervention.
             </p>
           </div>
         </div>
@@ -864,21 +805,21 @@ export default function ClientVillePage({
               </p>
 
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#0E2452] mb-6 leading-tight">
-                {ss ? ss.aboutTitle : "Votre partenaire de confiance pour tous vos débarras"}
+                {ss ? ss.aboutTitle : `Votre spécialiste du volet roulant à ${cityData.name}`}
               </h2>
 
               <div className="space-y-4 text-gray-600 text-base md:text-lg leading-relaxed text-justify hyphens-auto" lang="fr">
                 {ss ? <p>{ss.aboutParagraph}</p> : (<>
                 <p>
-                  Basée à {cityData.name}, notre équipe vide maisons, appartements et dépendances pour les particuliers,
-                  les familles, les notaires et les professionnels, lors d'une succession, d'un déménagement ou d'une vente.
+                  À {cityData.name}, nos techniciens dépannent, réparent et motorisent les volets roulants des particuliers,
+                  des commerçants, des syndics de copropriété et des professionnels, 7j/7.
                 </p>
                 <p>
-                  Après une estimation gratuite sur place, nous trions chaque pièce avec soin : les objets en bon état
-                  sont donnés ou rachetés, le reste est évacué vers des filières de recyclage agréées.
+                  Chaque intervention commence par un diagnostic précis : nous remplaçons uniquement les pièces nécessaires,
+                  sur toutes les marques (Somfy, Bubendorff, Profalux, Simu, Nice…), avec un devis clair remis avant l&apos;intervention.
                 </p>
                 <p>
-                  Nous rendons un logement vide et propre, prêt pour une visite, une remise des clés ou un état des lieux.
+                  Nous testons ensuite le volet, réglons les fins de course et vous expliquons l&apos;entretien : pièces et main-d&apos;œuvre sont garanties.
                 </p>
                 </>)}
               </div>
@@ -887,10 +828,10 @@ export default function ClientVillePage({
             {/* Right Column - Image */}
             <div className="rounded-2xl overflow-hidden shadow-xl">
               <Image
-                src={ss?.aboutImage ?? "/images/debarras-maison.jpg"}
-                alt={`Équipe Débarras Proximité en intervention de débarras à ${cityData.name}`}
-                width={768}
-                height={512}
+                src={ss?.aboutImage ?? "/images/volet/reparation-coffre-volet-roulant.jpg"}
+                alt={`Technicien Allo Dépannage Volet en intervention sur un volet roulant à ${cityData.name}`}
+                width={677}
+                height={369}
                 className="w-full h-auto object-cover"
               />
             </div>
@@ -901,18 +842,18 @@ export default function ClientVillePage({
             {[
               {
                 Icon: MapPin,
-                title: "Entreprise locale",
-                text: `Basés à ${cityData.name}, nous connaissons le terrain et intervenons rapidement près de chez vous.`,
+                title: "Techniciens proches de vous",
+                text: `Nous intervenons rapidement à ${cityData.name} et dans les communes voisines, 7j/7.`,
               },
               {
                 Icon: Users,
                 title: "Un interlocuteur unique",
-                text: "Une seule personne vous suit, de la demande de devis jusqu'à la remise des clés.",
+                text: "Une seule personne vous suit, de la demande de devis jusqu'aux tests de fonctionnement.",
               },
               {
                 Icon: CheckCircle2,
                 title: "Paiement après intervention",
-                text: "Vous ne payez qu'une fois le débarras terminé et les lieux vérifiés avec vous.",
+                text: "Vous ne payez qu'une fois l'intervention terminée et le bon fonctionnement vérifié avec vous.",
               },
             ].map(({ Icon, title, text }) => (
               <li key={title} className="flex items-start gap-4 rounded-2xl border border-gray-200 bg-white p-6">
@@ -941,35 +882,35 @@ export default function ClientVillePage({
           <div className="max-w-7xl mx-auto">
             {/* Header */}
             <div className="mb-12">
-              <p className="mb-3 inline-flex items-center gap-3 text-sm font-semibold uppercase tracking-[0.16em] text-[#0E2452]"><span className="h-1 w-8 rounded-full bg-[#FFC629]" aria-hidden="true" />Notre politique RSE</p>
+              <p className="mb-3 inline-flex items-center gap-3 text-sm font-semibold uppercase tracking-[0.16em] text-[#0E2452]"><span className="h-1 w-8 rounded-full bg-[#FFC629]" aria-hidden="true" />Notre engagement</p>
               <h2 className="text-3xl md:text-4xl font-bold text-[#0E2452] mb-3">
-                Une seconde vie pour vos biens
+                Réparer plutôt que remplacer
               </h2>
               <p className="text-lg text-gray-600 lg:whitespace-nowrap">
-                Au travers de la récupération de vos biens, nous limitons les déchets et leur donnons une nouvelle utilité.
+                Un diagnostic précis permet de prolonger la vie de vos volets et de limiter les déchets.
               </p>
             </div>
 
             <div className="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
               {/* Left: Image */}
               <div className="relative rounded-2xl overflow-hidden shadow-2xl h-[320px] md:h-[420px]">
-                <Image src="/images/service-2.jpg" alt="Objets récupérés lors d'un débarras, prêts pour une seconde vie" fill className="object-cover" />
+                <Image src={rseImage} alt="Mécanisme de volet roulant réparé plutôt que remplacé" fill sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover" />
               </div>
 
               {/* Right: Engagements */}
               <ol className="divide-y divide-gray-200">
                 {[
                   {
-                    title: "Réparation et revente",
-                    text: "Vos meubles et objets en bon état sont réparés puis revendus. Leur valeur est déduite de votre devis : votre débarras vous coûte moins cher.",
+                    title: "Diagnostic avant tout remplacement",
+                    text: "Un réglage, une attache ou une sangle suffisent souvent à remettre un volet en service. Nous remplaçons uniquement ce qui doit l'être : votre réparation vous coûte moins cher.",
                   },
                   {
-                    title: "Dons aux associations",
-                    text: "Ce qui peut encore servir est donné à des associations locales. Vos biens aident des familles dans le besoin, et vous gardez l'esprit léger.",
+                    title: "Pièces de qualité et garanties",
+                    text: "Moteurs, lames et mécanismes de marques reconnues, adaptés à votre volet, pour une réparation durable. Pièces et main-d'œuvre sont garanties.",
                   },
                   {
-                    title: "Réemploi et recyclage",
-                    text: "Les objets sans preneur en France sont réemployés à l'étranger ou recyclés en filières agréées. Rien ne finit jamais en décharge sauvage.",
+                    title: "Recyclage des pièces usagées",
+                    text: "Les moteurs, lames et pièces remplacés sont déposés dans les filières de recyclage adaptées, notamment pour les équipements électriques.",
                   },
                 ].map((item) => (
                   <li key={item.title} className="py-6 first:pt-0 last:pb-0">
@@ -995,7 +936,7 @@ export default function ClientVillePage({
             {ss.seoBlocks.map((block, i) => (
               <div key={block.title} className="grid md:grid-cols-2 gap-12 items-stretch">
                 <div className={`relative min-h-[300px] h-full rounded-2xl overflow-hidden shadow-xl ${i % 2 === 1 ? "md:order-2" : ""}`}>
-                  <Image src={block.image} alt={block.imageAlt} fill className="object-cover" />
+                  <Image src={block.image} alt={block.imageAlt} fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover" />
                 </div>
                 <div className="flex flex-col justify-center gap-4">
                   <h3 className="font-bold text-[#0E2452] text-2xl leading-snug">{block.title}</h3>
@@ -1026,138 +967,42 @@ export default function ClientVillePage({
               id="prestations-heading"
               className="text-3xl md:text-4xl font-bold text-[#0E2452] mb-3"
             >
-              Des prestations de débarras adaptées à chaque situation
+              Des solutions adaptées à chaque volet roulant
             </h2>
             <p className="text-gray-600 text-lg lg:whitespace-nowrap">
-              Vide maison, nettoyage, sinistre, chantier, succession ou syndrome de Diogène : nous gérons tout.
+              Dépannage, réparation, motorisation, installation, rideaux métalliques et stores : nous gérons tout.
             </p>
           </div>
 
           <div className="max-w-7xl mx-auto flex flex-col gap-12 md:gap-14">
 
-            {/* ── BLOC 1 ── Image gauche / Texte droite */}
-            <div className="grid md:grid-cols-2 gap-12 items-stretch">
-              <div className="relative min-h-[300px] h-full rounded-2xl overflow-hidden shadow-xl">
-                <Image
-                  src="/images/d-c3-a9barras-20apr-c3-a8s-20succession.webp"
-                  alt={`Équipe professionnelle de débarras à ${cityData.name}`}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-              <div className="flex flex-col gap-4">
-                <h3 className="font-bold text-[#0E2452] text-2xl leading-snug">
-                  Vide maison à {cityData.name} – Intervention rapide et
-                  professionnelle
-                </h3>
-                <p className="text-gray-600 text-base leading-relaxed text-justify hyphens-auto" lang="fr">
-                  Vous avez besoin d'un service de vide maison à {cityData.name} ?
-                  Notre équipe intervient rapidement pour vider entièrement votre
-                  maison, quelle que soit la situation : succession, vente
-                  immobilière, déménagement ou logement encombré.
-                  <br />
-                  <br />
-                  Nous prenons en charge le tri, l'enlèvement des meubles et
-                  objets, avec une intervention discrète, efficace et
-                  respectueuse, pour vous garantir un logement propre et prêt à
-                  être réutilisé ou vendu.
-                </p>
-                <ul className="flex flex-col gap-2 mt-auto">
-                  {[
-                    `Succession, vente, déménagement à ${cityData.name}`,
-                    "Tri sélectif et enlèvement de tous les objets",
-                    "Intervention discrète, efficace et respectueuse",
-                    "Rappel sous 30 min, devis le jour même",
-                  ].map((item, i) => (
-                    <li
-                      key={i}
-                      className="flex items-center gap-3 text-sm font-medium text-gray-700"
-                    >
-                      <CheckCircle2 className="w-5 h-5 flex-shrink-0 text-[#0E2452]" aria-hidden="true" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-
-            {/* ── BLOC 2 ── Texte gauche / Image droite */}
-            <div className="grid md:grid-cols-2 gap-12 items-stretch">
-              <div className="flex flex-col gap-4 order-1 md:order-1">
-                <h3 className="font-bold text-[#0E2452] text-2xl leading-snug">
-                  Nettoyage après débarras à {cityData.name} – Logement propre et
-                  prêt à l'usage
-                </h3>
-                <p className="text-gray-600 text-base leading-relaxed text-justify hyphens-auto" lang="fr">
-                  Après un débarras, un nettoyage complet est souvent
-                  indispensable. Nous proposons un service de nettoyage après
-                  débarras à {cityData.name}, incluant l'élimination des
-                  poussières, saletés et résidus laissés après l'évacuation.
-                  <br />
-                  <br />
-                  Grâce à une intervention rapide et soignée, votre maison ou
-                  appartement est rendu propre, sain et immédiatement prêt pour
-                  une vente, une location ou une nouvelle occupation.
-                </p>
-                <ul className="flex flex-col gap-2 mt-auto">
-                  {[
-                    `Nettoyage complet après débarras à ${cityData.name}`,
-                    "Élimination poussières, saletés et résidus",
-                    "Logement prêt pour vente ou location immédiate",
-                    "Intervention rapide, soignée et professionnelle",
-                  ].map((item, i) => (
-                    <li
-                      key={i}
-                      className="flex items-center gap-3 text-sm font-medium text-gray-700"
-                    >
-                      <CheckCircle2 className="w-5 h-5 flex-shrink-0 text-[#0E2452]" aria-hidden="true" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="relative min-h-[300px] h-full rounded-2xl overflow-hidden shadow-xl order-2 md:order-2">
-                <Image
-                  src="/images/capture-20d-27-c3-a9cran-202025-12-25-20020954.png"
-                  alt={`Nettoyage après débarras à ${cityData.name}`}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-            </div>
-
-            {/* ── BLOC 3 ── Image gauche / Texte droite */}
+            {/* ── BLOC 1 ── */}
             <div className="grid md:grid-cols-2 gap-12 items-stretch">
               <div className="relative min-h-[300px] h-full rounded-2xl overflow-hidden shadow-xl order-2 md:order-1">
                 <Image
-                  src="/images/debarras-sinistre.jpg"
-                  alt={`Débarras après sinistre incendie dégât des eaux à ${cityData.name}`}
+                  src="/images/volet/depannage-volet-roulant-bloque.jpg"
+                  alt={`Dépannage de volet roulant bloqué à ${cityData.name}`}
                   fill
+                  sizes="(min-width: 768px) 50vw, 100vw"
                   className="object-cover"
                 />
               </div>
               <div className="flex flex-col gap-4 order-1 md:order-2">
                 <h3 className="font-bold text-[#0E2452] text-2xl leading-snug">
-                  Débarras après sinistre à {cityData.name} – Incendie, dégât des
-                  eaux, inondation
+                  Dépannage de volet roulant à {cityData.name} – Intervention d&apos;urgence 7j/7
                 </h3>
                 <p className="text-gray-600 text-base leading-relaxed text-justify hyphens-auto" lang="fr">
-                  Votre logement a été touché par un sinistre à {cityData.name} ?
-                  Notre équipe intervient rapidement après un incendie, un dégât
-                  des eaux ou une inondation pour évacuer les biens endommagés,
-                  nettoyer les lieux et remettre votre logement en état.
+                  Votre volet roulant est bloqué en position ouverte, fermée ou à mi-hauteur à {cityData.name} ? Nos techniciens interviennent 7j/7, y compris le week-end et les jours fériés, pour identifier la cause du blocage et remettre votre volet en service.
                   <br />
                   <br />
-                  Nous assurons la coordination avec votre assureur et le syndic
-                  de copropriété si nécessaire, en vous fournissant tous les
-                  justificatifs nécessaires à votre déclaration de sinistre.
+                  Moteur qui ne répond plus, tablier sorti des coulisses, attache cassée ou sangle rompue : le véhicule d&apos;intervention contient les pièces les plus courantes, pour réparer le plus souvent en une seule visite.
                 </p>
                 <ul className="flex flex-col gap-2 mt-auto">
                   {[
-                    `Intervention urgente après sinistre à ${cityData.name}`,
-                    "Incendie, dégât des eaux, inondation",
-                    "Coordination assureur et syndic incluse",
-                    "Justificatifs pour déclaration de sinistre fournis",
+                    `Intervention d'urgence 7j/7 à ${cityData.name}`,
+                    "Volets manuels et électriques",
+                    "Pièces courantes dans le véhicule",
+                    "Devis remis avant l'intervention",
                   ].map((item, i) => (
                     <li
                       key={i}
@@ -1171,31 +1016,24 @@ export default function ClientVillePage({
               </div>
             </div>
 
-            {/* ── BLOC 4 ── Texte gauche / Image droite */}
+            {/* ── BLOC 2 ── */}
             <div className="grid md:grid-cols-2 gap-12 items-stretch">
               <div className="flex flex-col gap-4 order-1 md:order-1">
                 <h3 className="font-bold text-[#0E2452] text-2xl leading-snug">
-                  Débarras de chantier à {cityData.name} – Gravats et déchets de
-                  travaux
+                  Réparation de volet roulant à {cityData.name} – Lames, sangle et manivelle
                 </h3>
                 <p className="text-gray-600 text-base leading-relaxed text-justify hyphens-auto" lang="fr">
-                  Vos travaux sont terminés et vous avez besoin d'évacuer les
-                  déchets de chantier à {cityData.name} ? Nous prenons en charge
-                  l'enlèvement et le transport de vos gravats, débris de
-                  démolition, matériaux usagés et déchets de fin de chantier.
+                  Lames fendues ou enfoncées, sangle usée, manivelle qui tourne dans le vide ou tablier qui descend de travers : nos techniciens réparent votre volet roulant à {cityData.name} en remplaçant uniquement les pièces nécessaires.
                   <br />
                   <br />
-                  Tous nos déchets de chantier sont acheminés vers des centres de
-                  tri agréés pour un traitement conforme à la réglementation en
-                  vigueur. Intervention rapide sur devis, pour particuliers et
-                  professionnels à {cityData.name} et ses environs.
+                  Les lames sont remplacées par des lames de même profil et de même couleur que l&apos;existant. Lorsque le tablier est trop abîmé, nous vous proposons un tablier neuf, éventuellement en lames isolantes.
                 </p>
                 <ul className="flex flex-col gap-2 mt-auto">
                   {[
-                    `Gravats, débris, déchets de travaux à ${cityData.name}`,
-                    "Rénovation, démolition partielle, aménagement intérieur",
-                    "Centres de tri agréés, traitement réglementaire",
-                    "Intervention rapide pour particuliers et professionnels",
+                    "Lames assorties à l'existant",
+                    "Sangles, enrouleurs, treuils et manivelles",
+                    "Attaches, coulisses et lame finale",
+                    "Réparation garantie",
                   ].map((item, i) => (
                     <li
                       key={i}
@@ -1209,48 +1047,42 @@ export default function ClientVillePage({
               </div>
               <div className="relative min-h-[300px] h-full rounded-2xl overflow-hidden shadow-xl order-2 md:order-2">
                 <Image
-                  src="/images/debarras-fin-de-chantier.jpg"
-                  alt={`Débarras de chantier gravats déchets travaux à ${cityData.name}`}
+                  src="/images/volet/tablier-lames-volet-roulant.jpg"
+                  alt={`Lames et tablier de volet roulant à ${cityData.name}`}
                   fill
+                  sizes="(min-width: 768px) 50vw, 100vw"
                   className="object-cover"
                 />
               </div>
             </div>
 
-            {/* ── BLOC 5 ── Image gauche / Texte droite */}
+            {/* ── BLOC 3 ── */}
             <div className="grid md:grid-cols-2 gap-12 items-stretch">
               <div className="relative min-h-[300px] h-full rounded-2xl overflow-hidden shadow-xl order-2 md:order-1">
                 <Image
-                  src="/images/revente-meuble-bordeaux.jpg"
-                  alt={`Débarras après succession à ${cityData.name}`}
+                  src="/images/volet/moteur-tubulaire-volet-roulant.jpg"
+                  alt={`Moteur tubulaire de volet roulant à ${cityData.name}`}
                   fill
+                  sizes="(min-width: 768px) 50vw, 100vw"
                   className="object-cover"
                 />
               </div>
               <div className="flex flex-col gap-4 order-1 md:order-2">
                 <h3 className="font-bold text-[#0E2452] text-2xl leading-snug">
-                  Une solution efficace pour un débarras après une succession à{" "}
-                  {cityData.name}
+                  Moteur et motorisation de volet roulant à {cityData.name}
                 </h3>
                 <p className="text-gray-600 text-base leading-relaxed text-justify hyphens-auto" lang="fr">
-                  Le débarras d'un logement après une succession à {cityData.name}{" "}
-                  est une étape souvent difficile à gérer. L'équipe de Débarras Proximité
-                  vous accompagne avec respect et bienveillance, du tri minutieux
-                  des effets personnels à la mise en valeur des objets
-                  récupérables.
+                  Votre moteur de volet roulant est en panne ou vous souhaitez motoriser vos volets manuels à {cityData.name} ? Nous installons des moteurs filaires, radio ou solaires de marques reconnues, de puissance adaptée au poids du tablier.
                   <br />
                   <br />
-                  Nous intervenons aussi pour la gestion des encombrants en
-                  proposant un service complet, de la collecte au tri en passant
-                  par le don, pour que chaque objet trouve une destination
-                  appropriée.
+                  La motorisation se fait sans changer le coffre ni le tablier lorsqu&apos;ils sont en bon état. Télécommande, programmation horaire, centralisation et pilotage depuis votre smartphone sont possibles.
                 </p>
                 <ul className="flex flex-col gap-2 mt-auto">
                   {[
-                    `Tri minutieux des effets personnels à ${cityData.name}`,
-                    "Mise en valeur des objets récupérables",
-                    "Service complet collecte, tri et don",
-                    "Accompagnement respectueux et bienveillant",
+                    "Remplacement de moteur toutes marques",
+                    "Motorisation de volets manuels",
+                    "Moteurs filaires, radio ou solaires",
+                    "Télécommande et domotique",
                   ].map((item, i) => (
                     <li
                       key={i}
@@ -1264,30 +1096,24 @@ export default function ClientVillePage({
               </div>
             </div>
 
-            {/* ── BLOC 6 ── Texte gauche / Image droite */}
+            {/* ── BLOC 4 ── */}
             <div className="grid md:grid-cols-2 gap-12 items-stretch">
               <div className="flex flex-col gap-4 order-1 md:order-1">
                 <h3 className="font-bold text-[#0E2452] text-2xl leading-snug">
-                  Débarras en cas de syndrome de Diogène à {cityData.name}
+                  Installation de volets roulants à {cityData.name} – Pose neuve et rénovation
                 </h3>
                 <p className="text-gray-600 text-base leading-relaxed text-justify hyphens-auto" lang="fr">
-                  Notre équipe intervient pour effectuer un débarras intégral des
-                  logements Diogène à {cityData.name} et dans les communes
-                  voisines. Le syndrome de Diogène entraîne une accumulation
-                  excessive d'objets et de déchets, rendant le logement insalubre.
+                  Vous souhaitez équiper vos fenêtres ou remplacer d&apos;anciens volets à {cityData.name} ? Nous posons des volets roulants sur mesure, en rénovation sur des fenêtres existantes et sans gros travaux, ou en construction neuve.
                   <br />
                   <br />
-                  Notre entreprise vous propose un service de débarras adapté :
-                  tri et évacuation des déchets et encombrants, nettoyage des
-                  lieux, désinfection des surfaces, avec une approche discrète et
-                  sans jugement.
+                  Nous vous conseillons sur le coffre, le matériau des lames (PVC ou aluminium), la couleur et le type de manœuvre. Chaque volet est fabriqué aux dimensions exactes après une prise de mesures sur place.
                 </p>
                 <ul className="flex flex-col gap-2 mt-auto">
                   {[
-                    `Débarras intégral logement Diogène à ${cityData.name}`,
-                    "Tri, évacuation, nettoyage et désinfection",
-                    "Intervention discrète et sans jugement",
-                    "Communes voisines également desservies",
+                    "Volets sur mesure",
+                    "Rénovation et construction neuve",
+                    "Manuels, électriques ou solaires",
+                    "Prise de mesures sur place",
                   ].map((item, i) => (
                     <li
                       key={i}
@@ -1301,9 +1127,90 @@ export default function ClientVillePage({
               </div>
               <div className="relative min-h-[300px] h-full rounded-2xl overflow-hidden shadow-xl order-2 md:order-2">
                 <Image
-                  src="/images/syndrome-20de-20diog-c3-a8ne.jpg"
-                  alt={`Débarras syndrome de Diogène à ${cityData.name}`}
+                  src="/images/volet/installation-volet-roulant.jpg"
+                  alt={`Installation de volet roulant à ${cityData.name}`}
                   fill
+                  sizes="(min-width: 768px) 50vw, 100vw"
+                  className="object-cover"
+                />
+              </div>
+            </div>
+
+            {/* ── BLOC 5 ── */}
+            <div className="grid md:grid-cols-2 gap-12 items-stretch">
+              <div className="relative min-h-[300px] h-full rounded-2xl overflow-hidden shadow-xl order-2 md:order-1">
+                <Image
+                  src="/images/volet/rideau-metallique-depannage.jpg"
+                  alt={`Dépannage de rideau métallique à ${cityData.name}`}
+                  fill
+                  sizes="(min-width: 768px) 50vw, 100vw"
+                  className="object-cover"
+                />
+              </div>
+              <div className="flex flex-col gap-4 order-1 md:order-2">
+                <h3 className="font-bold text-[#0E2452] text-2xl leading-snug">
+                  Rideau métallique à {cityData.name} – Dépannage pour les commerces
+                </h3>
+                <p className="text-gray-600 text-base leading-relaxed text-justify hyphens-auto" lang="fr">
+                  Un rideau métallique bloqué empêche d&apos;ouvrir ou de fermer votre commerce à {cityData.name}. Nos techniciens interviennent 7j/7, tôt le matin comme en soirée, pour débloquer le rideau et mettre votre local en sécurité.
+                  <br />
+                  <br />
+                  Moteur, frein, ressort de compensation, lames ou serrure : nous réparons la cause de la panne, motorisons les rideaux manuels et proposons un contrat d&apos;entretien annuel pour anticiper les pannes.
+                </p>
+                <ul className="flex flex-col gap-2 mt-auto">
+                  {[
+                    "Dépannage d'urgence 7j/7",
+                    "Mise en sécurité du commerce",
+                    "Motorisation des rideaux manuels",
+                    "Contrat d'entretien annuel",
+                  ].map((item, i) => (
+                    <li
+                      key={i}
+                      className="flex items-center gap-3 text-sm font-medium text-gray-700"
+                    >
+                      <CheckCircle2 className="w-5 h-5 flex-shrink-0 text-[#0E2452]" aria-hidden="true" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            {/* ── BLOC 6 ── */}
+            <div className="grid md:grid-cols-2 gap-12 items-stretch">
+              <div className="flex flex-col gap-4 order-1 md:order-1">
+                <h3 className="font-bold text-[#0E2452] text-2xl leading-snug">
+                  Store banne à {cityData.name} – Toile, bras et moteur
+                </h3>
+                <p className="text-gray-600 text-base leading-relaxed text-justify hyphens-auto" lang="fr">
+                  Toile déchirée, bras articulé cassé ou moteur qui ne répond plus : nous réparons et entretenons vos stores bannes et stores intérieurs à {cityData.name}, toutes marques.
+                  <br />
+                  <br />
+                  Nous remplaçons les toiles sur mesure, motorisons les stores manuels et installons des capteurs vent et soleil, pour profiter de l&apos;ombre au bon moment et protéger la toile.
+                </p>
+                <ul className="flex flex-col gap-2 mt-auto">
+                  {[
+                    "Remplacement de toile sur mesure",
+                    "Bras articulés et mécanisme",
+                    "Motorisation et capteurs vent",
+                    "Stores bannes et intérieurs",
+                  ].map((item, i) => (
+                    <li
+                      key={i}
+                      className="flex items-center gap-3 text-sm font-medium text-gray-700"
+                    >
+                      <CheckCircle2 className="w-5 h-5 flex-shrink-0 text-[#0E2452]" aria-hidden="true" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="relative min-h-[300px] h-full rounded-2xl overflow-hidden shadow-xl order-2 md:order-2">
+                <Image
+                  src="/images/volet/mecanisme-coffre-volet-roulant.jpg"
+                  alt={`Mécanisme de store et de volet roulant à ${cityData.name}`}
+                  fill
+                  sizes="(min-width: 768px) 50vw, 100vw"
                   className="object-cover"
                 />
               </div>
@@ -1330,7 +1237,7 @@ export default function ClientVillePage({
                 Zone d'intervention {departmentConfig?.displayName ?? ""}
               </h2>
               <p className="text-gray-600 text-lg max-w-3xl">
-                Depuis {cityData.name}, nous intervenons dans tout le département pour vos débarras : une équipe locale, rapide et fiable, près de chez vous.
+                Depuis {cityData.name}, nos techniciens interviennent dans tout le département pour vos volets roulants : un service local, rapide et fiable, près de chez vous.
               </p>
             </div>
 
@@ -1381,7 +1288,7 @@ export default function ClientVillePage({
                       className="text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full flex-shrink-0"
                       style={{ backgroundColor: "#FFC629", color: "#0E2452" }}
                     >
-                      Toute la {departmentConfig?.name ?? "Gironde"}
+                      Rappel sous 30 min
                     </span>
                   </div>
                   <h3 className="text-lg md:text-xl font-bold mb-1">
@@ -1417,53 +1324,13 @@ export default function ClientVillePage({
           <div className="max-w-7xl mx-auto mb-10">
             <p className="mb-3 inline-flex items-center gap-3 text-sm font-semibold uppercase tracking-[0.16em] text-[#0E2452]"><span className="h-1 w-8 rounded-full bg-[#FFC629]" aria-hidden="true" />Questions fréquentes</p>
             <h2 className="text-3xl md:text-4xl font-bold text-[#0E2452]">
-              {ss ? ss.faqSectionTitle : "Tout ce que vous devez savoir sur nos services de débarras"}
+              {ss ? ss.faqSectionTitle : `Volets roulants à ${cityData.name} : vos questions`}
             </h2>
           </div>
 
           <div className="max-w-7xl mx-auto space-y-3">
-            {(ss ? ss.faqItems.map((f) => ({ question: f.q, answer: f.a })) : [
-              {
-                question: "Quels types de débarras proposez-vous ?",
-                answer: "Nous proposons tous types de débarras : appartements, maisons, caves, greniers, garages, locaux professionnels. Nous intervenons également pour les débarras de succession, les logements Diogène, les débarras après sinistre (incendie, dégât des eaux) et l'évacuation de gravats de chantier. Que vous soyez particulier ou professionnel, nous avons la solution adaptée à votre situation.",
-              },
-              {
-                question: "Comment se déroule un débarras ?",
-                answer: "Notre processus est simple : 1) Vous demandez un devis gratuit en ligne ou par téléphone en nous décrivant le contenu à débarrasser. 2) Nous vous proposons une estimation claire (gratuite, remisée ou payante selon la valeur des biens). 3) Nous intervenons à la date convenue avec notre équipe et notre véhicule. 4) Nous trions les objets : rachat des biens valorisables, don aux associations, recyclage des matériaux. 5) Nous vous remettons les lieux propres et dégagés.",
-              },
-              {
-                question: "Quels sont les tarifs d'un débarras ?",
-                answer: "Nos tarifs dépendent du volume à évacuer, du type de biens et de l'accessibilité du logement. À titre indicatif : studio dès 250 €, appartement T2 dès 450 €, T3 dès 650 €, maison dès 900 €. Pour un objet seul : canapé dès 69 €, matelas ou électroménager dès 39 €. Le débarras peut aussi être gratuit si vos biens ont de la valeur. Devis gratuit et sans engagement, établi le jour même.",
-              },
-              {
-                question: "Le débarras peut-il être gratuit ?",
-                answer: "Oui, dans certains cas le débarras peut être entièrement gratuit, voire vous rapporter de l'argent. C'est possible lorsque vos biens ont une valeur marchande suffisante : mobilier ancien, antiquités, objets de collection, électroménager récent, matériaux de construction. Nous estimons la valeur des biens sur place et déduisons cette somme du coût du débarras. Contactez-nous pour une estimation gratuite.",
-              },
-              {
-                question: "Quel est le délai d'intervention pour un débarras ?",
-                answer: "Nous intervenons généralement sous 24 à 48 heures après validation du devis. Pour les situations urgentes (succession, vente immobilière imminente, sinistre), nous pouvons organiser une intervention le jour même selon notre disponibilité. Contactez-nous par téléphone pour les demandes urgentes.",
-              },
-              {
-                question: "Faut-il être présent lors du débarras ?",
-                answer: "Votre présence n'est pas obligatoire. Vous pouvez nous confier les clés ou mandater une personne de confiance (notaire, agent immobilier, voisin). Nous vous tenons informé à chaque étape par téléphone et vous envoyons des photos avant/après intervention. Nous remettons les clés à la personne que vous aurez désignée à la fin du débarras.",
-              },
-              {
-                question: "Que devient le contenu après le débarras ?",
-                answer: "Nous procédons à un tri rigoureux et responsable : les objets en bon état sont revendus ou donnés à des associations caritatives, les métaux et matériaux recyclables sont acheminés vers des centres agréés, les déchets sont traités conformément à la réglementation environnementale. Nous pouvons vous fournir des attestations de traitement des déchets si nécessaire.",
-              },
-              {
-                question: "Intervenez-vous pour les débarras de succession ?",
-                answer: "Oui, nous sommes spécialisés dans les débarras de succession. Notre équipe intervient avec discrétion et bienveillance, en prenant soin de chaque objet qui pourrait avoir une valeur sentimentale ou patrimoniale. Nous pouvons coordonner notre intervention avec le notaire, les héritiers ou l'agence immobilière. Nous établissons un inventaire des biens si nécessaire.",
-              },
-              {
-                question: "Proposez-vous un nettoyage après débarras ?",
-                answer: "Oui. Un nettoyage sommaire est inclus dans chaque débarras : balayage, dépoussiérage et évacuation des derniers résidus. Un nettoyage complet (sols, murs, surfaces) est proposé en option, pour un logement prêt pour une vente, une location ou un état des lieux. Demandez-nous un devis combiné débarras + nettoyage.",
-              },
-              {
-                question: "Intervenez-vous pour les particuliers et les professionnels ?",
-                answer: "Oui, nous intervenons auprès des particuliers (successions, déménagements, rénovations) et des professionnels (agences immobilières, notaires, syndics, bailleurs sociaux, entreprises). Nous proposons des formules adaptées à chaque besoin et pouvons établir des conventions de partenariat pour les professionnels avec des besoins réguliers.",
-              },
-            ]).map((faq, index) => (
+            {(ss ? ss.faqItems.map((f) => ({ question: f.q, answer: f.a })) : getCityFaq(cityData.name)
+            ).map((faq, index) => (
               <div
                 key={index}
                 className={`bg-white rounded-xl border transition-all duration-300 ${openFaq === index ? "border-[#0E2452] shadow-md" : "border-gray-200 hover:border-gray-300"} ${
@@ -1516,13 +1383,13 @@ export default function ClientVillePage({
                   </span>
                 </div>
                 <h3 className="text-lg md:text-xl font-bold mb-1">
-                  {ss ? ss.ctaTitle : "Prêt à débarrasser votre logement ?"}
+                  {ss ? ss.ctaTitle : `Un volet roulant en panne à ${cityData.name} ?`}
                 </h3>
                 <p
                   className="text-sm leading-relaxed text-justify md:text-left"
                   style={{ color: "#a8b8d8" }}
                 >
-                  {ss ? ss.ctaText : "Service de débarras rapide et fiable pour succession, vente, déménagement ou logement encombré. Intervention discrète, tri sélectif, logement rendu propre et dégagé."}
+                  {ss ? ss.ctaText : "Dépannage d'urgence 7j/7, devis gratuit avant intervention, techniciens qualifiés et réparations garanties, sur toutes les marques."}
                 </p>
               </div>
 
@@ -1551,8 +1418,8 @@ export default function ClientVillePage({
         isOpen={isQuoteFormOpen}
         onClose={() => setIsQuoteFormOpen(false)}
         phoneConfig={phoneConfig}
-        title={ss?.quoteFormTitle ?? "Obtenez un devis de débarras gratuit"}
-        subtitle={ss?.quoteFormTitle ?? "Obtenez un devis de débarras gratuit"}
+        title={ss?.quoteFormTitle ?? "Demandez votre devis gratuit"}
+        subtitle={ss?.quoteFormSubtitle ?? "Dépannage, réparation, installation et motorisation"}
       />
 
     </div>

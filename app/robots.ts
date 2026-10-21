@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/api/"],
       },
     ],
-    sitemap: "https://www.debarras-proximite.fr/sitemap.xml",
+    sitemap: "https://www.allo-depannage-volet.fr/sitemap.xml",
   }
 }

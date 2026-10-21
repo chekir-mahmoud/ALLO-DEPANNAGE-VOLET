@@ -101,7 +101,7 @@ export default function Cookies() {
           <h2>Contact</h2>
           <p>
             Pour toute question concernant notre politique de cookies :<br />
-            <strong>Email :</strong> contact@debarras-proximite.fr<br />
+            <strong>Email :</strong> contact@allo-depannage-volet.fr<br />
             <strong>Téléphone :</strong> {phoneConfig.display}
           </p>
         </section>

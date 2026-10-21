@@ -3,8 +3,8 @@ import { pageMetadata } from "@/lib/seo"
 import BreadcrumbSchema from "@/components/breadcrumb-schema"
 
 export const metadata = pageMetadata({
-  title: "Contact et devis gratuit | Débarras Proximité",
-  description: "Contactez Débarras Proximité par téléphone, WhatsApp, e-mail ou formulaire : rappel sous 30 minutes, devis gratuit le jour même, partout en France.",
+  title: "Contact et devis gratuit | Allo Dépannage Volet",
+  description: "Contactez Allo Dépannage Volet par téléphone, WhatsApp, e-mail ou formulaire : dépannage de volets roulants 7j/7, rappel sous 30 minutes et devis gratuit, partout en France.",
   path: "/contact",
 })
 

@@ -3,8 +3,8 @@ import BreadcrumbSchema from "@/components/breadcrumb-schema"
 import EstimationClient from "./estimation-client"
 
 export const metadata = pageMetadata({
-  title: "Simulateur de prix de débarras gratuit | Débarras Proximité",
-  description: "Estimez gratuitement le prix de votre débarras (maison, appartement, cave, garage, local) en 1 minute, puis recevez un devis ferme et gratuit.",
+  title: "Simulateur de prix volet roulant gratuit | Allo Dépannage Volet",
+  description: "Estimez gratuitement le prix d'un dépannage, d'une réparation, d'un moteur, d'une motorisation ou d'une pose de volet roulant en 1 minute, puis recevez un devis gratuit.",
   path: "/estimation",
 })
 

@@ -9,38 +9,34 @@ import Footer from "@/components/Footer"
 import ContactFormInline from "@/components/contact-form-inline"
 import QuoteForm from "@/components/quote-form"
 
-import { Phone, Mail, Clock, FileText, ChevronDown, MessageCircle, CheckCircle2, ShieldCheck, Star, BadgeEuro } from "lucide-react"
+import { Phone, Mail, Clock, FileText, ChevronDown, MessageCircle, CheckCircle2, Star, BadgeEuro } from "lucide-react"
 import { DEFAULT_PHONE } from "@/lib/phone-config"
 import FloatingButtons from "@/components/FloatingButtons"
 import HowItWorksSection from "@/components/sections/how-it-works-section"
 import WhyChooseUsSection from "@/components/sections/why-choose-us-section"
 import TestimonialsSection from "@/components/sections/testimonials-section"
-import { DEBARRAS_MAISON_TESTIMONIALS } from "@/lib/testimonials/service-testimonials"
-
-// Avis affichés avec des villes réparties dans toute la France
-const NATIONAL_CITIES = ["Paris", "Lyon", "Marseille", "Toulouse", "Nantes", "Lille", "Strasbourg", "Montpellier", "Rennes", "Nice"]
-const NATIONAL_TESTIMONIALS = DEBARRAS_MAISON_TESTIMONIALS.map((t, i) => ({ ...t, location: NATIONAL_CITIES[i % NATIONAL_CITIES.length] }))
+import { VOLET_INTERVENTIONS } from "@/lib/testimonials/exemples-volet-roulant"
 
 const CONTACT_FAQ = [
   {
     question: "En combien de temps êtes-vous rappelé après votre demande ?",
-    answer: "Nous vous rappelons en moins de 30 minutes pendant nos horaires d'ouverture (du lundi au vendredi de 8h à 21h, le samedi de 9h à 19h). En dehors de ces horaires, nous vous recontactons dès la réouverture.",
+    answer: "Nous vous rappelons en moins de 30 minutes, 7j/7. Pour un volet bloqué ou un rideau métallique coincé, appelez-nous directement : notre service de dépannage fonctionne 24h/24.",
   },
   {
     question: "Puis-je obtenir un devis sans visite ?",
-    answer: "Oui. Envoyez-nous quelques photos de chaque pièce par WhatsApp ou par e-mail : c'est souvent suffisant pour estimer le volume et vous transmettre un devis le jour même. Pour une maison complète ou un chantier complexe, nous proposons une visite gratuite.",
+    answer: "Oui, pour de nombreuses interventions. Envoyez-nous une photo du volet, du coffre et, si possible, la marque du moteur par WhatsApp ou par e-mail : c'est souvent suffisant pour vous donner un prix. Pour une installation sur mesure, une prise de mesures sur place est nécessaire.",
   },
   {
     question: "Le devis est-il vraiment gratuit ?",
-    answer: "Oui, le devis est 100 % gratuit et sans engagement, qu'il soit réalisé sur photos ou après une visite sur place.",
+    answer: "Oui, le devis est 100 % gratuit et sans engagement, qu'il soit établi sur photos ou après le diagnostic sur place. Il vous est toujours remis avant toute intervention.",
   },
   {
     question: "Quelles informations préparer avant de nous contacter ?",
-    answer: "L'adresse du logement, le type de bien (appartement, maison, cave, garage), l'étage et la présence d'un ascenseur, les pièces à vider, la date souhaitée et, si possible, quelques photos. Signalez aussi les objets de valeur à faire estimer et les éventuels déchets particuliers.",
+    answer: "L'adresse d'intervention, le type de volet (manuel à sangle ou à manivelle, électrique filaire, radio ou solaire), la marque du moteur si vous la connaissez, la panne constatée, le nombre de volets concernés et, si possible, quelques photos. Pour une installation, indiquez les dimensions approximatives des fenêtres.",
   },
   {
     question: "Intervenez-vous en urgence ?",
-    answer: "Oui. Pour une vente immobilière imminente, une fin de bail ou une succession, appelez-nous directement : nous organisons une intervention rapide, parfois le jour même selon nos disponibilités.",
+    answer: "Oui. Pour un volet bloqué en position ouverte ou fermée, ou un rideau métallique de commerce coincé, appelez-nous directement : notre service de dépannage intervient 7j/7, y compris le week-end et les jours fériés.",
   },
 ]
 
@@ -56,13 +52,13 @@ export default function ContactPage() {
 
       {/* HERO — même style que la page À propos */}
       <section
-        aria-label="Contacter Débarras Proximité"
+        aria-label="Contacter Allo Dépannage Volet"
         className="relative isolate overflow-hidden bg-[#0E2452] text-white"
         id="hero"
       >
         <Image
-          src="/images/debarras-gratuit-768x512.jpg"
-          alt="Équipe Débarras Proximité en intervention de débarras"
+          src="/images/volet/reparation-coffre-volet-roulant.jpg"
+          alt="Technicien Allo Dépannage Volet en intervention sur un volet roulant"
           fill
           priority
           className="object-cover object-center opacity-30"
@@ -75,11 +71,11 @@ export default function ContactPage() {
           </p>
 
           <h1 className="text-4xl font-bold leading-tight md:text-6xl lg:min-h-[2lh] xl:min-h-0">
-            Contactez <span className="text-[#FFC629]">Débarras Proximité</span>
+            Contactez <span className="text-[#FFC629]">Allo Dépannage Volet</span>
           </h1>
 
-          <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300 md:text-xl md:min-h-24 text-justify hyphens-auto" lang="fr">
-            Une demande de devis, une question ou une intervention urgente ? Appelez-nous ou remplissez le formulaire : nous vous rappelons en moins de 30 minutes.
+          <p className="mt-6 text-lg leading-8 text-slate-300 md:text-xl md:min-h-24 text-justify hyphens-auto" lang="fr">
+            Un volet bloqué, une demande de devis ou une question ? Appelez-nous ou remplissez le formulaire : nous vous rappelons en moins de 30 minutes, 7j/7.
           </p>
 
           <div className="mt-9 flex flex-col gap-4 sm:flex-row sm:gap-6">
@@ -104,7 +100,7 @@ export default function ContactPage() {
 
         <div className="relative mx-auto grid max-w-7xl grid-cols-2 gap-3 border-t border-white/15 px-5 py-6 lg:grid-cols-4 md:px-8">
           <div className="flex items-center gap-3"><CheckCircle2 className="h-5 w-5 text-[#FFC629]" /><span className="text-sm text-slate-200">Devis 100% gratuit</span></div>
-          <div className="flex items-center gap-3"><ShieldCheck className="h-5 w-5 text-[#FFC629]" /><span className="text-sm text-slate-200">Équipe assurée</span></div>
+          <div className="flex items-center gap-3"><Clock className="h-5 w-5 text-[#FFC629]" /><span className="text-sm text-slate-200">Dépannage 7j/7</span></div>
           <div className="flex items-center gap-3"><Star className="h-5 w-5 fill-[#FFC629] text-[#FFC629]" /><span className="text-sm text-slate-200">4,8/5 par nos clients</span></div>
           <div className="flex items-center gap-3"><BadgeEuro className="h-5 w-5 text-[#FFC629]" /><span className="text-sm text-slate-200">Tarifs transparents</span></div>
         </div>
@@ -115,16 +111,16 @@ export default function ContactPage() {
         <div className="container mx-auto px-4 md:px-8">
           <div className="max-w-7xl mx-auto mb-10">
             <p className="mb-3 inline-flex items-center gap-3 text-sm font-semibold uppercase tracking-[0.16em] text-[#0E2452]"><span className="h-1 w-8 rounded-full bg-[#FFC629]" aria-hidden="true" />Nous contacter</p>
-            <h2 className="text-3xl md:text-4xl font-bold text-[#0E2452] mb-3">Parlons de votre débarras</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-[#0E2452] mb-3">Parlons de vos volets roulants</h2>
             <p className="text-gray-600 text-lg max-w-3xl">
-              Par téléphone, WhatsApp, e-mail ou via le formulaire : notre équipe vous répond rapidement, partout en France (
+              Par téléphone, WhatsApp, e-mail ou via le formulaire : nos techniciens vous répondent rapidement, partout en France (
               <Link href="/zone-intervention" className="font-semibold text-[#0E2452] underline decoration-[#FFC629] decoration-2 underline-offset-4">voir les départements</Link>).
             </p>
           </div>
 
           {/* Bandeau des coordonnées */}
-          <ul className="max-w-7xl mx-auto grid gap-6 rounded-2xl bg-[#0E2452] px-6 py-7 text-white sm:grid-cols-2 sm:px-10 lg:grid-cols-4 lg:gap-0 lg:divide-x lg:divide-white/15">
-            <li className="flex items-center gap-4 lg:pr-6">
+          <ul className="max-w-7xl mx-auto grid gap-6 rounded-2xl bg-[#0E2452] px-6 py-7 text-white sm:grid-cols-2 sm:px-10 xl:grid-cols-[1fr_1.1fr_1.3fr_1.2fr] xl:gap-0 xl:divide-x xl:divide-white/15">
+            <li className="flex items-center gap-4 xl:pr-6">
               <span className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-[#FFC629]">
                 <Phone className="h-6 w-6 text-[#0E2452]" aria-hidden="true" />
               </span>
@@ -133,7 +129,7 @@ export default function ContactPage() {
                 <a href={`tel:${phoneConfig.tel}`} className="text-lg font-bold text-[#FFC629] hover:underline">{phoneConfig.display}</a>
               </div>
             </li>
-            <li className="flex items-center gap-4 lg:px-6">
+            <li className="flex items-center gap-4 xl:px-6">
               <span className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-[#FFC629]">
                 <MessageCircle className="h-6 w-6 text-[#0E2452]" aria-hidden="true" />
               </span>
@@ -149,23 +145,23 @@ export default function ContactPage() {
                 </a>
               </div>
             </li>
-            <li className="flex items-center gap-4 lg:px-6">
+            <li className="flex items-center gap-4 xl:px-6">
               <span className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-[#FFC629]">
                 <Mail className="h-6 w-6 text-[#0E2452]" aria-hidden="true" />
               </span>
               <div className="min-w-0">
                 <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-300">E-mail</p>
-                <a href="mailto:contact@debarras-proximite.fr" className="break-all font-semibold text-white hover:text-[#FFC629]">contact@debarras-proximite.fr</a>
+                <a href="mailto:contact@allo-depannage-volet.fr" className="font-semibold text-white hover:text-[#FFC629] xl:text-sm">contact@<wbr /><span className="whitespace-nowrap">allo-depannage-volet.fr</span></a>
               </div>
             </li>
-            <li className="flex items-center gap-4 lg:pl-6">
+            <li className="flex items-center gap-4 xl:pl-6">
               <span className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-[#FFC629]">
                 <Clock className="h-6 w-6 text-[#0E2452]" aria-hidden="true" />
               </span>
               <div className="min-w-0 text-sm">
                 <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-300">Horaires</p>
-                <p className="text-white"><span className="font-semibold">Lun. – ven. :</span> 8h – 21h</p>
-                <p className="text-white"><span className="font-semibold">Samedi :</span> 9h – 19h</p>
+                <p className="text-white"><span className="font-semibold">Dépannage :</span> 24h/24, 7j/7</p>
+                <p className="text-white"><span className="font-semibold">Devis :</span> rappel sous 30 min</p>
               </div>
             </li>
           </ul>
@@ -184,7 +180,7 @@ export default function ContactPage() {
       <WhyChooseUsSection className="bg-white" />
 
       {/* Avis clients */}
-      <TestimonialsSection testimonials={NATIONAL_TESTIMONIALS} className="bg-gray-50" padding="py-10 md:py-14" />
+      <TestimonialsSection testimonials={VOLET_INTERVENTIONS} examples className="bg-gray-50" padding="py-10 md:py-14" />
 
       {/* FAQ contact */}
       <section className="bg-white py-10 md:py-14" id="faq-contact">
@@ -222,11 +218,11 @@ export default function ContactPage() {
             <div className="flex w-full flex-col items-center justify-between gap-6 md:flex-row">
               <div className="min-w-0 flex-1 text-center md:text-left">
                 <span className="mb-2 inline-block rounded-full bg-[#FFC629] px-3 py-1 text-xs font-bold uppercase tracking-widest text-[#0E2452]">
-                  Débarras urgent
+                  Dépannage urgent
                 </span>
-                <h3 className="mb-1 text-lg font-bold md:text-xl">Vente imminente, fin de bail, succession ?</h3>
+                <h3 className="mb-1 text-lg font-bold md:text-xl">Volet bloqué ou rideau métallique coincé ?</h3>
                 <p className="text-sm leading-relaxed text-slate-300">
-                  Appelez-nous directement : nous trouvons avec vous la date d&apos;intervention la plus rapide possible.
+                  Appelez-nous directement : un technicien intervient 7j/7, y compris le week-end et les jours fériés.
                 </p>
               </div>
               <Button

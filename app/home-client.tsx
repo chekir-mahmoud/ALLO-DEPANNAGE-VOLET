@@ -9,6 +9,7 @@ import Header from "@/components/header"
 import Footer from "@/components/Footer"
 import QuoteForm from "@/components/quote-form"
 import FloatingButtons from "@/components/FloatingButtons"
+import BrandsSection from "@/components/sections/brands-section"
 import HowItWorksSection from "@/components/sections/how-it-works-section"
 import TarifsSection from "@/components/sections/tarifs-section"
 import WhyChooseUsSection from "@/components/sections/why-choose-us-section"
@@ -18,39 +19,36 @@ import { articles } from "@/app/blog/data"
 import { DEFAULT_PHONE } from "@/lib/phone-config"
 import { servicePath } from "@/lib/site"
 import { ACTIVE_DEPARTMENTS } from "@/lib/departments"
-import { SOUS_SERVICES_DEBARRAS } from "@/lib/sous-services/debarras-maison"
-import { DEBARRAS_MAISON_TESTIMONIALS } from "@/lib/testimonials/service-testimonials"
+import { VOLET_SERVICES } from "@/lib/services-volet-roulant"
+import { VOLET_INTERVENTIONS } from "@/lib/testimonials/exemples-volet-roulant"
 import {
-  Building2, CheckCircle2, ChevronDown, ChevronRight, Clock, FileText, MapPin, Phone, ShieldCheck, Star, Users,
+  BadgeCheck, Building2, CheckCircle2, ChevronDown, ChevronRight, Clock, FileText, MapPin, Phone, ShieldCheck, Wrench,
 } from "lucide-react"
 
 // Questions fréquentes générales (affichées et transmises à Google)
 export const HOME_FAQ = [
   {
-    question: "Combien coûte un débarras de maison ?",
-    answer: "Le prix dépend du volume à évacuer, de l'accessibilité et de la valeur des objets récupérables. À titre indicatif : dès 250 € pour un studio, dès 450 € pour un T2, dès 650 € pour un T3 et dès 900 € pour une maison. Le devis est gratuit et le rachat des objets de valeur est déduit du prix.",
+    question: "Mon volet roulant est bloqué : que faire ?",
+    answer: "Ne forcez pas sur la manivelle, la sangle ou l'interrupteur : vous risqueriez d'aggraver la panne. Coupez l'alimentation s'il s'agit d'un volet électrique, puis contactez-nous. Nous intervenons en urgence 7j/7 pour débloquer le volet, identifier la cause (lame cassée, sangle usée, moteur ou axe défaillant) et le remettre en service.",
   },
   {
-    question: "Le devis est-il gratuit ?",
-    answer: "Oui, le devis est 100 % gratuit et sans engagement. Nous l'établissons sur photos ou après une visite, et vous le recevez le jour même.",
+    question: "Combien coûte le dépannage d'un volet roulant ?",
+    answer: "Le prix dépend de la panne et des pièces à remplacer. À titre indicatif : diagnostic et déplacement dès 69 €, remplacement de sangle dès 79 €, remplacement de lames dès 119 €, remplacement de moteur dès 290 €. Le devis est gratuit et vous connaissez le prix avant toute intervention.",
   },
   {
-    question: "Dans quel délai intervenez-vous ?",
-    answer: "Nous intervenons généralement sous 24 à 48 heures après validation du devis. Pour une urgence (vente imminente, fin de bail, succession), nous organisons une intervention encore plus rapide selon nos disponibilités.",
+    question: "Réparez-vous toutes les marques de volets roulants ?",
+    answer: "Oui. Nous intervenons sur toutes les marques de volets roulants et de moteurs : Somfy, Bubendorff, Profalux, Simu, Nice, Franciaflex et bien d'autres, ainsi que sur les volets manuels à sangle ou à manivelle et les volets électriques filaires, radio ou solaires.",
   },
   {
-    question: "Que deviennent les objets et les meubles ?",
-    answer: "Tout est trié sur place : les objets en bon état sont donnés à des associations ou revendus, les matériaux recyclables partent dans les filières adaptées et le reste est déposé en déchetterie agréée.",
+    question: "Peut-on motoriser un volet roulant manuel ?",
+    answer: "Oui, dans la grande majorité des cas. Nous remplaçons la sangle ou la manivelle par un moteur tubulaire adapté, avec interrupteur ou télécommande, et nous pouvons centraliser plusieurs volets ou les relier à une box domotique.",
   },
   {
-    question: "Intervenez-vous partout en France ?",
-    answer: "Oui. Nos équipes interviennent dans toute la France métropolitaine, des grandes villes aux petites communes rurales, ainsi qu'en outre-mer, avec le même niveau de service.",
+    question: "Intervenez-vous aussi sur les rideaux métalliques et les stores ?",
+    answer: "Oui. Nous installons, dépannons et entretenons les rideaux métalliques des commerces et locaux professionnels, ainsi que les stores bannes et stores intérieurs. Ces interventions sont possibles partout en France, avec un devis gratuit.",
   },
 ]
 
-// Avis affichés avec des villes réparties dans toute la France
-const NATIONAL_CITIES = ["Paris", "Lyon", "Marseille", "Toulouse", "Nantes", "Lille", "Strasbourg", "Montpellier", "Rennes", "Nice"]
-const NATIONAL_TESTIMONIALS = DEBARRAS_MAISON_TESTIMONIALS.map((t, i) => ({ ...t, location: NATIONAL_CITIES[i % NATIONAL_CITIES.length] }))
 
 const LATEST_ARTICLES = [...articles].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 3)
 
@@ -65,12 +63,12 @@ export default function HomeClient() {
 
       {/* HERO — même style que l'en-tête des pages ville, sans ville */}
       <section
-        aria-label="Débarras de maison partout en France"
+        aria-label="Dépannage et réparation de volets roulants partout en France"
         className="relative isolate overflow-hidden bg-[#0E2452] text-white"
         id="hero"
       >
         <Image
-          src="/images/debarras-gratuit-768x512.jpg"
+          src="/images/volet/mecanisme-coffre-volet-roulant.jpg"
           alt=""
           aria-hidden="true"
           fill
@@ -84,15 +82,15 @@ export default function HomeClient() {
           <div className="grid lg:grid-cols-[3fr_2fr] gap-10 lg:gap-14 items-center">
             <div className="lg:self-stretch lg:flex lg:flex-col lg:-mb-6">
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight text-white mb-5">
-                Débarras de logements <span className="text-[#FFC629]">partout en France</span>.
+                Dépannage et réparation de volets roulants <span className="text-[#FFC629]">partout en France</span>.
               </h1>
 
-              <p className="text-lg leading-relaxed text-slate-200 mb-6 max-w-2xl" lang="fr">
-                Maison, appartement, cave, grenier, garage ou local professionnel : nous vidons, trions et recyclons, et vous rendons un logement propre et dégagé.
+              <p className="text-lg leading-relaxed text-slate-200 mb-6 max-w-2xl text-justify hyphens-auto" lang="fr">
+                Volet bloqué, moteur en panne, lames cassées ou sangle usée : nos techniciens interviennent 7j/7 pour réparer, motoriser ou remplacer vos volets roulants, rideaux métalliques et stores.
               </p>
 
               <ul className="grid sm:grid-cols-2 gap-x-6 gap-y-3 mb-6">
-                {["Devis gratuit le jour même", "Intervention sous 24/48h", "Tri, dons et recyclage inclus", "Équipe assurée et discrète"].map((item) => (
+                {["Devis gratuit et sans engagement", "Dépannage d'urgence 7j/7", "Toutes marques : Somfy, Bubendorff…", "Pièces et main-d'œuvre garanties"].map((item) => (
                   <li key={item} className="flex items-center gap-3 text-slate-100">
                     <CheckCircle2 className="w-5 h-5 flex-shrink-0 text-[#FFC629]" aria-hidden="true" />
                     {item}
@@ -124,8 +122,8 @@ export default function HomeClient() {
 
               <ul className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 border-t border-white/15 pt-5 sm:grid sm:grid-cols-2 lg:mt-auto lg:pt-6">
                 {[
-                  { Icon: ShieldCheck, label: "Visite gratuite et rapide" },
-                  { Icon: Users, label: "Plus de 500 clients" },
+                  { Icon: ShieldCheck, label: "Diagnostic sur place" },
+                  { Icon: Wrench, label: "Techniciens qualifiés" },
                 ].map(({ Icon, label }) => (
                   <li key={label} className="flex items-center gap-1.5 whitespace-nowrap text-xs font-medium text-slate-100 min-[380px]:gap-2 min-[380px]:text-sm">
                     <Icon className="h-3.5 w-3.5 flex-shrink-0 text-[#FFC629] sm:h-4 sm:w-4" aria-hidden="true" />
@@ -147,8 +145,8 @@ export default function HomeClient() {
           <div className="max-w-7xl mx-auto mb-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
             <div>
               <p className="mb-3 inline-flex items-center gap-3 text-sm font-semibold uppercase tracking-[0.16em] text-[#0E2452]"><span className="h-1 w-8 rounded-full bg-[#FFC629]" aria-hidden="true" />Nos prestations</p>
-              <h2 className="text-3xl md:text-4xl font-bold text-[#0E2452] mb-3">Une solution pour chaque débarras</h2>
-              <p className="text-gray-600 text-lg max-w-3xl">Particuliers comme professionnels : chaque intervention commence par un devis gratuit, établi le jour même.</p>
+              <h2 className="text-3xl md:text-4xl font-bold text-[#0E2452] mb-3">Une solution pour chaque volet roulant</h2>
+              <p className="text-gray-600 text-lg max-w-3xl">Particuliers, commerces et copropriétés : dépannage, réparation, installation et motorisation, avec un devis gratuit avant toute intervention.</p>
             </div>
             <Link
               href="/nos-services"
@@ -160,14 +158,14 @@ export default function HomeClient() {
           </div>
 
           <ul className="max-w-7xl mx-auto grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {SOUS_SERVICES_DEBARRAS.map((ss) => (
+            {VOLET_SERVICES.map((ss) => (
               <li key={ss.slug}>
                 <Link
                   href={servicePath(ss.slug)}
                   className="group relative flex h-64 overflow-hidden rounded-2xl"
                 >
                   <Image
-                    src={ss.heroImage || "/placeholder.svg"}
+                    src={ss.image || "/placeholder.svg"}
                     alt={ss.label}
                     fill
                     sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
@@ -177,7 +175,7 @@ export default function HomeClient() {
                   <div className="relative mt-auto p-6">
                     <div className="mb-3 h-1 w-12 rounded-full bg-[#FFC629] transition-all duration-300 group-hover:w-20" />
                     <h3 className="text-xl font-bold leading-tight text-white">{ss.label}</h3>
-                    <p className="mt-1 text-sm font-medium text-[#FFC629]">{ss.heroCardSub}</p>
+                    <p className="mt-1 text-sm font-medium text-[#FFC629]">{ss.sub}</p>
                   </div>
                 </Link>
               </li>
@@ -185,6 +183,8 @@ export default function HomeClient() {
           </ul>
         </div>
       </section>
+
+      <BrandsSection className="bg-white" padding="pt-0 pb-10 md:pb-14" />
 
       <HowItWorksSection className="bg-gray-50" />
 
@@ -199,7 +199,7 @@ export default function HomeClient() {
             <div>
               <p className="mb-3 inline-flex items-center gap-3 text-sm font-semibold uppercase tracking-[0.16em] text-[#0E2452]"><span className="h-1 w-8 rounded-full bg-[#FFC629]" aria-hidden="true" />Présence nationale</p>
               <h2 className="text-3xl md:text-4xl font-bold text-[#0E2452] mb-3">Le même service, partout en France</h2>
-              <p className="text-gray-600 text-lg max-w-3xl">Grandes villes, villes moyennes ou communes rurales : nos équipes se déplacent dans toute la France métropolitaine et en outre-mer.</p>
+              <p className="text-gray-600 text-lg max-w-3xl">Grandes villes, villes moyennes ou communes rurales : nos techniciens se déplacent dans toute la France métropolitaine et en outre-mer pour dépanner vos volets roulants.</p>
             </div>
             <Link
               href="/zone-intervention"
@@ -214,8 +214,8 @@ export default function HomeClient() {
             {[
               { Icon: MapPin, val: `${departmentCount}`, label: "Départements couverts" },
               { Icon: Building2, val: "5 500+", label: "Communes desservies" },
-              { Icon: Clock, val: "24/48h", label: "Délai d'intervention" },
-              { Icon: Star, val: "4,8/5", label: "Note de nos clients" },
+              { Icon: Clock, val: "7j/7", label: "Dépannage d'urgence" },
+              { Icon: BadgeCheck, val: "Toutes", label: "Marques de volets" },
             ].map(({ Icon, val, label }) => (
               <li key={label} className="flex flex-col items-center gap-3 rounded-2xl border border-gray-200 bg-gray-50 px-3 py-5 text-center sm:flex-row sm:gap-4 sm:p-5 sm:text-left">
                 <span className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-[#0E2452]">
@@ -231,7 +231,7 @@ export default function HomeClient() {
         </div>
       </section>
 
-      <TestimonialsSection testimonials={NATIONAL_TESTIMONIALS} className="bg-gray-50" padding="py-10 md:py-14" />
+      <TestimonialsSection testimonials={VOLET_INTERVENTIONS} examples className="bg-gray-50" padding="py-10 md:py-14" />
 
       {/* DERNIERS ARTICLES */}
       <section className="bg-white py-10 md:py-14" id="blog">
@@ -273,7 +273,7 @@ export default function HomeClient() {
           <div className="max-w-7xl mx-auto mb-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
             <div>
               <p className="mb-3 inline-flex items-center gap-3 text-sm font-semibold uppercase tracking-[0.16em] text-[#0E2452]"><span className="h-1 w-8 rounded-full bg-[#FFC629]" aria-hidden="true" />Questions fréquentes</p>
-              <h2 className="text-3xl md:text-4xl font-bold text-[#0E2452]">Vos questions sur le débarras</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-[#0E2452]">Vos questions sur les volets roulants</h2>
             </div>
             <Link
               href="/foire-aux-questions"
@@ -304,9 +304,9 @@ export default function HomeClient() {
                 <span className="mb-2 inline-block rounded-full bg-[#FFC629] px-3 py-1 text-xs font-bold uppercase tracking-widest text-[#0E2452]">
                   Rappel sous 30 min
                 </span>
-                <h3 className="mb-1 text-lg font-bold md:text-xl">Un débarras à prévoir ?</h3>
+                <h3 className="mb-1 text-lg font-bold md:text-xl">Un volet roulant bloqué ou en panne ?</h3>
                 <p className="text-sm leading-relaxed text-slate-300">
-                  Devis gratuit le jour même, intervention sous 24h/48h, équipe assurée partout en France.
+                  Dépannage d'urgence 7j/7, devis gratuit, techniciens qualifiés partout en France.
                 </p>
               </div>
               <Button

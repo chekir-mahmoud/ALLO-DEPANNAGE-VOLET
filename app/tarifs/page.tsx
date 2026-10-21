@@ -4,8 +4,8 @@ import { DEFAULT_PHONE } from "@/lib/phone-config"
 import TarifsClient from "./client"
 
 export const metadata = pageMetadata({
-  title: "Tarifs d'un débarras partout en France | Débarras Proximité",
-  description: "Prix d'un débarras de maison, appartement, cave, grenier ou succession : par logement, au volume ou par objet. Devis gratuit le jour même.",
+  title: "Prix dépannage et réparation volet roulant | Allo Dépannage Volet",
+  description: "Tarifs du dépannage, de la réparation, de l'installation et de la motorisation de volets roulants, rideaux métalliques et stores. Devis gratuit, sans frais cachés.",
   path: "/tarifs",
 })
 

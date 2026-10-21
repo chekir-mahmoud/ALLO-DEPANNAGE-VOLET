@@ -1,7 +1,7 @@
 {
-  "name": "Débarras Proximité",
-  "short_name": "Débarras Proximité",
-  "description": "Débarras de maison à Bordeaux et en Gironde",
+  "name": "Allo Dépannage Volet",
+  "short_name": "Allo Dépannage Volet",
+  "description": "Dépannage, réparation et motorisation de volets roulants partout en France, 7j/7",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

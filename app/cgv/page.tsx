@@ -15,14 +15,14 @@ export default function CGV() {
         <section>
           <h2>Objet</h2>
           <p>
-            Les présentes Conditions Générales de Vente (CGV) s'appliquent à tous les services proposés par DÉBARRAS PROXIMITÉ. Elles définissent les droits et obligations des parties.
+            Les présentes Conditions Générales de Vente (CGV) s'appliquent à tous les services proposés par ALLO DÉPANNAGE VOLET. Elles définissent les droits et obligations des parties.
           </p>
         </section>
 
         <section>
           <h2>Services proposés</h2>
           <p>
-            DÉBARRAS PROXIMITÉ propose des services professionnels incluant : débarras de maisons, d'appartements, de caves, de greniers, de garages et de locaux, débarras de succession, enlèvement d'encombrants, et nettoyage après débarras.
+            ALLO DÉPANNAGE VOLET propose des services professionnels incluant : débarras de maisons, d'appartements, de caves, de greniers, de garages et de locaux, débarras de succession, enlèvement d'encombrants, et nettoyage après débarras.
           </p>
         </section>
 
@@ -36,7 +36,7 @@ export default function CGV() {
         <section>
           <h2>Commande et acceptation</h2>
           <p>
-            La commande n'est définitive qu'après acceptation écrite par DÉBARRAS PROXIMITÉ. Un acompte peut être demandé avant le début des travaux.
+            La commande n'est définitive qu'après acceptation écrite par ALLO DÉPANNAGE VOLET. Un acompte peut être demandé avant le début des travaux.
           </p>
         </section>
 
@@ -50,7 +50,7 @@ export default function CGV() {
         <section>
           <h2>Délais d'intervention</h2>
           <p>
-            Les délais d'intervention sont communiqués à titre indicatif. DÉBARRAS PROXIMITÉ s'engage à intervenir dans les délais annoncés mais décline toute responsabilité en cas de retard justifié.
+            Les délais d'intervention sont communiqués à titre indicatif. ALLO DÉPANNAGE VOLET s'engage à intervenir dans les délais annoncés mais décline toute responsabilité en cas de retard justifié.
           </p>
         </section>
 
@@ -64,7 +64,7 @@ export default function CGV() {
         <section>
           <h2>Responsabilité</h2>
           <p>
-            DÉBARRAS PROXIMITÉ décline toute responsabilité pour les dommages causés par l'utilisateur lors des travaux. Une assurance peut être souscrite sur demande.
+            ALLO DÉPANNAGE VOLET décline toute responsabilité pour les dommages causés par l'utilisateur lors des travaux. Une assurance peut être souscrite sur demande.
           </p>
         </section>
 
@@ -86,7 +86,7 @@ export default function CGV() {
           <h2>Contact</h2>
           <p>
             Pour toute question concernant ces CGV, veuillez nous contacter :<br />
-            <strong>Email :</strong> contact@debarras-proximite.fr<br />
+            <strong>Email :</strong> contact@allo-depannage-volet.fr<br />
             <strong>Téléphone :</strong> {phoneConfig.display}
           </p>
         </section>

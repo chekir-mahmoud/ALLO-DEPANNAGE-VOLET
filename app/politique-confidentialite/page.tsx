@@ -16,7 +16,7 @@ export default function PolitiqueConfidentialite() {
         <section>
           <h2>Introduction</h2>
           <p>
-            DÉBARRAS PROXIMITÉ s'engage à respecter votre vie privée et à protéger vos données personnelles. Cette politique de confidentialité explique comment nous collectons, utilisons et protégeons vos informations.
+            ALLO DÉPANNAGE VOLET s'engage à respecter votre vie privée et à protéger vos données personnelles. Cette politique de confidentialité explique comment nous collectons, utilisons et protégeons vos informations.
           </p>
         </section>
 
@@ -66,7 +66,7 @@ export default function PolitiqueConfidentialite() {
         <section>
           <h2>Sécurité des données</h2>
           <p>
-            DÉBARRAS PROXIMITÉ met en place des mesures techniques et organisationnelles pour protéger vos données contre l'accès non autorisé, la modification ou la destruction. Nous utilisons le chiffrement SSL et d'autres technologies de sécurité.
+            ALLO DÉPANNAGE VOLET met en place des mesures techniques et organisationnelles pour protéger vos données contre l'accès non autorisé, la modification ou la destruction. Nous utilisons le chiffrement SSL et d'autres technologies de sécurité.
           </p>
         </section>
 
@@ -82,7 +82,7 @@ export default function PolitiqueConfidentialite() {
             <li>Vous opposer au traitement de vos données</li>
           </ul>
           <p>
-            Pour exercer ces droits, contactez-nous à : contact@debarras-proximite.fr
+            Pour exercer ces droits, contactez-nous à : contact@allo-depannage-volet.fr
           </p>
         </section>
 
@@ -104,7 +104,7 @@ export default function PolitiqueConfidentialite() {
           <h2>Contact</h2>
           <p>
             Pour toute question concernant cette politique, contactez-nous :<br />
-            <strong>Email :</strong> contact@debarras-proximite.fr<br />
+            <strong>Email :</strong> contact@allo-depannage-volet.fr<br />
             <strong>Téléphone :</strong> {phoneConfig.display}
           </p>
         </section>

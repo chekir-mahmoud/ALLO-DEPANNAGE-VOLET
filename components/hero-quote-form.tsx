@@ -10,7 +10,7 @@ import QuoteFormHeading from "@/components/quote-form-heading"
 
 // Formulaire de devis de l'en-tête — même présentation que sur les pages ville
 export default function HeroQuoteForm({
-  messagePlaceholder = "Votre projet : type de bien, pièces à vider, date souhaitée...",
+  messagePlaceholder = "Votre besoin : volet bloqué, moteur, sangle, motorisation, nombre de volets...",
 }: {
   messagePlaceholder?: string
 }) {
@@ -71,7 +71,7 @@ export default function HeroQuoteForm({
             <Input name="telephone" type="tel" placeholder="Téléphone *" aria-label="Téléphone" required autoComplete="tel" className={fieldClass} />
             <Input name="email" type="email" placeholder="E-mail (facultatif)" aria-label="E-mail" autoComplete="email" className={fieldClass} />
           </div>
-          <Input name="adresse" placeholder="Adresse du logement *" aria-label="Adresse du logement" required autoComplete="street-address" className={fieldClass} />
+          <Input name="adresse" placeholder="Adresse d'intervention *" aria-label="Adresse d'intervention" required autoComplete="street-address" className={fieldClass} />
           <Textarea
             name="message"
             rows={2}

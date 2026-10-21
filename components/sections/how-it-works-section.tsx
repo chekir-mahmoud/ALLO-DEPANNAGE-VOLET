@@ -15,7 +15,7 @@ export default function HowItWorksSection({ className = "bg-gray-50", padding = 
               </p>
 
               <h2 className="font-bold text-[#0E2452] mb-10 md:mb-12 leading-tight text-2xl md:text-3xl">
-                Un processus simple en 4 étapes pour votre débarras
+                Un dépannage simple en 4 étapes
               </h2>
 
               <div className="space-y-8 relative">
@@ -26,23 +26,23 @@ export default function HowItWorksSection({ className = "bg-gray-50", padding = 
                 {[
                   {
                     number: "1",
-                    title: "Demande de devis gratuit",
-                    desc: "Contactez-nous par téléphone, formulaire ou WhatsApp. Décrivez votre besoin de débarras (maison, appartement, cave, garage) et recevez un devis rapide et gratuit le jour même.",
+                    title: "Vous nous contactez",
+                    desc: "Par téléphone, formulaire ou WhatsApp, décrivez la panne (volet bloqué, moteur, sangle, lames) ou votre projet. Une photo nous aide à préparer l'intervention.",
                   },
                   {
                     number: "2",
-                    title: "Visite et estimation sur place",
-                    desc: "Un expert se déplace gratuitement pour évaluer le volume à débarrasser et vous proposer un devis clair, adapté et sans engagement.",
+                    title: "Diagnostic et devis",
+                    desc: "Un technicien établit le diagnostic, identifie les pièces à remplacer et vous remet un devis clair. Vous connaissez le prix avant toute réparation.",
                   },
                   {
                     number: "3",
-                    title: "Intervention rapide",
-                    desc: "Notre équipe intervient à la date convenue pour vider entièrement les lieux, trier les objets et effectuer le débarras avec soin et efficacité.",
+                    title: "Réparation ou installation",
+                    desc: "Déblocage, remplacement du moteur, de la sangle ou des lames, motorisation ou pose : l'intervention est réalisée le plus souvent en une seule visite.",
                   },
                   {
                     number: "4",
-                    title: "Recyclage et nettoyage",
-                    desc: "Nous assurons le tri, le recyclage et le don des objets réutilisables. Les lieux sont laissés propres après intervention.",
+                    title: "Tests et garantie",
+                    desc: "Nous testons le volet, réglons les fins de course et vous expliquons l'entretien. Les pièces et la main-d'œuvre sont garanties.",
                   },
                 ].map((step, i) => (
                   <div key={i} className="relative pl-12 md:pl-16">
@@ -68,12 +68,13 @@ export default function HowItWorksSection({ className = "bg-gray-50", padding = 
 
             {/* Right: Image */}
             <div className="relative h-[300px] md:h-full">
-              <div className="rounded-2xl overflow-hidden shadow-2xl h-full">
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl h-full">
                 <img
-                  src="/images/debarras-maison.jpg"
-                  alt="Service de débarras professionnel maison appartement"
+                  src="/images/volet/technicien-reparation-volet-roulant.jpg"
+                  alt="Technicien réparant un volet roulant"
                   className="w-full h-full object-cover"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0E2452]/60 via-[#0E2452]/30 to-[#0E2452]/15" aria-hidden="true" />
               </div>
 
               {/* Effets */}

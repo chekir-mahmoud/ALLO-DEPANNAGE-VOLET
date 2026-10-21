@@ -17,13 +17,6 @@ const nextConfig = {
   },
   async redirects() {
     return [
-      // Ancien domaine -> nouveau domaine (301), en conservant le chemin
-      ...["www.debarras-services-33.fr", "debarras-services-33.fr"].map((host) => ({
-        source: "/:path*",
-        has: [{ type: "host", value: host }],
-        destination: "https://www.debarras-proximite.fr/:path*",
-        permanent: true,
-      })),
       // Sous-service débarras appartement remplacé par débarras fin de chantier
       {
         source: "/:departement/:ville/debarras-appartement",

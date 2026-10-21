@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server"
 import { ACTIVE_DEPARTMENTS, getCitiesByDepartment } from "@/lib/service-config"
-import { SOUS_SERVICES_DEBARRAS } from "@/lib/sous-services/debarras-maison"
+import { SOUS_SERVICES_VOLET } from "@/lib/sous-services/volet-roulant"
 import { articles } from "@/app/blog/data"
 import { SITE_URL, HOME_DEPARTMENT, cityPath, servicePath, sousServicePath } from "@/lib/site"
 
-const DEBARRAS_SOUS_SERVICES = SOUS_SERVICES_DEBARRAS.map((s) => s.slug)
+const DEBARRAS_SOUS_SERVICES = SOUS_SERVICES_VOLET.map((s) => s.slug)
 
 type UrlEntry = { loc: string; priority: string; changefreq: string }
 
@@ -65,7 +65,7 @@ export async function GET(
         priority,
         changefreq,
       })),
-      ...SOUS_SERVICES_DEBARRAS.map((ss) => ({
+      ...SOUS_SERVICES_VOLET.map((ss) => ({
         loc: `${SITE_URL}${servicePath(ss.slug)}`,
         priority: "0.8",
         changefreq: "monthly",

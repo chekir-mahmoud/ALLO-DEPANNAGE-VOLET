@@ -17,21 +17,21 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.debarras-proximite.fr"),
+  metadataBase: new URL("https://www.allo-depannage-volet.fr"),
 
   title: {
-    default: "Débarras de maison partout en France | Débarras Proximité",
+    default: "Dépannage et réparation volet roulant 7j/7 partout en France",
     template: "%s",
   },
 
   description:
-    "Débarras Proximité : débarras de maison, appartement, cave, grenier et succession partout en France. Vidage complet, enlèvement d'encombrants, tri et recyclage. Devis gratuit le jour même, intervention sous 24h/48h.",
+    "Allo Dépannage Volet : dépannage, réparation, installation et motorisation de volets roulants partout en France, 7j/7. Rideaux métalliques et stores. Devis gratuit.",
 
-  authors: [{ name: "Débarras Proximité", url: "https://www.debarras-proximite.fr" }],
-  creator: "Débarras Proximité",
-  publisher: "Débarras Proximité",
-  applicationName: "Débarras Proximité",
-  category: "Débarras de maison et enlèvement d'encombrants",
+  authors: [{ name: "Allo Dépannage Volet", url: "https://www.allo-depannage-volet.fr" }],
+  creator: "Allo Dépannage Volet",
+  publisher: "Allo Dépannage Volet",
+  applicationName: "Allo Dépannage Volet",
+  category: "Dépannage et réparation de volets roulants",
   classification: "Business Services",
 
   formatDetection: { telephone: true, email: true, address: true },
@@ -39,16 +39,16 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "fr_FR",
-    url: "https://www.debarras-proximite.fr/",
-    siteName: "Débarras Proximité",
-    title: "Débarras de maison partout en France | Débarras Proximité",
-    description: "Débarras de maison, appartement, cave, grenier et succession partout en France. Devis gratuit le jour même, intervention rapide.",
+    url: "https://www.allo-depannage-volet.fr/",
+    siteName: "Allo Dépannage Volet",
+    title: "Dépannage et réparation volet roulant 7j/7 partout en France",
+    description: "Dépannage, réparation, installation et motorisation de volets roulants partout en France. Rideaux métalliques et stores. Devis gratuit.",
     images: [
       {
-        url: "https://www.debarras-proximite.fr/images/debarras-gratuit-768x512.jpg",
-        width: 768,
-        height: 512,
-        alt: "Débarras Proximité - Débarras de maison partout en France",
+        url: "https://www.allo-depannage-volet.fr/images/volet/technicien-reparation-volet-roulant.jpg",
+        width: 1536,
+        height: 1024,
+        alt: "Allo Dépannage Volet - dépannage de volets roulants partout en France",
         type: "image/jpeg",
       },
     ],
@@ -56,9 +56,9 @@ export const metadata: Metadata = {
 
   twitter: {
     card: "summary_large_image",
-    title: "Débarras de maison partout en France | Débarras Proximité",
-    description: "Débarras de maison, cave, grenier et succession partout en France. Devis gratuit le jour même.",
-    images: ["https://www.debarras-proximite.fr/images/debarras-gratuit-768x512.jpg"],
+    title: "Dépannage et réparation volet roulant 7j/7 partout en France",
+    description: "Dépannage, réparation et motorisation de volets roulants partout en France. Devis gratuit.",
+    images: ["https://www.allo-depannage-volet.fr/images/volet/technicien-reparation-volet-roulant.jpg"],
   },
 
   robots: {
@@ -86,7 +86,7 @@ export const metadata: Metadata = {
   },
 
   manifest: "/site.webmanifest",
-  appleWebApp: { capable: true, title: "Débarras Proximité", statusBarStyle: "default" },
+  appleWebApp: { capable: true, title: "Allo Dépannage Volet", statusBarStyle: "default" },
 
   other: {
     "mobile-web-app-capable": "yes",
@@ -98,20 +98,20 @@ export const metadata: Metadata = {
 const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  "@id": "https://www.debarras-proximite.fr/#organization",
-  "name": "Débarras Proximité",
-  "legalName": "Débarras Proximité",
-  "description": "Débarras de maison, appartement, cave, grenier et succession partout en France. Vidage complet, enlèvement d'encombrants, tri et recyclage.",
-  "url": "https://www.debarras-proximite.fr",
+  "@id": "https://www.allo-depannage-volet.fr/#organization",
+  "name": "Allo Dépannage Volet",
+  "legalName": "Allo Dépannage Volet",
+  "description": "Dépannage, réparation, installation et motorisation de volets roulants partout en France. Rideaux métalliques et stores.",
+  "url": "https://www.allo-depannage-volet.fr",
   "logo": {
     "@type": "ImageObject",
-    "url": "https://www.debarras-proximite.fr/images/logo-debarras-proximite.png",
+    "url": "https://www.allo-depannage-volet.fr/images/logo-depannage-volet-roulant.png",
     "width": 1200,
-    "height": 297
+    "height": 265
   },
-  "image": "https://www.debarras-proximite.fr/images/debarras-gratuit-768x512.jpg",
-  "telephone": "+33775229002",
-  "email": "contact@debarras-proximite.fr",
+  "image": "https://www.allo-depannage-volet.fr/images/volet/technicien-reparation-volet-roulant.jpg",
+  "telephone": "+33614469888",
+  "email": "contact@allo-depannage-volet.fr",
   "address": COMPANY_ADDRESS,
   "areaServed": { "@type": "Country", "name": "France" },
   "foundingDate": "2017",
@@ -120,10 +120,10 @@ const organizationSchema = {
     "minValue": 10,
     "maxValue": 50
   },
-  "slogan": "Le débarras de maison partout en France",
+  "slogan": "Le dépannage de volets roulants partout en France",
   "contactPoint": {
     "@type": "ContactPoint",
-    "telephone": "+33775229002",
+    "telephone": "+33614469888",
     "contactType": "customer service",
     "contactOption": "TollFree",
     "availableLanguage": "French",
@@ -140,11 +140,11 @@ const organizationSchema = {
 const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  "@id": "https://www.debarras-proximite.fr/#website",
-  "url": "https://www.debarras-proximite.fr",
-  "name": "Débarras Proximité",
+  "@id": "https://www.allo-depannage-volet.fr/#website",
+  "url": "https://www.allo-depannage-volet.fr",
+  "name": "Allo Dépannage Volet",
   "publisher": {
-    "@id": "https://www.debarras-proximite.fr/#organization"
+    "@id": "https://www.allo-depannage-volet.fr/#organization"
   }
 }
 
@@ -175,7 +175,7 @@ export default function RootLayout({
         {/* Viewport */}
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
 
-        {/* Google Analytics / Tag Manager : à ajouter avec les identifiants Débarras Proximité */}
+        {/* Google Analytics / Tag Manager : à ajouter avec les identifiants Allo Dépannage Volet */}
       </head>
 
       <body className="font-sans antialiased" suppressHydrationWarning>

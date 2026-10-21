@@ -2,8 +2,8 @@ import type React from "react"
 import { pageMetadata } from "@/lib/seo"
 
 export const metadata = pageMetadata({
-  title: "Blog : conseils pour votre débarras | Débarras Proximité",
-  description: "Nos guides pour préparer un débarras, connaître les prix, choisir son entreprise, gérer une succession, trier et recycler vos objets.",
+  title: "Blog : conseils volets roulants | Allo Dépannage Volet",
+  description: "Nos guides sur les volets roulants : volet bloqué, prix d'un dépannage, moteur en panne, motorisation, lames, sangles, entretien et rideaux métalliques.",
   path: "/blog",
 })
 

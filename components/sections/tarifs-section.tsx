@@ -12,50 +12,50 @@ export default function TarifsSection({ place, className = "bg-white", padding =
           <div className="mb-10">
             <p className="mb-3 inline-flex items-center gap-3 text-sm font-semibold uppercase tracking-[0.16em] text-[#0E2452]"><span className="h-1 w-8 rounded-full bg-[#FFC629]" aria-hidden="true" />Nos tarifs</p>
             <h2 className="text-3xl md:text-4xl font-bold text-[#0E2452] mb-3">
-              Combien coûte un débarras {place} ?
+              Combien coûte un dépannage de volet roulant {place} ?
             </h2>
             <p className="text-gray-600 text-lg lg:whitespace-nowrap">
-              Des tarifs clairs et sans surprise, selon votre logement, le volume ou les objets à enlever.
+              Des tarifs clairs et sans surprise, selon la panne, les pièces à remplacer ou votre projet.
             </p>
           </div>
 
           <div className="grid lg:grid-cols-3 gap-5 md:gap-6">
             {[
               {
-                title: "Par type de logement",
-                intro: "Le plus simple pour estimer votre budget.",
+                title: "Dépannage et réparation",
+                intro: "Pour un volet bloqué ou abîmé.",
                 rows: [
-                  { label: "Studio", prix: "dès 250 €" },
-                  { label: "Appartement T2", prix: "dès 450 €" },
-                  { label: "Appartement T3", prix: "dès 650 €" },
-                  { label: "Appartement T4 et plus", prix: "sur devis" },
-                  { label: "Maison", prix: "dès 900 €" },
+                  { label: "Diagnostic et déplacement", prix: "dès 69 €" },
+                  { label: "Déblocage de volet roulant", prix: "dès 89 €" },
+                  { label: "Remplacement de sangle ou manivelle", prix: "dès 79 €" },
+                  { label: "Remplacement de lames", prix: "dès 119 €" },
+                  { label: "Remplacement du tablier", prix: "dès 249 €" },
                 ],
-                note: "Prix selon le volume, l'accès et les déchets.",
+                note: "Prix selon la panne, les dimensions et l'accès.",
               },
               {
-                title: "Au volume",
-                intro: "Le plus transparent pour les grands débarras.",
+                title: "Moteurs et motorisation",
+                intro: "Pour passer à l'électrique ou remplacer un moteur.",
                 rows: [
-                  { label: "Mini débarras", sous: "moins de 5 m³", prix: "dès 150 €" },
-                  { label: "Petit débarras", sous: "5 à 15 m³", prix: "dès 250 €" },
-                  { label: "Débarras moyen", sous: "15 à 30 m³", prix: "dès 550 €" },
-                  { label: "Gros débarras", sous: "30 à 50 m³", prix: "dès 900 €" },
-                  { label: "Très gros débarras", sous: "50 m³ et plus", prix: "dès 1 400 €" },
+                  { label: "Remplacement moteur", sous: "filaire", prix: "dès 290 €" },
+                  { label: "Remplacement moteur", sous: "radio, Somfy…", prix: "dès 390 €" },
+                  { label: "Motorisation d'un volet manuel", prix: "dès 450 €" },
+                  { label: "Télécommande ou inverseur", prix: "dès 59 €" },
+                  { label: "Centralisation et domotique", prix: "sur devis" },
                 ],
-                note: "Prix selon le tri, le poids, la manutention et le traitement.",
+                note: "Prix selon la marque, le moteur et le nombre de volets.",
               },
               {
-                title: "Par objet ou prestation",
-                intro: "Idéal pour les petits enlèvements.",
+                title: "Installation, rideaux et stores",
+                intro: "Pour équiper ou moderniser vos fermetures.",
                 rows: [
-                  { label: "Canapé", prix: "dès 69 €" },
-                  { label: "Matelas", prix: "dès 39 €" },
-                  { label: "Électroménager", prix: "dès 39 €" },
-                  { label: "Enlèvement de meubles", prix: "dès 99 €" },
-                  { label: "Cave ou garage", prix: "dès 199 €" },
+                  { label: "Pose de volet roulant", sous: "rénovation", prix: "dès 390 €" },
+                  { label: "Pose de volet roulant neuf", prix: "sur devis" },
+                  { label: "Dépannage rideau métallique", prix: "dès 149 €" },
+                  { label: "Réparation de store banne", prix: "dès 129 €" },
+                  { label: "Contrat d'entretien", prix: "dès 99 €/an" },
                 ],
-                note: "Prix selon le déplacement, la manutention et le traitement.",
+                note: "Prix selon les dimensions, le modèle et la pose.",
               },
             ].map((grille) => (
               <article key={grille.title} className="flex flex-col rounded-2xl border border-gray-200 bg-white p-6 md:p-7 transition-shadow duration-300 hover:shadow-xl">
@@ -64,7 +64,7 @@ export default function TarifsSection({ place, className = "bg-white", padding =
                 <div className="my-5 h-1 w-10 rounded-full bg-[#FFC629]" aria-hidden="true" />
                 <dl className="flex-1 divide-y divide-gray-100">
                   {grille.rows.map((row) => (
-                    <div key={row.label} className="flex items-baseline justify-between gap-4 py-3">
+                    <div key={`${row.label}-${row.sous ?? ""}`} className="flex items-baseline justify-between gap-4 py-3">
                       <dt className="text-sm font-medium text-gray-700">
                         {row.label}
                         {"sous" in row && <span className="ml-1.5 text-xs font-normal text-gray-500">({row.sous})</span>}
@@ -99,7 +99,7 @@ export default function TarifsSection({ place, className = "bg-white", padding =
           </div>
 
           <p className="mt-8 mx-auto max-w-4xl text-center text-xs text-gray-500">
-            Prix indicatifs TTC. Le tarif définitif dépend du volume, de l'accessibilité et du type de biens à évacuer. Devis gratuit et sans engagement, établi le jour même.
+            Prix indicatifs TTC, pièces standards incluses. Le tarif définitif dépend de la panne, des pièces et de l'accès. Devis gratuit et sans engagement avant toute intervention.
           </p>
         </div>
       </div>

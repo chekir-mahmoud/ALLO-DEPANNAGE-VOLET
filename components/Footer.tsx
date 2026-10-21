@@ -1,6 +1,6 @@
 import React from "react"
 import CurrentYear from "@/components/current-year"
-import { SOUS_SERVICES_DEBARRAS } from "@/lib/sous-services/debarras-maison"
+import { VOLET_SERVICES } from "@/lib/services-volet-roulant"
 import { servicePath } from "@/lib/site"
 import Image from 'next/image';
 import { Phone, MapPin } from 'lucide-react';
@@ -22,15 +22,15 @@ const Footer: React.FC<FooterProps> = ({ phoneConfig }) => {
           {/* Company Info with Logo */}
           <div className="lg:col-span-1 flex flex-col items-center md:items-start">
             <Image
-              src="/images/logo-debarras-proximite-blanc.png"
-              alt="Débarras Proximité Logo"
-              width={226}
+              src="/images/logo-depannage-volet-roulant-blanc.png"
+              alt="Allo Dépannage Volet Logo"
+              width={254}
               height={56}
               className="h-14 w-auto mb-6"
                   style={{ width: "auto" }}
                 />
             <p className="text-gray-400 text-sm leading-relaxed mb-6 text-justify">
-              Débarras Proximité, spécialiste du débarras de logements et locaux partout en France. Vidage complet, succession, cave, grenier et encombrants : un service rapide, soigné et responsable.
+              Allo Dépannage Volet, spécialiste du dépannage, de la réparation et de la motorisation de volets roulants partout en France. Rideaux métalliques et stores : un service rapide, soigné et garanti.
             </p>
 
             <div className="flex gap-4 items-center justify-center">
@@ -69,9 +69,7 @@ const Footer: React.FC<FooterProps> = ({ phoneConfig }) => {
             <h4 className="font-bold text-lg mb-6 text-white">Nos Services</h4>
             <ul className="space-y-3 text-sm">
               {[
-                // « Débarras de maison » en premier, puis les autres prestations
-                { href: servicePath("debarras-maison"), label: "Débarras de maison" },
-                ...SOUS_SERVICES_DEBARRAS.filter((ss) => ss.slug !== "debarras-maison").map((ss) => ({
+                ...VOLET_SERVICES.map((ss) => ({
                   href: servicePath(ss.slug),
                   label: ss.label,
                 })),
@@ -177,8 +175,8 @@ const Footer: React.FC<FooterProps> = ({ phoneConfig }) => {
                 </div>
                 <div>
                   <p className="text-blue-200 text-xs mb-1">Email</p>
-                  <a href="mailto:contact@debarras-proximite.fr" className="text-white hover:text-[#FFC629] font-semibold">
-                    contact@debarras-proximite.fr
+                  <a href="mailto:contact@allo-depannage-volet.fr" className="text-white hover:text-[#FFC629] font-semibold">
+                    contact@allo-depannage-volet.fr
                   </a>
                 </div>
               </li>
@@ -199,7 +197,7 @@ const Footer: React.FC<FooterProps> = ({ phoneConfig }) => {
         <div className="border-t border-white/10 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-sm text-gray-400 text-center md:text-left">
-              © <CurrentYear /> DÉBARRAS PROXIMITÉ. Tous droits réservés. Débarras de logements et locaux partout en France.
+              © <CurrentYear /> ALLO DÉPANNAGE VOLET. Tous droits réservés. Dépannage et réparation de volets roulants partout en France.
             </p>
             <div className="flex flex-wrap justify-center gap-6 text-sm">
               <a href="/mentions-legales" className="text-gray-400 hover:text-[#FFC629] transition-colors">

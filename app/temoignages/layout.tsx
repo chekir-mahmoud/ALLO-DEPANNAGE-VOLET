@@ -3,8 +3,8 @@ import { pageMetadata } from "@/lib/seo"
 import BreadcrumbSchema from "@/components/breadcrumb-schema"
 
 export const metadata = pageMetadata({
-  title: "Avis clients : 4,8/5 sur 480 avis | Débarras Proximité",
-  description: "Les avis de nos clients sur leurs débarras de maison, cave, grenier et succession partout en France : 4,8/5 sur 480 avis Google.",
+  title: "Avis clients : dépannage de volets roulants | Allo Dépannage Volet",
+  description: "Les avis de nos clients sur le dépannage, la réparation, l'installation et la motorisation de leurs volets roulants, rideaux métalliques et stores, partout en France.",
   path: "/temoignages",
 })
 

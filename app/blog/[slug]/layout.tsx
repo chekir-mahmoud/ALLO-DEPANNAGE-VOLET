@@ -14,11 +14,11 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
   const article = articles.find((a) => a.slug === slug)
-  if (!article) return { title: "Article introuvable | Débarras Proximité" }
+  if (!article) return { title: "Article introuvable | Allo Dépannage Volet" }
   const images = article.image ? [{ url: article.image, alt: article.title }] : undefined
   // Titre de moins de 65 caractères pour ne pas être tronqué dans Google
   const seoTitle = (article as { metaTitle?: string }).metaTitle ?? article.title
-  const branded = `${seoTitle} | Débarras Proximité`
+  const branded = `${seoTitle} | Allo Dépannage Volet`
   return {
     title: branded.length <= 65 ? branded : seoTitle,
     description: article.excerpt,
@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     openGraph: {
       type: "article",
       locale: "fr_FR",
-      siteName: "Débarras Proximité",
+      siteName: "Allo Dépannage Volet",
       title: article.title,
       description: article.excerpt,
       url: `/blog/${article.slug}`,
@@ -68,8 +68,8 @@ export default async function Layout({ children, params }: { children: React.Rea
               articleSection: article.category,
               keywords: article.tags.join(", "),
               mainEntityOfPage: `${SITE_URL}/blog/${article.slug}`,
-              author: { "@type": "Organization", name: "Débarras Proximité", url: SITE_URL },
-              publisher: { "@type": "Organization", name: "Débarras Proximité", url: SITE_URL },
+              author: { "@type": "Organization", name: "Allo Dépannage Volet", url: SITE_URL },
+              publisher: { "@type": "Organization", name: "Allo Dépannage Volet", url: SITE_URL },
             }),
           }}
         />

@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { FileText, Phone } from "lucide-react"
+import { GOOGLE_RATING, GOOGLE_REVIEW_COUNT } from "@/lib/site"
 import Link from "next/link"
 
 
@@ -145,7 +146,7 @@ export default function Header({ phoneConfig, onContactClick, forceShowHeader }:
                   </svg>
                 </div>
                 <div className="flex items-center gap-2.5">
-                  <span className="text-xl font-bold">4.8</span>
+                  {GOOGLE_RATING && <span className="text-xl font-bold">{GOOGLE_RATING}</span>}
                   <div className="flex gap-0.5">
                     {[...Array(5)].map((_, i) => (
                       <svg key={i} className="w-4 h-4 fill-yellow-300 drop-shadow-sm" viewBox="0 0 24 24">
@@ -153,9 +154,15 @@ export default function Header({ phoneConfig, onContactClick, forceShowHeader }:
                       </svg>
                     ))}
                   </div>
-                  <span className="text-sm font-medium opacity-95">
-                    Basé sur <span className="font-bold">480 avis</span>
-                  </span>
+                  {GOOGLE_RATING && GOOGLE_REVIEW_COUNT ? (
+                    <span className="text-sm font-medium opacity-95">
+                      Basé sur <span className="font-bold">{GOOGLE_REVIEW_COUNT} avis</span>
+                    </span>
+                  ) : (
+                    <Link href="/avis-clients" className="text-sm font-medium opacity-95 hover:underline">
+                      <span className="font-bold">Avis vérifiés</span> sur Google
+                    </Link>
+                  )}
                 </div>
               </div>
 
@@ -183,9 +190,9 @@ export default function Header({ phoneConfig, onContactClick, forceShowHeader }:
             <div className="md:hidden flex items-center justify-between w-full gap-2">
               <a href="/" className="flex items-center flex-shrink-0">
                 <Image
-                  src="/images/logo-debarras-proximite.png"
-                  alt="Débarras Proximité"
-                  width={210}
+                  src="/images/logo-depannage-volet-roulant.png"
+                  alt="Allo Dépannage Volet"
+                  width={236}
                   height={52}
                   className="h-[52px] w-auto"
                   style={{ width: "auto" }}
@@ -211,11 +218,11 @@ export default function Header({ phoneConfig, onContactClick, forceShowHeader }:
 
               <Link href="/" className="flex items-center mx-6 flex-shrink-0">
                 <Image
-                  src="/images/logo-debarras-proximite.png"
-                  alt="Débarras Proximité"
-                  width={260}
-                  height={64}
-                  className="h-16 w-auto -my-1 transition-transform duration-300 hover:scale-105"
+                  src="/images/logo-depannage-volet-roulant.png"
+                  alt="Allo Dépannage Volet"
+                  width={262}
+                  height={58}
+                  className="h-[58px] w-auto transition-transform duration-300 hover:scale-105"
                   style={{ width: "auto" }}
                 />
               </Link>

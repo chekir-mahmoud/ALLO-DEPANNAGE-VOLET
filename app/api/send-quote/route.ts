@@ -54,7 +54,7 @@ export async function POST(request: Request) {
         Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: "DÉBARRAS PROXIMITÉ <onboarding@resend.dev>",
+        from: "ALLO DÉPANNAGE VOLET <onboarding@resend.dev>",
         to: "chekir.mahmoud91@gmail.com",
         subject: `🔔 Nouvelle demande de devis${estimationLines.length ? ` (estimation ${estimationMin && estimationMax ? `${estimationMin}–${estimationMax}` : estimationTotal ?? 0} €)` : ''}${pagePath ? ` - ${pagePath}` : ''}`,
         html: `
@@ -126,7 +126,7 @@ export async function POST(request: Request) {
               </div>
               
               <div class="footer">
-                <p style="margin: 0;">Email automatique généré depuis le site <strong>DÉBARRAS PROXIMITÉ</strong></p>
+                <p style="margin: 0;">Email automatique généré depuis le site <strong>ALLO DÉPANNAGE VOLET</strong></p>
                 <p style="margin: 5px 0 0 0; color: #d1d5db;">⏱️ Envoyé le ${new Date().toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
               </div>
             </div>
